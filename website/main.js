@@ -1,3 +1,51 @@
+// Chatbox logic
+function handleChatboxEntry() {
+    const input = document.getElementById('chatbox-input').value.trim();
+    if (!input) return;
+    showLoadingScreen();
+    fetch('/detect_category', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: input })
+    })
+    .then(res => res.json())
+    .then(data => {
+        hideLoadingScreen();
+        if (data.category) {
+            category = data.category;
+            step = 1;
+            answers = [];
+            document.querySelector('.landing').style.display = 'none';
+            document.getElementById('interaction').style.display = '';
+            askAgent();
+        } else {
+            alert('Could not determine a product category. Please try again.');
+        }
+    })
+    .catch(() => {
+        hideLoadingScreen();
+        alert('Could not process your request.');
+    });
+}
+
+window.onload = () => {
+    // Get categories and specs from backend
+    fetch('/categories')
+        .then(res => res.json())
+        .then(data => {
+            const categories = Object.keys(data);
+            window.currentSpecs = {};
+            for (const cat of categories) {
+                window.currentSpecs[cat] = data[cat].specs || [];
+            }
+            renderLanding(categories);
+        });
+    // Chatbox event
+    document.getElementById('chatbox-send').onclick = handleChatboxEntry;
+    document.getElementById('chatbox-input').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleChatboxEntry();
+    });
+};
 
 let step = 0;
 let category = null;
@@ -27,6 +75,15 @@ function renderLanding(categories) {
         card.appendChild(label);
         grid.appendChild(card);
     });
+    // Attach chatbox event listeners after rendering
+    const chatboxSend = document.getElementById('chatbox-send');
+    const chatboxInput = document.getElementById('chatbox-input');
+    if (chatboxSend && chatboxInput) {
+        chatboxSend.onclick = handleChatboxEntry;
+        chatboxInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') handleChatboxEntry();
+        });
+    }
 }
 
 function startInteraction(selectedCategory) {

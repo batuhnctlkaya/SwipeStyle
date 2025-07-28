@@ -1,3 +1,22 @@
+def detect_category_from_query(query):
+    # Use Gemini to extract category from user query
+    try:
+        model = genai.GenerativeModel('gemini-2.5-flash')
+        prompt = (
+            f"Kullanıcı şu ürünü arıyor: '{query}'. "
+            "Bu isteğe en uygun kategori hangisi? Sadece kategori adını (ör: Mouse, Headphones, Phone, Laptop) tek kelime olarak döndür."
+        )
+        response = model.generate_content(prompt)
+        category = response.text.strip().split()[0]
+        # Validate against known categories
+        with open('categories.json', 'r', encoding='utf-8') as f:
+            categories = json.load(f)
+        for cat in categories:
+            if cat.lower() in category.lower():
+                return cat
+        return None
+    except Exception:
+        return None
 import json
 import os
 from dotenv import load_dotenv

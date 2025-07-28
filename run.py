@@ -1,9 +1,17 @@
+
 import json
 from flask import Flask, request, jsonify, send_from_directory
 from app.agent import Agent
+from app.agent import detect_category_from_query
 
 app = Flask(__name__, static_folder='website')
 agent = Agent()
+@app.route('/detect_category', methods=['POST'])
+def detect_category():
+    data = request.json
+    query = data.get('query', '')
+    category = detect_category_from_query(query)
+    return jsonify({'category': category})
 
 @app.route('/')
 def index():
