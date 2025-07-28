@@ -1,0 +1,11 @@
+{
+  "Headphones": {
+    "specs": ["Kablosuz", "ANC", "Bass", "Mikrofon Kalitesi", "Kulak İçi", "Kulak Üstü"]
+  },
+  "Laptop": {
+    "specs": ["RAM", "SSD", "Ekran Boyutu", "Pil Ömrü", "Ağırlık"]
+  },
+  "Smartphone": {
+    "specs": ["Kamera", "Batarya", "Ekran", "Depolama", "İşlemci"]
+  }
+}
