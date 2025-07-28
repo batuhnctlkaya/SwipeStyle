@@ -154,12 +154,10 @@ function handleOption(opt) {
 function askAgent() {
     document.querySelector('.loading').style.display = '';
     document.querySelector('.error').textContent = '';
-    // Show custom loading only when fetching recommendations
-    if (step > 0 && category) {
-        const specs = window.currentSpecs || [];
-        if (step > specs.length) {
-            showLoadingScreen();
-        }
+    // Show custom loading widget only when fetching recommendations
+    let specs = window.currentSpecs && window.currentSpecs[category] ? window.currentSpecs[category] : [];
+    if (step > specs.length) {
+        showLoadingScreen();
     }
     fetch('/ask', {
         method: 'POST',
@@ -169,6 +167,7 @@ function askAgent() {
     .then(res => res.json())
     .then(data => {
         if (data.question && data.options) {
+            hideLoadingScreen();
             renderQuestion(data.question, data.options, data.emoji);
         } else if (data.recommendations) {
             renderRecommendations(data.recommendations);
