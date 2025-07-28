@@ -20,43 +20,61 @@ class Agent:
         answers = data.get('answers', [])
 
         if step == 0:
-            return {'question': 'Hangi ürün türünü seçmek istersiniz?', 'options': list(self.categories.keys())}
-        elif step == 1 and category:
+            return {'question': 'What tech are you shopping for?', 'options': list(self.categories.keys())}
+        elif category:
             specs = self.categories.get(category, {}).get('specs', [])
-            if specs:
-                return {'question': f'{category} için hangi özellikleri tercih edersiniz?', 'options': specs}
+            if step > 0 and step <= len(specs):
+                spec = specs[step-1]
+                return {
+                    'question': spec['question'],
+                    'emoji': spec.get('emoji', ''),
+                    'options': ['Yes', 'No']
+                }
+            elif step > len(specs):
+                # Use Gemini for recommendations
+                selected_specs = [specs[i]['key'] for i, ans in enumerate(answers) if ans == 'Yes']
+                prompt = self._build_prompt_with_links(category, selected_specs)
+                try:
+                    model = genai.GenerativeModel('gemini-2.5-flash')
+                    response = model.generate_content(prompt)
+                    recs = self._parse_gemini_links_response(response.text)
+                    return {'recommendations': recs}
+                except Exception as e:
+                    return {'error': f'Gemini API hatası: {str(e)}'}
             else:
-                return {'question': 'Bu kategori için özellik bulunamadı.', 'options': []}
-        elif step == 2 and category and answers:
-            # Use Gemini for recommendations
-            prompt = self._build_prompt(category, answers)
-            try:
-                model = genai.GenerativeModel('gemini-2.5-flash')
-                response = model.generate_content(prompt)
-                recs = self._parse_gemini_response(response.text)
-                return {'recommendations': recs}
-            except Exception as e:
-                return {'error': f'Gemini API hatası: {str(e)}'}
+                return {'error': 'Geçersiz adım veya veri.'}
         else:
             return {'error': 'Geçersiz adım veya veri.'}
 
-    def _build_prompt(self, category, answers):
+    def _build_prompt_with_links(self, category, answers):
         answer_str = ', '.join(answers)
         return (
             f"Türk pazarında '{category}' kategorisinde, şu özelliklere sahip ürünler öner: {answer_str}. "
-            "Farklı fiyat aralıklarında 2-3 ürün öner, isim ve tahmini fiyatı belirt. Sadece tablo veya kısa liste olarak dön."
+            "Her ürün için isim, tahmini fiyat ve doğrudan akakce.com'daki ürün sayfasına giden bir link ver. Sadece aşağıdaki örnekteki gibi kısa bir tablo olarak dön.\n"
+            "\nÖrnek çıktı:\n"
+            "ASUS Vivobook 15 X1502ZA (i5-1235U, 16GB RAM, 512GB SSD) - 15.000 TL - https://www.akakce.com/arama/?q=ASUS+Vivobook+15+X1502ZA\n"
+            "HP Victus 15-fa0010nt (i5, 16GB RAM, 512GB SSD) - 18.000 TL - https://www.akakce.com/arama/?q=HP+Victus+15-fa0010nt\n"
+            "\nLütfen sadece bu formatta dön: Ürün Adı - Fiyat - Link."
         )
 
-    def _parse_gemini_response(self, text):
-        # Simple parser for Gemini's response
+    def _parse_gemini_links_response(self, text):
+        # Parse Gemini response for name and price, then generate Akakce search link
+        import re
         lines = text.split('\n')
         recs = []
         for line in lines:
-            parts = line.split('-')
+            # Ignore lines that are just 'Fiyat', 'Link', or empty
+            if not line.strip() or 'Fiyat' in line or 'Link' in line:
+                continue
+            parts = [p.strip() for p in re.split(r'\||-', line) if p.strip()]
             if len(parts) >= 2:
-                name = parts[0].strip()
-                price = parts[1].strip()
-                recs.append({'name': name, 'price': price})
+                name = parts[0]
+                price = parts[1]
+                # Generate Akakce search URL
+                search_query = re.sub(r'[^\w\s]', '', name)
+                search_query = re.sub(r'\s+', '+', search_query)
+                akakce_url = f'https://www.akakce.com/arama/?q={search_query}'
+                recs.append({'name': name, 'price': price, 'link': akakce_url})
         if not recs:
-            recs.append({'name': text.strip(), 'price': ''})
+            recs.append({'name': text.strip(), 'price': '', 'link': ''})
         return recs

@@ -5,15 +5,46 @@
     <title>SwipeStyle Ürün Tavsiye</title>
     <script src="main.js" defer></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
+        body { font-family: Arial, sans-serif; margin: 0; background: #fafbfc; }
+        .landing { max-width: 600px; margin: 0 auto; }
+        .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; justify-items: center; margin-bottom: 40px; }
+        .category-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            width: 200px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .category-card:hover {
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+        }
+        .category-icon {
+            font-size: 3.5em;
+            margin-bottom: 18px;
+        }
+        .category-label {
+            font-size: 1.3em;
+            font-weight: 500;
+            color: #222;
+        }
         .question { font-size: 1.2em; margin-bottom: 20px; }
         .options button { margin: 5px; padding: 10px 20px; }
         .recommendation { margin-top: 30px; }
     </style>
 </head>
 <body>
-    <h1>SwipeStyle Ürün Tavsiye Sistemi</h1>
-    <div id="interaction">
+    <div class="landing">
+        <h1 style="text-align:center; margin-top:40px; font-size:2.2em;">What tech are you shopping for?</h1>
+        <p style="text-align:center; color:#6c6c6c; font-size:1.2em; margin-bottom:40px;">Pick a category to start your personalized discovery journey</p>
+        <div class="card-grid" id="category-cards"></div>
+    </div>
+    <div id="interaction" style="display:none;">
         <div class="loading" style="color: gray; margin-bottom: 20px;">Yükleniyor...</div>
         <div class="question"></div>
         <div class="options"></div>

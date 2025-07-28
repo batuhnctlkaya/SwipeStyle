@@ -1,11 +1,39 @@
 {
+  "Mouse": {
+    "specs": [
+      {"key": "Kablosuz", "question": "Kablosuz mouse ister misiniz?", "emoji": "🖱️"},
+      {"key": "Ergonomik", "question": "Ergonomik tasarım önemli mi?", "emoji": "🖐️"},
+      {"key": "DPI", "question": "Yüksek DPI ister misiniz?", "emoji": "🎯"},
+      {"key": "Makro Tuşlar", "question": "Makro tuşlar gerekli mi?", "emoji": "🔲"},
+      {"key": "RGB", "question": "RGB ışıklandırma ister misiniz?", "emoji": "🌈"}
+    ]
+  },
   "Headphones": {
-    "specs": ["Kablosuz", "ANC", "Bass", "Mikrofon Kalitesi", "Kulak İçi", "Kulak Üstü"]
+    "specs": [
+      {"key": "Kablosuz", "question": "Kablosuz kulaklık ister misiniz?", "emoji": "🎧"},
+      {"key": "ANC", "question": "Aktif gürültü engelleme önemli mi?", "emoji": "🔇"},
+      {"key": "Bass", "question": "Güçlü bass ister misiniz?", "emoji": "🎵"},
+      {"key": "Mikrofon Kalitesi", "question": "Mikrofon kalitesi önemli mi?", "emoji": "🎤"},
+      {"key": "Kulak İçi", "question": "Kulak içi mi tercih edersiniz?", "emoji": "👂"},
+      {"key": "Kulak Üstü", "question": "Kulak üstü mü tercih edersiniz?", "emoji": "🦻"}
+    ]
+  },
+  "Phone": {
+    "specs": [
+      {"key": "Kamera", "question": "İyi bir kamera ister misiniz?", "emoji": "📸"},
+      {"key": "Batarya", "question": "Uzun pil ömrü önemli mi?", "emoji": "🔋"},
+      {"key": "Ekran", "question": "Büyük ekran ister misiniz?", "emoji": "📱"},
+      {"key": "Depolama", "question": "Fazla depolama alanı ister misiniz?", "emoji": "💾"},
+      {"key": "İşlemci", "question": "Güçlü işlemci önemli mi?", "emoji": "⚡"}
+    ]
   },
   "Laptop": {
-    "specs": ["RAM", "SSD", "Ekran Boyutu", "Pil Ömrü", "Ağırlık"]
-  },
-  "Smartphone": {
-    "specs": ["Kamera", "Batarya", "Ekran", "Depolama", "İşlemci"]
+    "specs": [
+      {"key": "RAM", "question": "Yüksek RAM kapasitesi ister misiniz?", "emoji": "🧠"},
+      {"key": "SSD", "question": "SSD disk ister misiniz?", "emoji": "💽"},
+      {"key": "Ekran Boyutu", "question": "Büyük ekran ister misiniz?", "emoji": "🖥️"},
+      {"key": "Pil Ömrü", "question": "Uzun pil ömrü önemli mi?", "emoji": "🔋"},
+      {"key": "Ağırlık", "question": "Hafif bir laptop ister misiniz?", "emoji": "🏋️"}
+    ]
   }
 }
