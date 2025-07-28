@@ -94,7 +94,7 @@ function renderQuestion(question, options, emoji) {
 function renderRecommendations(recs) {
     hideLoadingScreen();
     const recDiv = document.querySelector('.recommendation');
-    recDiv.innerHTML = '<h2>Önerilen Ürünler</h2>' + recs.map(r => {
+    let html = '<h2>Önerilen Ürünler</h2>' + recs.map(r => {
         let linkHtml = '';
         let url = r.link || '';
         if (url && !url.startsWith('http') && url.length > 5) {
@@ -105,7 +105,20 @@ function renderRecommendations(recs) {
         }
         return `<div style="margin-bottom:18px;">${r.name} - ${r.price}${linkHtml}</div>`;
     }).join('');
+    html += `<div style="margin-top:32px;text-align:center;"><button id="back-to-categories" style="padding:12px 32px;font-size:1.1em;border-radius:12px;border:none;background:#a18cd1;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.08);">Yeni arama yap</button></div>`;
+    recDiv.innerHTML = html;
     document.querySelector('.error').textContent = '';
+    document.getElementById('back-to-categories').onclick = () => {
+        document.getElementById('interaction').style.display = 'none';
+        document.querySelector('.landing').style.display = '';
+        document.querySelector('.recommendation').innerHTML = '';
+        document.querySelector('.question').innerHTML = '';
+        document.querySelector('.options').innerHTML = '';
+        document.querySelector('.error').textContent = '';
+        step = 0;
+        category = null;
+        answers = [];
+    };
 }
 
 function showLoadingScreen() {
