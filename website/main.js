@@ -8,23 +8,25 @@ function handleChatboxEntry() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: input })
     })
-    .then(res => res.json())
-    .then(data => {
+    .then(async res => {
+        let data = await res.json();
         hideLoadingScreen();
-        if (data.category) {
+        if (res.ok && data.category) {
             category = data.category;
             step = 1;
             answers = [];
             document.querySelector('.landing').style.display = 'none';
             document.getElementById('interaction').style.display = '';
             askAgent();
+        } else if (data.error) {
+            alert(data.error);
         } else {
-            alert('Could not determine a product category. Please try again.');
+            alert('Kategori tespit edilemedi veya oluşturulamadı. Lütfen daha açık bir istek girin.');
         }
     })
     .catch(() => {
         hideLoadingScreen();
-        alert('Could not process your request.');
+        alert('Sunucuya erişilemiyor. Lütfen daha sonra tekrar deneyin.');
     });
 }
 

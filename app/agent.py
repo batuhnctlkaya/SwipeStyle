@@ -77,11 +77,11 @@ class Agent:
     def _build_prompt_with_links(self, category, answers):
         answer_str = ', '.join(answers)
         return (
-            f"Türk pazarında '{category}' kategorisinde, şu özelliklere sahip ürünler öner: {answer_str}. "
+            f"Türk pazarında google shop üzerinde '{category}' kategorisinde, şu özelliklere sahip ürünler öner: {answer_str}. "
             "Her ürün için isim, tahmini fiyat ve doğrudan akakce.com'daki ürün sayfasına giden bir link ver. Sadece aşağıdaki örnekteki gibi kısa bir tablo olarak dön.\n"
             "\nÖrnek çıktı:\n"
-            "ASUS Vivobook 15 X1502ZA (i5-1235U, 16GB RAM, 512GB SSD) - 15.000 TL - https://www.akakce.com/arama/?q=ASUS+Vivobook+15+X1502ZA\n"
-            "HP Victus 15-fa0010nt (i5, 16GB RAM, 512GB SSD) - 18.000 TL - https://www.akakce.com/arama/?q=HP+Victus+15-fa0010nt\n"
+            "ASUS Vivobook 15 X1502ZA (i5-1235U, 16GB RAM, 512GB SSD) - 15.000 TL - (LINK)\n"
+            "HP Victus 15-fa0010nt (i5, 16GB RAM, 512GB SSD) - 18.000 TL - (LINK)\n"
             "\nLütfen sadece bu formatta dön: Ürün Adı - Fiyat - Link."
         )
 
