@@ -38,32 +38,41 @@ class Agent:
         category = data.get('category')
         answers = data.get('answers', [])
 
-        if step == 0:
+        # Step 0: ask for category if not provided
+        if step == 0 or not category:
             return {'question': 'What tech are you shopping for?', 'options': list(self.categories.keys())}
-        elif category:
-            specs = self.categories.get(category, {}).get('specs', [])
-            if step > 0 and step <= len(specs):
-                spec = specs[step-1]
-                return {
-                    'question': spec['question'],
-                    'emoji': spec.get('emoji', ''),
-                    'options': ['Yes', 'No']
-                }
-            elif step > len(specs):
-                # Use Gemini for recommendations
-                selected_specs = [specs[i]['key'] for i, ans in enumerate(answers) if ans == 'Yes']
-                prompt = self._build_prompt_with_links(category, selected_specs)
-                try:
-                    model = genai.GenerativeModel('gemini-2.5-flash')
-                    response = model.generate_content(prompt)
-                    recs = self._parse_gemini_links_response(response.text)
-                    return {'recommendations': recs}
-                except Exception as e:
-                    return {'error': f'Gemini API hatası: {str(e)}'}
-            else:
-                return {'error': 'Geçersiz adım veya veri.'}
-        else:
-            return {'error': 'Geçersiz adım veya veri.'}
+
+        # Validate category
+        if category not in self.categories:
+            return {'error': f"Kategori bulunamadı: {category}. Lütfen geçerli bir kategori seçin."}
+
+        specs = self.categories[category].get('specs', [])
+        if not specs:
+            return {'error': f"'{category}' için özellik bulunamadı."}
+
+        # Ask spec questions one by one
+        if step > 0 and step <= len(specs):
+            spec = specs[step-1]
+            return {
+                'question': spec.get('question', ''),
+                'emoji': spec.get('emoji', ''),
+                'options': ['Yes', 'No']
+            }
+
+        # After all questions, recommend products
+        if step > len(specs):
+            selected_specs = [specs[i]['key'] for i, ans in enumerate(answers) if ans == 'Yes']
+            prompt = self._build_prompt_with_links(category, selected_specs)
+            try:
+                model = genai.GenerativeModel('gemini-2.5-flash')
+                response = model.generate_content(prompt)
+                recs = self._parse_gemini_links_response(response.text)
+                return {'recommendations': recs}
+            except Exception as e:
+                return {'error': f'Gemini API hatası: {str(e)}'}
+
+        # Fallback error
+        return {'error': 'Geçersiz adım veya veri.'}
 
     def _build_prompt_with_links(self, category, answers):
         answer_str = ', '.join(answers)
