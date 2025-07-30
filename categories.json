@@ -1,5 +1,4 @@
 {
-  "_comment": "SwipeStyle Kategori Tanımları - Bu dosya, SwipeStyle uygulamasında kullanılan ürün kategorilerini ve her kategori için sorulacak soruları tanımlar. Her kategori için: specs: Kategori özellikleri listesi, key: Özellik anahtarı (backend'de kullanılır), question: Kullanıcıya sorulacak soru, emoji: Soru ile birlikte gösterilecek emoji. Yeni kategori eklemek için: 1. Kategori adını anahtar olarak ekleyin 2. specs array'ine özellikleri ekleyin 3. Her özellik için key, question ve emoji tanımlayın",
   "Mouse": {
     "specs": [
       {"key": "Kablosuz", "question": "Kablosuz mouse mu arıyorsunuz? 🎯", "emoji": "🖱️"},
