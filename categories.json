@@ -1,0 +1,147 @@
+{
+  "Headphones": {
+    "specs": [
+      {
+        "id": "form_factor",
+        "type": "single_choice",
+        "label": {"tr": "Form faktörü nedir?", "en": "Preferred form factor?"},
+        "emoji": "🎧",
+        "options": [
+          {"id": "in_ear", "label": {"tr": "Kulak içi", "en": "In-ear"}},
+          {"id": "over_ear", "label": {"tr": "Kulak üstü", "en": "Over-ear"}},
+          {"id": "no_preference", "label": {"tr": "Fark etmez", "en": "No preference"}}
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "wireless",
+        "type": "boolean",
+        "label": {"tr": "Kablosuz olsun mu?", "en": "Wireless?"},
+        "emoji": "📶",
+        "weight": 0.9
+      },
+      {
+        "id": "anc",
+        "type": "boolean",
+        "label": {"tr": "Aktif gürültü engelleme (ANC) önemli mi?", "en": "Is ANC important?"},
+        "emoji": "🔇",
+        "weight": 1.0
+      },
+      {
+        "id": "mic_quality",
+        "type": "boolean",
+        "label": {"tr": "Mikrofon kalitesi önemli mi?", "en": "Is mic quality important?"},
+        "emoji": "🎤",
+        "weight": 0.7
+      },
+      {
+        "id": "battery_life_hours",
+        "type": "number",
+        "label": {"tr": "Minimum pil ömrü (saat)?", "en": "Min battery life (hours)?"},
+        "emoji": "🔋",
+        "weight": 0.6,
+        "depends_on": [{"id": "wireless", "eq": true}],
+        "min": 0, "max": 80
+      },
+      {
+        "id": "water_resistance",
+        "type": "boolean",
+        "label": {"tr": "Suya dayanıklılık ister misiniz?", "en": "Need water resistance?"},
+        "emoji": "💧",
+        "weight": 0.4,
+        "depends_on": [{"id": "form_factor", "eq": "in_ear"}]
+      }
+    ]
+  },
+  "Phone": {
+    "specs": [
+      {
+        "id": "screen_size",
+        "type": "single_choice",
+        "label": {"tr": "Ekran boyutu tercihiniz?", "en": "Preferred screen size?"},
+        "emoji": "📱",
+        "options": [
+          {"id": "compact", "label": {"tr": "Kompakt (≤6.1\")", "en": "Compact (≤6.1\")"}},
+          {"id": "standard", "label": {"tr": "Standart (6.1-6.7\")", "en": "Standard (6.1-6.7\")"}},
+          {"id": "large", "label": {"tr": "Büyük (≥6.7\")", "en": "Large (≥6.7\")"}},
+          {"id": "no_preference", "label": {"tr": "Fark etmez", "en": "No preference"}}
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "operating_system",
+        "type": "single_choice",
+        "label": {"tr": "İşletim sistemi tercihi?", "en": "Operating system preference?"},
+        "emoji": "⚙️",
+        "options": [
+          {"id": "ios", "label": {"tr": "iOS (iPhone)", "en": "iOS (iPhone)"}},
+          {"id": "android", "label": {"tr": "Android", "en": "Android"}},
+          {"id": "no_preference", "label": {"tr": "Fark etmez", "en": "No preference"}}
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "camera_quality",
+        "type": "single_choice",
+        "label": {"tr": "Kamera kalitesi ne kadar önemli?", "en": "How important is camera quality?"},
+        "emoji": "📸",
+        "options": [
+          {"id": "basic", "label": {"tr": "Temel yeterli", "en": "Basic is enough"}},
+          {"id": "good", "label": {"tr": "İyi olsun", "en": "Good quality"}},
+          {"id": "excellent", "label": {"tr": "Mükemmel olsun", "en": "Excellent quality"}},
+          {"id": "no_preference", "label": {"tr": "Fark etmez", "en": "No preference"}}
+        ],
+        "weight": 0.9
+      },
+      {
+        "id": "storage_capacity",
+        "type": "single_choice",
+        "label": {"tr": "Depolama kapasitesi?", "en": "Storage capacity?"},
+        "emoji": "💾",
+        "options": [
+          {"id": "64gb", "label": {"tr": "64GB yeterli", "en": "64GB enough"}},
+          {"id": "128gb", "label": {"tr": "128GB", "en": "128GB"}},
+          {"id": "256gb", "label": {"tr": "256GB", "en": "256GB"}},
+          {"id": "512gb", "label": {"tr": "512GB+", "en": "512GB+"}},
+          {"id": "no_preference", "label": {"tr": "Fark etmez", "en": "No preference"}}
+        ],
+        "weight": 0.8
+      },
+      {
+        "id": "gaming_performance",
+        "type": "boolean",
+        "label": {"tr": "Oyun performansı önemli mi?", "en": "Is gaming performance important?"},
+        "emoji": "🎮",
+        "weight": 0.7
+      },
+      {
+        "id": "battery_life",
+        "type": "single_choice",
+        "label": {"tr": "Pil ömrü beklentiniz?", "en": "Battery life expectation?"},
+        "emoji": "🔋",
+        "options": [
+          {"id": "all_day", "label": {"tr": "Tüm gün (8-12 saat)", "en": "All day (8-12 hours)"}},
+          {"id": "heavy_use", "label": {"tr": "Yoğun kullanım (12+ saat)", "en": "Heavy use (12+ hours)"}},
+          {"id": "no_preference", "label": {"tr": "Fark etmez", "en": "No preference"}}
+        ],
+        "weight": 0.8
+      },
+      {
+        "id": "brand_preference",
+        "type": "single_choice",
+        "label": {"tr": "Marka tercihiniz var mı?", "en": "Any brand preference?"},
+        "emoji": "🏷️",
+        "options": [
+          {"id": "apple", "label": {"tr": "Apple", "en": "Apple"}},
+          {"id": "samsung", "label": {"tr": "Samsung", "en": "Samsung"}},
+          {"id": "xiaomi", "label": {"tr": "Xiaomi", "en": "Xiaomi"}},
+          {"id": "google", "label": {"tr": "Google Pixel", "en": "Google Pixel"}},
+          {"id": "oneplus", "label": {"tr": "OnePlus", "en": "OnePlus"}},
+          {"id": "no_preference", "label": {"tr": "Fark etmez", "en": "No preference"}}
+        ],
+        "weight": 0.6,
+        "depends_on": [{"id": "operating_system", "eq": "android"}]
+      }
+    ]
+  }
+}
