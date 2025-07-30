@@ -1,3 +1,5 @@
+# SwipeStyle Debug Output Dosyası - Bu dosya, SwipeStyle uygulamasının debug çıktılarını içerir. Gemini AI'dan gelen prompt'lar ve yanıtlar burada saklanır. Dosya İçeriği: PROMPT: Gemini AI'ya gönderilen prompt, OUTPUT: Gemini AI'dan gelen yanıt, EXCEPTION: Hata durumları. Bu dosya, yeni kategori oluşturma sürecinde debug amaçlı kullanılır. Geliştirme sırasında AI yanıtlarını incelemek için faydalıdır. Not: Bu dosya otomatik olarak oluşturulur ve güncellenir. Manuel olarak düzenlemeyin.
+
 PROMPT:
 'Vantilatör' kategorisi için Türkçe olarak 3-5 soru ve emoji öner. Her soru için bir anahtar (key), bir soru (question), bir emoji (emoji) içeren bir JSON listesi döndür.
 Örnek çıktı: [{"key": "brand", "question": "Hangi markayı tercih edersiniz?", "emoji": "🏷️"}, ...]

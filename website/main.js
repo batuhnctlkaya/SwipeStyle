@@ -1,4 +1,47 @@
+/**
+ * SwipeStyle Frontend JavaScript Modülü
+ * =====================================
+ * 
+ * Bu dosya, SwipeStyle uygulamasının frontend JavaScript kodlarını içerir.
+ * Kullanıcı arayüzü etkileşimlerini yönetir, API çağrıları yapar ve
+ * dinamik içerik güncellemeleri sağlar.
+ * 
+ * Ana Özellikler:
+ * - Kategori kartları render etme
+ * - Soru-cevap akışı yönetimi
+ * - Loading ekranları
+ * - Ürün önerileri gösterimi
+ * - Hata yönetimi
+ * 
+ * API Endpoint'leri:
+ * - /detect_category: Kategori tespiti
+ * - /categories: Kategori listesi
+ * - /ask: Soru-cevap akışı
+ * 
+ * Kullanım:
+ * HTML dosyasında defer ile yüklenir
+ * Sayfa yüklendiğinde otomatik olarak başlatılır
+ */
+
 // Chatbox logic
+/**
+ * Kullanıcının arama kutusuna yazdığı sorguyu işler.
+ * 
+ * Bu fonksiyon, kullanıcının arama kutusuna yazdığı metni alır
+ * ve backend'e göndererek kategori tespiti yapar. Eğer kategori
+ * bulunursa, soru-cevap akışını başlatır.
+ * 
+ * İşlem Adımları:
+ * 1. Arama kutusundan metni alır
+ * 2. Loading ekranını gösterir
+ * 3. /detect_category endpoint'ine POST isteği gönderir
+ * 4. Yanıtı işler ve akışı başlatır
+ * 
+ * Hata Durumları:
+ * - Boş sorgu: İşlem yapılmaz
+ * - API hatası: Kullanıcıya hata mesajı gösterilir
+ * - Kategori bulunamadı: Uyarı mesajı gösterilir
+ */
 function handleChatboxEntry() {
     const input = document.getElementById('chatbox-input').value.trim();
     if (!input) return;
@@ -30,6 +73,20 @@ function handleChatboxEntry() {
     });
 }
 
+/**
+ * Sayfa yüklendiğinde çalışan ana fonksiyon.
+ * 
+ * Bu fonksiyon, sayfa tamamen yüklendiğinde çalışır ve:
+ * 1. Kategorileri backend'den yükler
+ * 2. Kategori kartlarını render eder
+ * 3. Event listener'ları ayarlar
+ * 
+ * Yapılan İşlemler:
+ * - /categories endpoint'inden kategori listesi alınır
+ * - Her kategori için özellikler (specs) kaydedilir
+ * - Kategori kartları oluşturulur
+ * - Arama kutusu event listener'ları eklenir
+ */
 window.onload = () => {
     // Get categories and specs from backend
     fetch('/categories')
@@ -49,10 +106,17 @@ window.onload = () => {
     });
 };
 
-let step = 0;
-let category = null;
-let answers = [];
+// Global değişkenler
+let step = 0;        // Mevcut adım (0: kategori seçimi, 1-N: sorular)
+let category = null; // Seçilen kategori
+let answers = [];    // Verilen cevaplar listesi
 
+/**
+ * Kategori ikonları sözlüğü.
+ * 
+ * Her kategori için emoji ikonu tanımlar.
+ * Eğer kategori bu listede yoksa, varsayılan olarak 🔍 kullanılır.
+ */
 const categoryIcons = {
     'Mouse': '🖱️',
     'Headphones': '🎧',
@@ -60,6 +124,21 @@ const categoryIcons = {
     'Laptop': '💻'
 };
 
+/**
+ * Ana sayfa kategori kartlarını render eder.
+ * 
+ * Bu fonksiyon, backend'den gelen kategori listesini alır
+ * ve her kategori için tıklanabilir kart oluşturur.
+ * 
+ * Args:
+ *     categories (Array): Kategori adları listesi
+ * 
+ * Oluşturulan Kartlar:
+ * - Her kart tıklanabilir
+ * - Kategori ikonu ve adı gösterilir
+ * - Hover efektleri vardır
+ * - Tıklandığında startInteraction() çağrılır
+ */
 function renderLanding(categories) {
     const grid = document.getElementById('category-cards');
     grid.innerHTML = '';
@@ -88,6 +167,22 @@ function renderLanding(categories) {
     }
 }
 
+/**
+ * Kategori seçimi sonrası etkileşimi başlatır.
+ * 
+ * Bu fonksiyon, kullanıcı bir kategori seçtiğinde çağrılır.
+ * Global değişkenleri günceller ve soru-cevap akışını başlatır.
+ * 
+ * Args:
+ *     selectedCategory (string): Seçilen kategori adı
+ * 
+ * Yapılan İşlemler:
+ * - Global category değişkeni güncellenir
+ * - step 1'e ayarlanır
+ * - answers listesi temizlenir
+ * - Ana sayfa gizlenir, etkileşim alanı gösterilir
+ * - askAgent() çağrılır
+ */
 function startInteraction(selectedCategory) {
     category = selectedCategory;
     step = 1;
@@ -97,6 +192,23 @@ function startInteraction(selectedCategory) {
     askAgent();
 }
 
+/**
+ * Soru kartını render eder.
+ * 
+ * Bu fonksiyon, backend'den gelen soru verilerini alır
+ * ve kullanıcı dostu bir kart şeklinde gösterir.
+ * 
+ * Args:
+ *     question (string): Soru metni
+ *     options (Array): Seçenekler listesi (genellikle ["Yes", "No"])
+ *     emoji (string): Soru ile ilgili emoji
+ * 
+ * Oluşturulan Kart:
+ * - Gradient arka plan
+ * - Emoji, soru metni ve seçenek butonları
+ * - Responsive tasarım
+ * - Hover efektleri
+ */
 function renderQuestion(question, options, emoji) {
     document.querySelector('.loading').style.display = 'none';
     const qDiv = document.querySelector('.question');
@@ -150,6 +262,22 @@ function renderQuestion(question, options, emoji) {
     document.querySelector('.error').textContent = '';
 }
 
+/**
+ * Ürün önerilerini render eder.
+ * 
+ * Bu fonksiyon, backend'den gelen ürün önerilerini alır
+ * ve kullanıcı dostu bir liste şeklinde gösterir.
+ * 
+ * Args:
+ *     recs (Array): Ürün önerileri listesi
+ *         Her öneri: {name: string, price: string, link: string}
+ * 
+ * Oluşturulan İçerik:
+ * - Başlık: "Önerilen Ürünler"
+ * - Her ürün için: ad, fiyat ve satın alma linki
+ * - "Yeni arama yap" butonu
+ * - Linkler yeni sekmede açılır
+ */
 function renderRecommendations(recs) {
     hideLoadingScreen();
     const recDiv = document.querySelector('.recommendation');
@@ -180,6 +308,19 @@ function renderRecommendations(recs) {
     };
 }
 
+/**
+ * Tam ekran loading ekranını gösterir.
+ * 
+ * Bu fonksiyon, uzun süren işlemler sırasında kullanıcıya
+ * görsel geri bildirim sağlar. Özellikle ürün önerileri
+ * alınırken kullanılır.
+ * 
+ * Özellikler:
+ * - Yarı şeffaf arka plan
+ * - Dönen loading animasyonu
+ * - Bilgilendirici mesaj
+ * - Sayfanın üzerinde gösterilir (z-index: 9999)
+ */
 function showLoadingScreen() {
     hideLoadingScreen();
     const interaction = document.getElementById('interaction');
@@ -212,17 +353,57 @@ function showLoadingScreen() {
     loadingDiv.style.display = 'flex';
 }
 
+/**
+ * Loading ekranını gizler.
+ * 
+ * Bu fonksiyon, loading ekranını kaldırır ve
+ * normal sayfa içeriğini gösterir.
+ */
 function hideLoadingScreen() {
     let loadingDiv = document.getElementById('custom-loading');
     if (loadingDiv) loadingDiv.style.display = 'none';
 }
 
+/**
+ * Kullanıcı seçenek seçtiğinde çağrılır.
+ * 
+ * Bu fonksiyon, kullanıcının bir seçenek seçmesi durumunda
+ * cevabı kaydeder ve bir sonraki soruya geçer.
+ * 
+ * Args:
+ *     opt (string): Seçilen seçenek (genellikle "Yes" veya "No")
+ * 
+ * Yapılan İşlemler:
+ * - Cevap answers listesine eklenir
+ * - step bir artırılır
+ * - askAgent() çağrılarak bir sonraki soru alınır
+ */
 function handleOption(opt) {
     answers.push(opt);
     step++;
     askAgent();
 }
 
+/**
+ * Backend'den soru veya öneri alır.
+ * 
+ * Bu fonksiyon, mevcut adıma göre backend'e istek gönderir
+ * ve gelen yanıtı işler. Soru varsa render eder, öneriler
+ * varsa gösterir, hata varsa kullanıcıya bildirir.
+ * 
+ * İşlem Akışı:
+ * 1. Loading göstergesi gösterilir
+ * 2. /ask endpoint'ine POST isteği gönderilir
+ * 3. Yanıt türüne göre işlenir:
+ *    - question: renderQuestion() çağrılır
+ *    - recommendations: renderRecommendations() çağrılır
+ *    - error: Hata mesajı gösterilir
+ * 
+ * Global Değişkenler:
+ * - step: Mevcut adım
+ * - category: Seçilen kategori
+ * - answers: Verilen cevaplar listesi
+ */
 function askAgent() {
     document.querySelector('.loading').style.display = '';
     document.querySelector('.error').textContent = '';
@@ -256,6 +437,17 @@ function askAgent() {
     });
 }
 
+/**
+ * Sayfa yüklendiğinde çalışan ana fonksiyon (tekrar).
+ * 
+ * Bu fonksiyon, sayfa tamamen yüklendiğinde çalışır ve:
+ * 1. Kategorileri backend'den yükler
+ * 2. Kategori kartlarını render eder
+ * 3. Event listener'ları ayarlar
+ * 
+ * Not: Bu fonksiyon dosyanın sonunda tekrar tanımlanmıştır.
+ * İlk tanım yukarıda, bu ikinci tanım dosyanın sonunda.
+ */
 window.onload = () => {
     // Get categories and specs from backend
     fetch('/categories')

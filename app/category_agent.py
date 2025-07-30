@@ -1,3 +1,28 @@
+"""
+SwipeStyle Kategori Agent Modülü
+================================
+
+Bu modül, SwipeStyle uygulamasının kategori yönetimi işlevlerini içerir.
+Kategorileri yükler, kaydeder ve yeni kategoriler oluşturur.
+
+Ana Sınıflar:
+- CategoryAgent: Kategori yönetimi ana sınıfı
+
+Fonksiyonlar:
+- generate_specs_for_category: Yeni kategori için özellikler oluşturur
+
+Özellikler:
+- Kategori tespiti ve eşleştirme
+- Gemini AI ile yeni kategori oluşturma
+- JSON dosya yönetimi
+- Debug log'ları
+
+Gereksinimler:
+- Google Generative AI (Gemini)
+- categories.json dosyası
+- .env dosyasında GEMINI_API_KEY
+"""
+
 import json
 import os
 from dotenv import load_dotenv
@@ -10,8 +35,30 @@ if GEMINI_API_KEY:
 
 def generate_specs_for_category(category):
     """
-    Use Gemini to generate specs/questions for a new category.
-    Returns a list of spec dicts, or None if generation fails or output is invalid.
+    Gemini AI kullanarak yeni kategori için özellikler ve sorular oluşturur.
+    
+    Bu fonksiyon, Gemini AI'ya kategori adını gönderir ve o kategori
+    için uygun sorular, emojiler ve anahtar kelimeler oluşturmasını ister.
+    Sonuç JSON formatında döner ve debug için output.txt'ye yazılır.
+    
+    Args:
+        category (str): Yeni kategori adı (örn: "Tablet")
+        
+    Returns:
+        dict or list or None: Oluşturulan özellikler veya None
+        
+    Dönen Format:
+        {
+            "category_name": "Tablet",
+            "specs": [
+                {"key": "Ekran Boyutu", "question": "Büyük ekran ister misiniz?", "emoji": "📱"},
+                {"key": "Depolama", "question": "Fazla depolama alanı ister misiniz?", "emoji": "💾"}
+            ]
+        }
+        
+    Örnek:
+        >>> generate_specs_for_category("Tablet")
+        {"category_name": "Tablet", "specs": [...]}
     """
     try:
         model = genai.GenerativeModel('gemini-2.5-flash')
@@ -70,17 +117,46 @@ def generate_specs_for_category(category):
 
 class CategoryAgent:
     """
-    Manages product categories for the recommendation system.
-    - Loads and saves categories from/to categories.json
-    - Checks if a category exists for a user query
-    - If not, uses Gemini to generate specs and creates the category
+    SwipeStyle Kategori Yönetimi Ana Sınıfı
+    
+    Bu sınıf, ürün kategorilerini yönetir ve yeni kategoriler oluşturur.
+    Kategorileri JSON dosyasından yükler, kaydeder ve kullanıcı sorgularına
+    göre kategori eşleştirmesi yapar.
+    
+    Özellikler:
+    - categories_path: Kategori dosyası yolu
+    - categories: Yüklenen kategori sözlüğü
+    
+    Ana Metodlar:
+    - get_or_create_category(): Kategori tespiti/oluşturma
+    - _load_categories(): Kategorileri yükler
+    - _save_categories(): Kategorileri kaydeder
+    - get_categories(): Kategori listesi döner
+    
+    Kullanım:
+        >>> agent = CategoryAgent()
+        >>> category, created = agent.get_or_create_category("kablosuz kulaklık")
+        >>> print(category, created)
+        "Headphones" False
     """
+    
     def __init__(self, categories_path='categories.json'):
+        """
+        CategoryAgent'ı başlatır.
+        
+        Args:
+            categories_path (str): Kategori dosyasının yolu (varsayılan: 'categories.json')
+        """
         self.categories_path = categories_path
         self._load_categories()
 
     def _load_categories(self):
-        """Load categories from the JSON file, or initialize empty if not found."""
+        """
+        Kategorileri JSON dosyasından yükler.
+        
+        Eğer dosya mevcut değilse, boş bir sözlük oluşturur.
+        Bu metod, __init__ tarafından otomatik olarak çağrılır.
+        """
         if os.path.exists(self.categories_path):
             with open(self.categories_path, 'r', encoding='utf-8') as f:
                 self.categories = json.load(f)
@@ -88,15 +164,35 @@ class CategoryAgent:
             self.categories = {}
 
     def _save_categories(self):
-        """Save the current categories to the JSON file."""
+        """
+        Mevcut kategorileri JSON dosyasına kaydeder.
+        
+        Kategoriler UTF-8 encoding ile kaydedilir ve
+        Türkçe karakterler korunur.
+        """
         with open(self.categories_path, 'w', encoding='utf-8') as f:
             json.dump(self.categories, f, ensure_ascii=False, indent=2)
 
     def get_or_create_category(self, user_query_or_category):
         """
-        Given a user query or category name, return the matching category.
-        If it doesn't exist, create it using Gemini and save to file.
-        Returns (category_name, created: bool) or (None, False) if failed.
+        Kullanıcı sorgusuna göre kategori tespiti yapar veya yeni kategori oluşturur.
+        
+        Bu metod önce mevcut kategorilerde eşleşme arar. Eğer bulamazsa,
+        Gemini AI kullanarak yeni kategori oluşturur ve dosyaya kaydeder.
+        
+        Args:
+            user_query_or_category (str): Kullanıcı sorgusu veya kategori adı
+            
+        Returns:
+            tuple: (category_name, created)
+                - category_name (str): Tespit edilen/oluşturulan kategori adı
+                - created (bool): Yeni oluşturuldu mu? (True/False)
+                
+        Örnek:
+            >>> agent = CategoryAgent()
+            >>> category, created = agent.get_or_create_category("kablosuz kulaklık")
+            >>> print(f"Kategori: {category}, Yeni mi: {created}")
+            Kategori: Headphones, Yeni mi: False
         """
         # Try to match user input to an existing category
         for cat in self.categories:
@@ -120,5 +216,16 @@ class CategoryAgent:
         return None, False
 
     def get_categories(self):
-        """Return a list of all category names."""
+        """
+        Tüm kategori adlarının listesini döndürür.
+        
+        Returns:
+            list: Kategori adları listesi
+            
+        Örnek:
+            >>> agent = CategoryAgent()
+            >>> categories = agent.get_categories()
+            >>> print(categories)
+            ['Mouse', 'Headphones', 'Phone', 'Laptop']
+        """
         return list(self.categories.keys())

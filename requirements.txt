@@ -1,3 +1,27 @@
+# SwipeStyle Python Bağımlılıkları
+# =================================
+# 
+# Bu dosya, SwipeStyle uygulamasının çalışması için gerekli Python paketlerini listeler.
+# 
+# Ana Bağımlılıklar:
+# - Flask: Web framework (backend API için)
+# - dotenv: Environment variables yönetimi (.env dosyası için)
+# - google-generativeai: Gemini AI entegrasyonu (ürün önerisi için)
+# 
+# Kurulum:
+#     pip install -r requirements.txt
+# 
+# Not: GEMINI_API_KEY environment variable'ı .env dosyasında tanımlanmalıdır.
+# 
+# Kullanım:
+#     python run.py
+#     # Uygulama http://localhost:8080 adresinde çalışır
+# 
+# Geliştirme Notları:
+# - Flask debug modu açık (production'da kapatılmalı)
+# - Gemini API anahtarı .env dosyasından okunur
+# - Tüm bağımlılıklar otomatik olarak kurulur
+
 Flask
 dotenv
 google-generativeai

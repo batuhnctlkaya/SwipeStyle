@@ -1,4 +1,40 @@
+"""
+SwipeStyle Ana Agent Modülü
+===========================
+
+Bu modül, SwipeStyle uygulamasının ana akıllı agent'ını içerir.
+Kullanıcı etkileşimlerini yönetir, soru-cevap akışını kontrol eder
+ve Gemini AI kullanarak ürün önerileri sunar.
+
+Ana Sınıflar:
+- Agent: Ana agent sınıfı, kullanıcı etkileşimlerini yönetir
+
+Fonksiyonlar:
+- detect_category_from_query: Kullanıcı sorgusundan kategori tespiti
+
+Gereksinimler:
+- Google Generative AI (Gemini)
+- categories.json dosyası
+- .env dosyasında GEMINI_API_KEY
+"""
+
 def detect_category_from_query(query):
+    """
+    Kullanıcı sorgusundan kategori tespiti yapar.
+    
+    Bu fonksiyon, Gemini AI kullanarak kullanıcının yazdığı metinden
+    en uygun ürün kategorisini tespit eder.
+    
+    Args:
+        query (str): Kullanıcının arama sorgusu (örn: "kablosuz kulaklık")
+        
+    Returns:
+        str or None: Tespit edilen kategori adı veya None
+        
+    Örnek:
+        >>> detect_category_from_query("kablosuz kulaklık")
+        "Headphones"
+    """
     # Use Gemini to extract category from user query
     try:
         model = genai.GenerativeModel('gemini-2.5-flash')
@@ -17,6 +53,7 @@ def detect_category_from_query(query):
         return None
     except Exception:
         return None
+
 import json
 import os
 from dotenv import load_dotenv
@@ -28,12 +65,57 @@ if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
 class Agent:
+    """
+    SwipeStyle Ana Agent Sınıfı
+    
+    Bu sınıf, kullanıcı etkileşimlerini yönetir ve ürün önerileri sunar.
+    Soru-cevap akışını kontrol eder, kategorileri yükler ve
+    Gemini AI ile akıllı öneriler üretir.
+    
+    Özellikler:
+    - categories: Yüklenen kategori listesi
+    - state: Kullanıcı oturum durumu
+    
+    Ana Metodlar:
+    - handle(): Ana etkileşim yöneticisi
+    - _build_prompt_with_links(): Gemini için prompt oluşturur
+    - _parse_gemini_links_response(): AI yanıtını ayrıştırır
+    """
+    
     def __init__(self):
+        """
+        Agent'ı başlatır ve kategorileri yükler.
+        
+        categories.json dosyasından kategori listesini okur
+        ve kullanıcı durumu için boş state oluşturur.
+        """
         with open('categories.json', 'r', encoding='utf-8') as f:
             self.categories = json.load(f)
         self.state = {}
 
     def handle(self, data):
+        """
+        Kullanıcı etkileşimini yönetir ve uygun yanıtı döndürür.
+        
+        Bu metod, kullanıcının hangi adımda olduğunu kontrol eder:
+        - Step 0: Kategori seçimi
+        - Step 1-N: Soru-cevap akışı
+        - Step N+1: Ürün önerileri
+        
+        Args:
+            data (dict): Kullanıcı verisi
+                - step: Mevcut adım (int)
+                - category: Seçilen kategori (str)
+                - answers: Verilen cevaplar listesi (list)
+                
+        Returns:
+            dict: Yanıt verisi
+                - question: Soru metni
+                - options: Seçenekler listesi
+                - emoji: Soru emojisi
+                - recommendations: Ürün önerileri
+                - error: Hata mesajı
+        """
         step = data.get('step', 0)
         category = data.get('category')
         answers = data.get('answers', [])
@@ -75,6 +157,24 @@ class Agent:
         return {'error': 'Geçersiz adım veya veri.'}
 
     def _build_prompt_with_links(self, category, answers):
+        """
+        Gemini AI için ürün önerisi prompt'u oluşturur.
+        
+        Bu metod, seçilen kategori ve kullanıcı cevaplarına göre
+        Gemini AI'ya gönderilecek prompt'u hazırlar. Prompt,
+        Türk pazarındaki ürünleri önermesi için tasarlanmıştır.
+        
+        Args:
+            category (str): Ürün kategorisi (örn: "Headphones")
+            answers (list): Kullanıcının "Yes" dediği özellikler listesi
+            
+        Returns:
+            str: Gemini AI için hazırlanmış prompt metni
+            
+        Örnek:
+            >>> _build_prompt_with_links("Headphones", ["Kablosuz", "ANC"])
+            "Türk pazarında google shop üzerinde 'Headphones' kategorisinde..."
+        """
         answer_str = ', '.join(answers)
         return (
             f"Türk pazarında google shop üzerinde '{category}' kategorisinde, şu özelliklere sahip ürünler öner: {answer_str}. "
@@ -86,6 +186,28 @@ class Agent:
         )
 
     def _parse_gemini_links_response(self, text):
+        """
+        Gemini AI yanıtını ayrıştırır ve ürün önerilerini formatlar.
+        
+        Bu metod, Gemini AI'dan gelen metin yanıtını alır ve
+        ürün adı, fiyat ve link bilgilerini ayrıştırır. Ayrıca
+        her ürün için akakce.com arama linki oluşturur.
+        
+        Args:
+            text (str): Gemini AI'dan gelen ham yanıt metni
+            
+        Returns:
+            list: Ürün önerileri listesi
+                Her öneri: {
+                    'name': 'Ürün adı',
+                    'price': 'Fiyat bilgisi', 
+                    'link': 'Akakce arama linki'
+                }
+                
+        Örnek:
+            >>> _parse_gemini_links_response("Sony WH-1000XM4 - 2.500 TL")
+            [{'name': 'Sony WH-1000XM4', 'price': '2.500 TL', 'link': 'https://www.akakce.com/arama/?q=Sony+WH1000XM4'}]
+        """
         # Parse Gemini response for name and price, then generate Akakce search link
         import re
         lines = text.split('\n')
