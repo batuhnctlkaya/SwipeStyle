@@ -112,10 +112,10 @@ let category = null; // Seçilen kategori
 let answers = [];    // Verilen cevaplar listesi
 
 /**
- * Kategori ikonları sözlüğü - Alışveriş odaklı ikonlar.
+ * Kategori ikonları sözlüğü - Sade ve şık ikonlar.
  * 
  * Her kategori için modern emoji ikonu tanımlar.
- * Eğer kategori bu listede yoksa, varsayılan olarak 🛍️ kullanılır.
+ * Eğer kategori bu listede yoksa, varsayılan olarak 🔍 kullanılır.
  */
 const categoryIcons = {
     'Mouse': '🖱️',
@@ -125,13 +125,13 @@ const categoryIcons = {
 };
 
 /**
- * Kategori renkleri - Alışveriş odaklı renk paleti.
+ * Kategori renkleri - Sade renk paleti.
  */
 const categoryColors = {
-    'Mouse': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    'Headphones': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    'Phone': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    'Laptop': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+    'Mouse': '#3182ce',
+    'Headphones': '#805ad5',
+    'Phone': '#38a169',
+    'Laptop': '#dd6b20'
 };
 
 /**
@@ -157,20 +157,18 @@ function renderLanding(categories) {
         card.className = 'category-card';
         card.onclick = () => startInteraction(cat);
         
-        // Kategori rengini uygula
-        if (categoryColors[cat]) {
-            card.style.background = categoryColors[cat];
-            card.style.color = '#ffffff';
-        }
-        
         const icon = document.createElement('div');
         icon.className = 'category-icon';
-        icon.textContent = categoryIcons[cat] || '🛍️';
+        icon.textContent = categoryIcons[cat] || '🔍';
+        
+        // Kategori rengini uygula
+        if (categoryColors[cat]) {
+            icon.style.color = categoryColors[cat];
+        }
         
         const label = document.createElement('div');
         label.className = 'category-label';
         label.textContent = cat;
-        label.style.color = categoryColors[cat] ? '#ffffff' : '#2d3748';
         
         card.appendChild(icon);
         card.appendChild(label);
@@ -213,7 +211,7 @@ function startInteraction(selectedCategory) {
 }
 
 /**
- * Soru kartını render eder - Alışveriş odaklı tasarım.
+ * Soru kartını render eder - Sade ve şık tasarım.
  * 
  * Bu fonksiyon, backend'den gelen soru verilerini alır
  * ve kullanıcı dostu bir kart şeklinde gösterir.
@@ -224,7 +222,7 @@ function startInteraction(selectedCategory) {
  *     emoji (string): Soru ile ilgili emoji
  * 
  * Oluşturulan Kart:
- * - Gradient arka plan
+ * - Temiz arka plan
  * - Emoji, soru metni ve seçenek butonları
  * - Responsive tasarım
  * - Hover efektleri
@@ -234,65 +232,65 @@ function renderQuestion(question, options, emoji) {
     const qDiv = document.querySelector('.question');
     qDiv.innerHTML = '';
     const card = document.createElement('div');
-    card.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-    card.style.borderRadius = '30px';
-    card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+    card.style.background = '#ffffff';
+    card.style.borderRadius = '16px';
+    card.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
     card.style.width = '500px';
     card.style.margin = '40px auto';
-    card.style.padding = '50px 30px';
+    card.style.padding = '40px 30px';
     card.style.display = 'flex';
     card.style.flexDirection = 'column';
     card.style.alignItems = 'center';
     card.style.justifyContent = 'center';
     card.style.position = 'relative';
-    card.style.color = '#ffffff';
-    card.style.backdropFilter = 'blur(10px)';
+    card.style.border = '1px solid #e2e8f0';
     
     // Emoji
     const emojiDiv = document.createElement('div');
-    emojiDiv.style.fontSize = '4em';
+    emojiDiv.style.fontSize = '3.5em';
     emojiDiv.style.marginBottom = '20px';
-    emojiDiv.textContent = emoji || '🛍️';
+    emojiDiv.style.color = '#3182ce';
+    emojiDiv.textContent = emoji || '🔍';
     card.appendChild(emojiDiv);
     
     // Question
     const qText = document.createElement('div');
-    qText.style.fontSize = '1.8em';
-    qText.style.fontWeight = 'bold';
+    qText.style.fontSize = '1.6em';
+    qText.style.fontWeight = '500';
     qText.style.textAlign = 'center';
     qText.style.marginBottom = '30px';
     qText.style.lineHeight = '1.4';
+    qText.style.color = '#2d3748';
     qText.textContent = question;
     card.appendChild(qText);
     
     // Options
     const optionsDiv = document.createElement('div');
     optionsDiv.style.display = 'flex';
-    optionsDiv.style.gap = '30px';
+    optionsDiv.style.gap = '20px';
     optionsDiv.style.flexWrap = 'wrap';
     optionsDiv.style.justifyContent = 'center';
     
     options.forEach(opt => {
         const btn = document.createElement('button');
-        btn.textContent = opt === 'Yes' ? '✅ Evet' : '❌ Hayır';
-        btn.style.padding = '15px 40px';
-        btn.style.fontSize = '1.2em';
-        btn.style.borderRadius = '50px';
+        btn.textContent = opt === 'Yes' ? 'Evet' : 'Hayır';
+        btn.style.padding = '12px 32px';
+        btn.style.fontSize = '1.1em';
+        btn.style.borderRadius = '8px';
         btn.style.border = 'none';
         btn.style.cursor = 'pointer';
-        btn.style.background = opt === 'Yes' ? 'linear-gradient(45deg, #43e97b, #38f9d7)' : 'linear-gradient(45deg, #ff6b6b, #feca57)';
+        btn.style.background = opt === 'Yes' ? '#3182ce' : '#718096';
         btn.style.color = '#ffffff';
-        btn.style.fontWeight = '600';
-        btn.style.boxShadow = '0 8px 25px rgba(0,0,0,0.2)';
-        btn.style.transition = 'all 0.3s ease';
+        btn.style.fontWeight = '500';
+        btn.style.transition = 'all 0.2s ease';
         btn.onclick = () => handleOption(opt);
         btn.onmouseenter = () => {
-            btn.style.transform = 'translateY(-3px)';
-            btn.style.boxShadow = '0 12px 30px rgba(0,0,0,0.3)';
+            btn.style.transform = 'translateY(-1px)';
+            btn.style.background = opt === 'Yes' ? '#2c5aa0' : '#4a5568';
         };
         btn.onmouseleave = () => {
             btn.style.transform = 'translateY(0)';
-            btn.style.boxShadow = '0 8px 25px rgba(0,0,0,0.2)';
+            btn.style.background = opt === 'Yes' ? '#3182ce' : '#718096';
         };
         optionsDiv.appendChild(btn);
     });
@@ -303,7 +301,7 @@ function renderQuestion(question, options, emoji) {
 }
 
 /**
- * Ürün önerilerini render eder - Alışveriş odaklı tasarım.
+ * Ürün önerilerini render eder - Sade ve şık tasarım.
  * 
  * Bu fonksiyon, backend'den gelen ürün önerilerini alır
  * ve kullanıcı dostu bir liste şeklinde gösterir.
@@ -324,11 +322,11 @@ function renderRecommendations(recs) {
     
     let html = `
         <div style="text-align: center; margin-bottom: 40px;">
-            <h2 style="font-size: 2.5em; color: #ffffff; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                🎉 Önerilen Ürünler
+            <h2 style="font-size: 2.2em; color: #2d3748; margin-bottom: 16px; font-weight: 500;">
+                Önerilen Ürünler
             </h2>
-            <p style="color: #ffffff; font-size: 1.2em; opacity: 0.9;">
-                Size en uygun ürünleri bulduk!
+            <p style="color: #718096; font-size: 1.1em;">
+                Size en uygun ürünleri bulduk
             </p>
         </div>
     `;
@@ -340,29 +338,29 @@ function renderRecommendations(recs) {
             url = 'https://' + url.replace(/^(www\.)?/, '');
         }
         if (url && url.startsWith('http')) {
-            linkHtml = ` <a href="${url}" target="_blank" style="color:#ffffff; text-decoration:none; background:linear-gradient(45deg, #ff6b6b, #feca57); padding:8px 16px; border-radius:20px; font-weight:600; margin-left:10px;">🛒 Satın Al</a>`;
+            linkHtml = ` <a href="${url}" target="_blank" style="color:#ffffff; text-decoration:none; background:#3182ce; padding:8px 16px; border-radius:6px; font-weight:500; margin-left:12px;">Satın Al</a>`;
         }
         
         html += `
             <div style="
-                background: rgba(255,255,255,0.95);
-                margin-bottom: 20px;
-                padding: 25px;
-                border-radius: 20px;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-                backdrop-filter: blur(10px);
+                background: #ffffff;
+                margin-bottom: 16px;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border: 1px solid #e2e8f0;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 flex-wrap: wrap;
-                gap: 15px;
+                gap: 12px;
             ">
                 <div style="flex: 1; min-width: 200px;">
-                    <div style="font-size: 1.3em; font-weight: 600; color: #2d3748; margin-bottom: 8px;">
+                    <div style="font-size: 1.2em; font-weight: 500; color: #2d3748; margin-bottom: 6px;">
                         ${r.name}
                     </div>
-                    <div style="font-size: 1.1em; color: #ff6b6b; font-weight: 600;">
-                        💰 ${r.price}
+                    <div style="font-size: 1em; color: #3182ce; font-weight: 500;">
+                        ${r.price}
                     </div>
                 </div>
                 ${linkHtml}
@@ -371,19 +369,18 @@ function renderRecommendations(recs) {
     });
     
     html += `
-        <div style="text-align: center; margin-top: 40px;">
+        <div style="text-align: center; margin-top: 32px;">
             <button id="back-to-categories" style="
-                padding: 18px 40px;
-                font-size: 1.2em;
-                border-radius: 50px;
+                padding: 14px 32px;
+                font-size: 1.1em;
+                border-radius: 8px;
                 border: none;
-                background: linear-gradient(45deg, #667eea, #764ba2);
+                background: #3182ce;
                 color: #ffffff;
                 cursor: pointer;
-                font-weight: 600;
-                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-                transition: all 0.3s ease;
-            ">🔄 Yeni Arama Yap</button>
+                font-weight: 500;
+                transition: all 0.2s ease;
+            ">Yeni Arama Yap</button>
         </div>
     `;
     
@@ -394,12 +391,12 @@ function renderRecommendations(recs) {
     const backBtn = document.getElementById('back-to-categories');
     if (backBtn) {
         backBtn.onmouseenter = () => {
-            backBtn.style.transform = 'translateY(-3px)';
-            backBtn.style.boxShadow = '0 12px 30px rgba(0,0,0,0.3)';
+            backBtn.style.transform = 'translateY(-1px)';
+            backBtn.style.background = '#2c5aa0';
         };
         backBtn.onmouseleave = () => {
             backBtn.style.transform = 'translateY(0)';
-            backBtn.style.boxShadow = '0 8px 25px rgba(0,0,0,0.2)';
+            backBtn.style.background = '#3182ce';
         };
         backBtn.onclick = () => {
             document.getElementById('interaction').style.display = 'none';
@@ -431,20 +428,20 @@ function showNotification(message, type = 'info') {
         position: fixed;
         top: 20px;
         right: 20px;
-        padding: 15px 25px;
-        border-radius: 10px;
+        padding: 12px 20px;
+        border-radius: 8px;
         color: #ffffff;
-        font-weight: 600;
+        font-weight: 500;
         z-index: 10000;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         animation: slideIn 0.3s ease;
     `;
     
     const colors = {
-        'error': 'linear-gradient(45deg, #ff6b6b, #feca57)',
-        'warning': 'linear-gradient(45deg, #feca57, #ff9ff3)',
-        'success': 'linear-gradient(45deg, #43e97b, #38f9d7)',
-        'info': 'linear-gradient(45deg, #4facfe, #00f2fe)'
+        'error': '#e53e3e',
+        'warning': '#dd6b20',
+        'success': '#38a169',
+        'info': '#3182ce'
     };
     
     notification.style.background = colors[type] || colors.info;
@@ -474,7 +471,7 @@ function showNotification(message, type = 'info') {
 }
 
 /**
- * Tam ekran loading ekranını gösterir - Alışveriş odaklı tasarım.
+ * Tam ekran loading ekranını gösterir - Sade tasarım.
  * 
  * Bu fonksiyon, uzun süren işlemler sırasında kullanıcıya
  * görsel geri bildirim sağlar. Özellikle ürün önerileri
@@ -499,29 +496,28 @@ function showLoadingScreen() {
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(102, 126, 234, 0.9);
+            background: rgba(248, 250, 252, 0.95);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            backdrop-filter: blur(10px);
         `;
         loadingDiv.innerHTML = `
-            <div style="margin-bottom: 30px;">
+            <div style="margin-bottom: 24px;">
                 <div style="
-                    width: 80px;
-                    height: 80px;
-                    border: 8px solid rgba(255,255,255,0.3);
-                    border-top: 8px solid #ffffff;
+                    width: 60px;
+                    height: 60px;
+                    border: 4px solid #e2e8f0;
+                    border-top: 4px solid #3182ce;
                     border-radius: 50%;
                     animation: spin 1s linear infinite;
                 "></div>
             </div>
-            <div style="font-size: 1.5em; color: #ffffff; font-weight: 600; text-align: center;">
-                🛍️ Ürünler aranıyor...
+            <div style="font-size: 1.3em; color: #2d3748; font-weight: 500; text-align: center;">
+                Ürünler aranıyor...
             </div>
-            <div style="font-size: 1.1em; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center;">
+            <div style="font-size: 1em; color: #718096; margin-top: 8px; text-align: center;">
                 Size en uygun ürünleri buluyoruz
             </div>
             <style>
