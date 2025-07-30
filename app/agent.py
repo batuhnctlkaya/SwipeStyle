@@ -92,7 +92,8 @@ class Agent:
         print(f"  📊 answers_count={len(answers)}")
         print(f"  📋 specs_count={len(specs)}")
         print(f"  📝 answers={answers}")
-        print(f"  🏷️ spec_ids=[{', '.join([spec['id'] for spec in specs])}]")
+        # Fix the budge t_band issue by ensuring proper formatting of spec IDs
+        print(f"  🏷️ spec_ids=[{', '.join([spec['id'].strip() for spec in specs])}]")
         
         # answered_specs - sadece cevaplanan spec'leri işle
         for i, answer in enumerate(answers):
@@ -133,20 +134,39 @@ class Agent:
                         preferences[spec_id] = None
                         print(f"    ❌ Could not convert to number: '{answer}'")
         
-        # Budget_band özel durumu - specs'ten fazla cevap varsa son cevap budget olabilir
-        if len(answers) > len(specs):
-            extra_answers = answers[len(specs):]
-            print(f"  💰 Extra answers (potential budget): {extra_answers}")
+        # Özel bütçe kontrolü - Para birimi sembolü içeren yanıtları bütçe olarak tanı
+        for i, answer in enumerate(answers):
+            if answer and ('$' in answer or '₺' in answer):
+                preferences['budget_band'] = answer
+                print(f"  💰 Special budget detection: '{answer}' added as budget_band")
+                
+                # Bu bir spec cevabı olarak işlendiyse, bu spec'i null olarak işaretle
+                if i < len(specs):
+                    spec_id = specs[i]['id']
+                    if spec_id in preferences and spec_id != 'budget_band':
+                        preferences[spec_id] = None
+                        print(f"  ⚠️ Clearing {spec_id} since this was actually a budget answer")
+    
+        # Spec türleri ile cevap formatları arasında tutarlılık kontrolleri
+        for i, answer in enumerate(answers):
+            if i < len(specs) and answer is not None:
+                spec = specs[i]
+                spec_id = spec['id']
+                
+                # Tip uyumsuzluğu durumunda ek loglama
+                print(f"  📋 Processing spec {i}: {spec_id} = '{answer}' (type: {spec['type']})")
+                
+                # Boolean tipinde beklenen ama farklı formatta gelen cevaplar için düzeltme
+                if spec['type'] == 'boolean' and not any(kw in answer.lower() for kw in ['yes', 'no', 'evet', 'hayır', 'preference']):
+                    print(f"    ⚠️ WARNING: Expected boolean but got '{answer}'. This might indicate a spec order mismatch.")
+                
+                # Single_choice için seçenek listesiyle eşleşmeyen cevaplar için uyarı
+                if spec['type'] == 'single_choice':
+                    options = [opt['label']['en'] for opt in spec['options']] + [opt['label']['tr'] for opt in spec['options']]
+                    if answer not in options and 'preference' not in answer.lower() and 'sure' not in answer.lower():
+                        print(f"    ⚠️ WARNING: Answer '{answer}' not in options list. This might indicate a spec order mismatch.")
             
-            for extra_answer in extra_answers:
-                if extra_answer and ('₺' in str(extra_answer) or '$' in str(extra_answer) or 'k' in str(extra_answer).lower()):
-                    preferences['budget_band'] = extra_answer
-                    print(f"    ✅ Budget detected: {extra_answer}")
-                    break
-                else:
-                    print(f"    ❌ Not a budget answer: '{extra_answer}'")
-        else:
-            print(f"  📊 No extra answers (answers={len(answers)}, specs={len(specs)})")
+            # Normal işleme devam et...
         
         print(f"  🎯 Final preferences: {json.dumps(preferences, indent=2, ensure_ascii=False)}")
         return preferences
@@ -154,24 +174,40 @@ class Agent:
     def _has_unsatisfied_dependencies(self, spec, preferences):
         """Spec'in dependency'leri sağlanmıyor mu kontrol et"""
         if 'depends_on' not in spec:
+            print(f"  👍 No dependencies for {spec['id']}")
             return False
             
+        print(f"  🔍 Checking dependencies for {spec['id']}: {spec.get('depends_on')}")
+        
         for dep in spec['depends_on']:
             dep_id = dep['id']
             expected_value = dep['eq']
             
             if dep_id not in preferences:
+                print(f"  ❌ Dependency {dep_id} not answered")
                 return True  # Dependency cevaplanmamış
                 
             actual_value = preferences[dep_id]
+            print(f"  ⚙️ Dependency check: {dep_id}={actual_value}, expected={expected_value}")
             
             # No preference varsa dependency sağlanmıyor
             if actual_value == "no_preference" or actual_value is None:
+                print(f"  ❌ Dependency value is 'no_preference' or None")
                 return True
                 
+            # String/bool karşılaştırma için fix
+            if isinstance(expected_value, bool) and isinstance(actual_value, str):
+                # String to boolean conversion
+                if actual_value.lower() in ['true', 'yes', 'evet']:
+                    actual_value = True
+                elif actual_value.lower() in ['false', 'no', 'hayır']:
+                    actual_value = False
+            
             if actual_value != expected_value:
+                print(f"  ❌ Dependency value doesn't match: {actual_value} != {expected_value}")
                 return True  # Dependency sağlanmıyor
-                
+        
+        print(f"  ✅ All dependencies satisfied for {spec['id']}")
         return False  # Tüm dependency'ler sağlanıyor
 
     def _calculate_confidence_score(self, preferences, specs):
@@ -227,7 +263,9 @@ class Agent:
             return budget_question
         
         return None  # Artık öneriye geç
-
+    """
+    BURAYA TEKRAR BAKALIM
+    """
     def _check_conflicts(self, specs, preferences, language):
         """Çelişki kontrolü"""
         # Örnek: aynı kategoride farklı seçimler
@@ -312,7 +350,9 @@ class Agent:
             
         numeric_missing = [
             spec for spec in specs 
-            if spec['type'] == 'number' and spec['id'] not in preferences
+            if spec['type'] == 'number' 
+            and spec['id'] not in preferences
+            and not self._has_unsatisfied_dependencies(spec, preferences)  # BU SATIR EKLENDİ
         ]
         
         print(f"  🔢 Numeric check: found {len(numeric_missing)} missing numeric specs")
@@ -334,8 +374,9 @@ class Agent:
         # Kategori-spesifik bütçe aralıkları
         budget_ranges = self._get_category_budget_ranges(category, language)
         
+        # Ensure ID is always correctly formatted without spaces
         return {
-            'id': 'budget_band',
+            'id': 'budget_band', # Consistent ID without spaces
             'type': 'single_choice',
             'question': 'What\'s your budget range?' if language == 'en' else 'Bütçe aralığın nedir?',
             'emoji': '💰',
@@ -348,45 +389,19 @@ class Agent:
     def _get_category_budget_ranges(self, category, language):
         """Kategori-spesifik bütçe aralıklarını döndür"""
         
-        # Kategori bazında bütçe aralıkları (TL ve USD)
-        category_budgets = {
-            'Headphones': {
-                'tr': ['500-1.5k₺', '1.5-3k₺', '3-6k₺', '6-12k₺', '12k₺+'],
-                'en': ['$15-50', '$50-100', '$100-200', '$200-400', '$400+']
-            },
-            'Phone': {
-                'tr': ['5-10k₺', '10-20k₺', '20-35k₺', '35-50k₺', '50k₺+'],
-                'en': ['$150-300', '$300-600', '$600-1000', '$1000-1500', '$1500+']
-            },
-            'Laptop': {
-                'tr': ['15-25k₺', '25-40k₺', '40-60k₺', '60-100k₺', '100k₺+'],
-                'en': ['$400-700', '$700-1200', '$1200-1800', '$1800-3000', '$3000+']
-            },
-            'Mouse': {
-                'tr': ['200-500₺', '500-1k₺', '1-2k₺', '2-4k₺', '4k₺+'],
-                'en': ['$10-20', '$20-40', '$40-80', '$80-150', '$150+']
-            },
-            'Keyboard': {
-                'tr': ['300-800₺', '800-1.5k₺', '1.5-3k₺', '3-6k₺', '6k₺+'],
-                'en': ['$15-30', '$30-60', '$60-120', '$120-250', '$250+']
-            },
-            'Monitor': {
-                'tr': ['3-6k₺', '6-12k₺', '12-20k₺', '20-35k₺', '35k₺+'],
-                'en': ['$100-200', '$200-400', '$400-700', '$700-1200', '$1200+']
-            }
-        }
-        
-        # Kategori mevcutsa kategori-spesifik bütçe döndür
-        if category and category in category_budgets:
-            return category_budgets[category].get(language, category_budgets[category]['en'])
+        if category and category in self.categories:
+            # categories.json'dan direkt olarak al
+            if "budget_bands" in self.categories[category]:
+                return self.categories[category]["budget_bands"].get(language, 
+                       self.categories[category]["budget_bands"]["en"])
         
         # Fallback: Genel elektronik bütçesi
-        fallback_budgets = {
-            'tr': ['1-3k₺', '3-8k₺', '8-20k₺', '20-50k₺', '50k₺+'],
-            'en': ['$30-100', '$100-250', '$250-600', '$600-1500', '$1500+']
+        default_budgets = {
+            'tr': ['1-3k₺', '3-7k₺', '7-15k₺', '15-30k₺', '30k₺+'],
+            'en': ['$30-100', '$100-200', '$200-500', '$500-1000', '$1000+']
         }
         
-        return fallback_budgets.get(language, fallback_budgets['en'])
+        return default_budgets.get(language, default_budgets["en"])
 
     def _should_show_spec(self, spec, answers, previous_specs):
         """Spec'in gösterilip gösterilmeyeceğini dependency'lere göre kontrol et"""
@@ -438,8 +453,12 @@ class Agent:
             'id': spec['id']
         }
         
-        # Soru sorma nedenini ekle (UX için)
-        if reason:
+        # Spec'e özgü tooltip ekle
+        if 'tooltip' in spec and language in spec['tooltip']:
+            question_data['tooltip'] = spec['tooltip'][language]
+    
+        # Soru sorma nedenine göre tooltip ekle (eğer spec'te yoksa)
+        elif reason:
             tooltips = {
                 'mandatory': {
                     'en': 'This is essential for good recommendations',
@@ -459,7 +478,6 @@ class Agent:
                 }
             }
             question_data['tooltip'] = tooltips.get(reason, {}).get(language, '')
-            question_data['reason'] = reason
         
         if spec['type'] == 'boolean':
             question_data['options'] = ['Yes', 'No', 'No preference'] if language == 'en' else ['Evet', 'Hayır', 'Farketmez']

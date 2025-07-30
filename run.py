@@ -13,7 +13,7 @@ def detect_category():
     print("=" * 50)
     print("🔍 /detect_category endpointine gelen veri:", data)
     print("=" * 50)
-    # Dosyaya da yazdıralım
+    # Dosyaya da yazadıralım
     with open('debug_log.txt', 'a', encoding='utf-8') as f:
         f.write(f"🔍 /detect_category veri: {data}\n")
     query = data.get('query', '')
