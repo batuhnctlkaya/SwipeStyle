@@ -1,39 +1,39 @@
 {
   "Mouse": {
     "specs": [
-      {"key": "Kablosuz", "question": "Kablosuz mouse mu arıyorsunuz? 🎯", "emoji": "🖱️"},
-      {"key": "Ergonomik", "question": "Rahat kullanım için ergonomik tasarım önemli mi? 🖐️", "emoji": "🖐️"},
-      {"key": "DPI", "question": "Yüksek hassasiyet (DPI) ister misiniz? 🎯", "emoji": "🎯"},
-      {"key": "Makro Tuşlar", "question": "Ekstra programlanabilir tuşlar gerekli mi? 🔲", "emoji": "🔲"},
-      {"key": "RGB", "question": "Renkli ışıklandırma (RGB) ister misiniz? 🌈", "emoji": "🌈"}
+      {"key": "Kablosuz", "question": "Kablosuz mouse mu arıyorsunuz?", "emoji": "🖱️"},
+      {"key": "Ergonomik", "question": "Rahat kullanım için ergonomik tasarım önemli mi?", "emoji": "🖐️"},
+      {"key": "DPI", "question": "Yüksek hassasiyet (DPI) ister misiniz?", "emoji": "🎯"},
+      {"key": "Makro Tuşlar", "question": "Ekstra programlanabilir tuşlar gerekli mi?", "emoji": "🔲"},
+      {"key": "RGB", "question": "Renkli ışıklandırma (RGB) ister misiniz?", "emoji": "🌈"}
     ]
   },
   "Headphones": {
     "specs": [
-      {"key": "Kablosuz", "question": "Kablosuz kulaklık mu arıyorsunuz? 🎧", "emoji": "🎧"},
-      {"key": "ANC", "question": "Gürültü engelleme özelliği önemli mi? 🔇", "emoji": "🔇"},
-      {"key": "Bass", "question": "Güçlü bass sesi ister misiniz? 🎵", "emoji": "🎵"},
-      {"key": "Mikrofon Kalitesi", "question": "Kaliteli mikrofon önemli mi? 🎤", "emoji": "🎤"},
-      {"key": "Kulak İçi", "question": "Kulak içi (in-ear) mi tercih edersiniz? 👂", "emoji": "👂"},
-      {"key": "Kulak Üstü", "question": "Kulak üstü (over-ear) mi tercih edersiniz? 🦻", "emoji": "🦻"}
+      {"key": "Kablosuz", "question": "Kablosuz kulaklık mu arıyorsunuz?", "emoji": "🎧"},
+      {"key": "ANC", "question": "Gürültü engelleme özelliği önemli mi?", "emoji": "🔇"},
+      {"key": "Bass", "question": "Güçlü bass sesi ister misiniz?", "emoji": "🎵"},
+      {"key": "Mikrofon Kalitesi", "question": "Kaliteli mikrofon önemli mi?", "emoji": "🎤"},
+      {"key": "Kulak İçi", "question": "Kulak içi (in-ear) mi tercih edersiniz?", "emoji": "👂"},
+      {"key": "Kulak Üstü", "question": "Kulak üstü (over-ear) mi tercih edersiniz?", "emoji": "🦻"}
     ]
   },
   "Phone": {
     "specs": [
-      {"key": "Kamera", "question": "Profesyonel fotoğraf çekimi önemli mi? 📸", "emoji": "📸"},
-      {"key": "Batarya", "question": "Uzun pil ömrü arıyor musunuz? 🔋", "emoji": "🔋"},
-      {"key": "Ekran", "question": "Büyük ve kaliteli ekran ister misiniz? 📱", "emoji": "📱"},
-      {"key": "Depolama", "question": "Fazla depolama alanı gerekli mi? 💾", "emoji": "💾"},
-      {"key": "İşlemci", "question": "Hızlı performans önemli mi? ⚡", "emoji": "⚡"}
+      {"key": "Kamera", "question": "Profesyonel fotoğraf çekimi önemli mi?", "emoji": "📸"},
+      {"key": "Batarya", "question": "Uzun pil ömrü arıyor musunuz?", "emoji": "🔋"},
+      {"key": "Ekran", "question": "Büyük ve kaliteli ekran ister misiniz?", "emoji": "📱"},
+      {"key": "Depolama", "question": "Fazla depolama alanı gerekli mi?", "emoji": "💾"},
+      {"key": "İşlemci", "question": "Hızlı performans önemli mi?", "emoji": "⚡"}
     ]
   },
   "Laptop": {
     "specs": [
-      {"key": "RAM", "question": "Yüksek RAM kapasitesi ister misiniz? 🧠", "emoji": "🧠"},
-      {"key": "SSD", "question": "Hızlı SSD disk ister misiniz? 💽", "emoji": "💽"},
-      {"key": "Ekran Boyutu", "question": "Büyük ekran tercih eder misiniz? 🖥️", "emoji": "🖥️"},
-      {"key": "Pil Ömrü", "question": "Uzun pil ömrü önemli mi? 🔋", "emoji": "🔋"},
-      {"key": "Ağırlık", "question": "Hafif ve taşınabilir laptop mu arıyorsunuz? 🏋️", "emoji": "🏋️"}
+      {"key": "RAM", "question": "Yüksek RAM kapasitesi ister misiniz?", "emoji": "🧠"},
+      {"key": "SSD", "question": "Hızlı SSD disk ister misiniz?", "emoji": "💽"},
+      {"key": "Ekran Boyutu", "question": "Büyük ekran tercih eder misiniz?", "emoji": "🖥️"},
+      {"key": "Pil Ömrü", "question": "Uzun pil ömrü önemli mi?", "emoji": "🔋"},
+      {"key": "Ağırlık", "question": "Hafif ve taşınabilir laptop mu arıyorsunuz?", "emoji": "🏋️"}
     ]
   }
 }
