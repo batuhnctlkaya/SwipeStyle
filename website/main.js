@@ -62,14 +62,14 @@ function handleChatboxEntry() {
             document.getElementById('interaction').style.display = '';
             askAgent();
         } else if (data.error) {
-            alert(data.error);
+            showNotification(data.error, 'error');
         } else {
-            alert('Kategori tespit edilemedi veya oluşturulamadı. Lütfen daha açık bir istek girin.');
+            showNotification('Kategori tespit edilemedi. Lütfen daha açık bir istek girin.', 'warning');
         }
     })
     .catch(() => {
         hideLoadingScreen();
-        alert('Sunucuya erişilemiyor. Lütfen daha sonra tekrar deneyin.');
+        showNotification('Sunucuya erişilemiyor. Lütfen daha sonra tekrar deneyin.', 'error');
     });
 }
 
@@ -112,16 +112,26 @@ let category = null; // Seçilen kategori
 let answers = [];    // Verilen cevaplar listesi
 
 /**
- * Kategori ikonları sözlüğü.
+ * Kategori ikonları sözlüğü - Alışveriş odaklı ikonlar.
  * 
- * Her kategori için emoji ikonu tanımlar.
- * Eğer kategori bu listede yoksa, varsayılan olarak 🔍 kullanılır.
+ * Her kategori için modern emoji ikonu tanımlar.
+ * Eğer kategori bu listede yoksa, varsayılan olarak 🛍️ kullanılır.
  */
 const categoryIcons = {
     'Mouse': '🖱️',
     'Headphones': '🎧',
     'Phone': '📱',
     'Laptop': '💻'
+};
+
+/**
+ * Kategori renkleri - Alışveriş odaklı renk paleti.
+ */
+const categoryColors = {
+    'Mouse': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    'Headphones': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    'Phone': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    'Laptop': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
 };
 
 /**
@@ -146,12 +156,22 @@ function renderLanding(categories) {
         const card = document.createElement('div');
         card.className = 'category-card';
         card.onclick = () => startInteraction(cat);
+        
+        // Kategori rengini uygula
+        if (categoryColors[cat]) {
+            card.style.background = categoryColors[cat];
+            card.style.color = '#ffffff';
+        }
+        
         const icon = document.createElement('div');
         icon.className = 'category-icon';
-        icon.textContent = categoryIcons[cat] || '🔍';
+        icon.textContent = categoryIcons[cat] || '🛍️';
+        
         const label = document.createElement('div');
         label.className = 'category-label';
         label.textContent = cat;
+        label.style.color = categoryColors[cat] ? '#ffffff' : '#2d3748';
+        
         card.appendChild(icon);
         card.appendChild(label);
         grid.appendChild(card);
@@ -193,7 +213,7 @@ function startInteraction(selectedCategory) {
 }
 
 /**
- * Soru kartını render eder.
+ * Soru kartını render eder - Alışveriş odaklı tasarım.
  * 
  * Bu fonksiyon, backend'den gelen soru verilerini alır
  * ve kullanıcı dostu bir kart şeklinde gösterir.
@@ -214,46 +234,66 @@ function renderQuestion(question, options, emoji) {
     const qDiv = document.querySelector('.question');
     qDiv.innerHTML = '';
     const card = document.createElement('div');
-    card.style.background = 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)';
-    card.style.borderRadius = '24px';
-    card.style.boxShadow = '0 4px 24px rgba(0,0,0,0.10)';
-    card.style.width = '400px';
+    card.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    card.style.borderRadius = '30px';
+    card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+    card.style.width = '500px';
     card.style.margin = '40px auto';
-    card.style.padding = '40px 20px';
+    card.style.padding = '50px 30px';
     card.style.display = 'flex';
     card.style.flexDirection = 'column';
     card.style.alignItems = 'center';
     card.style.justifyContent = 'center';
     card.style.position = 'relative';
+    card.style.color = '#ffffff';
+    card.style.backdropFilter = 'blur(10px)';
+    
     // Emoji
     const emojiDiv = document.createElement('div');
-    emojiDiv.style.fontSize = '3em';
-    emojiDiv.style.marginBottom = '18px';
-    emojiDiv.textContent = emoji || '';
+    emojiDiv.style.fontSize = '4em';
+    emojiDiv.style.marginBottom = '20px';
+    emojiDiv.textContent = emoji || '🛍️';
     card.appendChild(emojiDiv);
+    
     // Question
     const qText = document.createElement('div');
-    qText.style.fontSize = '1.6em';
+    qText.style.fontSize = '1.8em';
     qText.style.fontWeight = 'bold';
     qText.style.textAlign = 'center';
-    qText.style.marginBottom = '18px';
+    qText.style.marginBottom = '30px';
+    qText.style.lineHeight = '1.4';
     qText.textContent = question;
     card.appendChild(qText);
+    
     // Options
     const optionsDiv = document.createElement('div');
     optionsDiv.style.display = 'flex';
-    optionsDiv.style.gap = '24px';
+    optionsDiv.style.gap = '30px';
+    optionsDiv.style.flexWrap = 'wrap';
+    optionsDiv.style.justifyContent = 'center';
+    
     options.forEach(opt => {
         const btn = document.createElement('button');
-        btn.textContent = opt;
-        btn.style.padding = '12px 32px';
-        btn.style.fontSize = '1.1em';
-        btn.style.borderRadius = '12px';
+        btn.textContent = opt === 'Yes' ? '✅ Evet' : '❌ Hayır';
+        btn.style.padding = '15px 40px';
+        btn.style.fontSize = '1.2em';
+        btn.style.borderRadius = '50px';
         btn.style.border = 'none';
         btn.style.cursor = 'pointer';
-        btn.style.background = '#fff';
-        btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+        btn.style.background = opt === 'Yes' ? 'linear-gradient(45deg, #43e97b, #38f9d7)' : 'linear-gradient(45deg, #ff6b6b, #feca57)';
+        btn.style.color = '#ffffff';
+        btn.style.fontWeight = '600';
+        btn.style.boxShadow = '0 8px 25px rgba(0,0,0,0.2)';
+        btn.style.transition = 'all 0.3s ease';
         btn.onclick = () => handleOption(opt);
+        btn.onmouseenter = () => {
+            btn.style.transform = 'translateY(-3px)';
+            btn.style.boxShadow = '0 12px 30px rgba(0,0,0,0.3)';
+        };
+        btn.onmouseleave = () => {
+            btn.style.transform = 'translateY(0)';
+            btn.style.boxShadow = '0 8px 25px rgba(0,0,0,0.2)';
+        };
         optionsDiv.appendChild(btn);
     });
     card.appendChild(optionsDiv);
@@ -263,7 +303,7 @@ function renderQuestion(question, options, emoji) {
 }
 
 /**
- * Ürün önerilerini render eder.
+ * Ürün önerilerini render eder - Alışveriş odaklı tasarım.
  * 
  * Bu fonksiyon, backend'den gelen ürün önerilerini alır
  * ve kullanıcı dostu bir liste şeklinde gösterir.
@@ -281,35 +321,160 @@ function renderQuestion(question, options, emoji) {
 function renderRecommendations(recs) {
     hideLoadingScreen();
     const recDiv = document.querySelector('.recommendation');
-    let html = '<h2>Önerilen Ürünler</h2>' + recs.map(r => {
+    
+    let html = `
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h2 style="font-size: 2.5em; color: #ffffff; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                🎉 Önerilen Ürünler
+            </h2>
+            <p style="color: #ffffff; font-size: 1.2em; opacity: 0.9;">
+                Size en uygun ürünleri bulduk!
+            </p>
+        </div>
+    `;
+    
+    recs.forEach((r, index) => {
         let linkHtml = '';
         let url = r.link || '';
         if (url && !url.startsWith('http') && url.length > 5) {
             url = 'https://' + url.replace(/^(www\.)?/, '');
         }
         if (url && url.startsWith('http')) {
-            linkHtml = ` <a href="${url}" target="_blank" style="color:#3b82f6; text-decoration:underline;">Satın Al</a>`;
+            linkHtml = ` <a href="${url}" target="_blank" style="color:#ffffff; text-decoration:none; background:linear-gradient(45deg, #ff6b6b, #feca57); padding:8px 16px; border-radius:20px; font-weight:600; margin-left:10px;">🛒 Satın Al</a>`;
         }
-        return `<div style="margin-bottom:18px;">${r.name} - ${r.price}${linkHtml}</div>`;
-    }).join('');
-    html += `<div style="margin-top:32px;text-align:center;"><button id="back-to-categories" style="padding:12px 32px;font-size:1.1em;border-radius:12px;border:none;background:#a18cd1;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.08);">Yeni arama yap</button></div>`;
+        
+        html += `
+            <div style="
+                background: rgba(255,255,255,0.95);
+                margin-bottom: 20px;
+                padding: 25px;
+                border-radius: 20px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+                backdrop-filter: blur(10px);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 15px;
+            ">
+                <div style="flex: 1; min-width: 200px;">
+                    <div style="font-size: 1.3em; font-weight: 600; color: #2d3748; margin-bottom: 8px;">
+                        ${r.name}
+                    </div>
+                    <div style="font-size: 1.1em; color: #ff6b6b; font-weight: 600;">
+                        💰 ${r.price}
+                    </div>
+                </div>
+                ${linkHtml}
+            </div>
+        `;
+    });
+    
+    html += `
+        <div style="text-align: center; margin-top: 40px;">
+            <button id="back-to-categories" style="
+                padding: 18px 40px;
+                font-size: 1.2em;
+                border-radius: 50px;
+                border: none;
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                color: #ffffff;
+                cursor: pointer;
+                font-weight: 600;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+                transition: all 0.3s ease;
+            ">🔄 Yeni Arama Yap</button>
+        </div>
+    `;
+    
     recDiv.innerHTML = html;
     document.querySelector('.error').textContent = '';
-    document.getElementById('back-to-categories').onclick = () => {
-        document.getElementById('interaction').style.display = 'none';
-        document.querySelector('.landing').style.display = '';
-        document.querySelector('.recommendation').innerHTML = '';
-        document.querySelector('.question').innerHTML = '';
-        document.querySelector('.options').innerHTML = '';
-        document.querySelector('.error').textContent = '';
-        step = 0;
-        category = null;
-        answers = [];
-    };
+    
+    // Back button hover effect
+    const backBtn = document.getElementById('back-to-categories');
+    if (backBtn) {
+        backBtn.onmouseenter = () => {
+            backBtn.style.transform = 'translateY(-3px)';
+            backBtn.style.boxShadow = '0 12px 30px rgba(0,0,0,0.3)';
+        };
+        backBtn.onmouseleave = () => {
+            backBtn.style.transform = 'translateY(0)';
+            backBtn.style.boxShadow = '0 8px 25px rgba(0,0,0,0.2)';
+        };
+        backBtn.onclick = () => {
+            document.getElementById('interaction').style.display = 'none';
+            document.querySelector('.landing').style.display = '';
+            document.querySelector('.recommendation').innerHTML = '';
+            document.querySelector('.question').innerHTML = '';
+            document.querySelector('.options').innerHTML = '';
+            document.querySelector('.error').textContent = '';
+            step = 0;
+            category = null;
+            answers = [];
+        };
+    }
 }
 
 /**
- * Tam ekran loading ekranını gösterir.
+ * Bildirim gösterme fonksiyonu.
+ */
+function showNotification(message, type = 'info') {
+    // Mevcut bildirimi kaldır
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 10px;
+        color: #ffffff;
+        font-weight: 600;
+        z-index: 10000;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        animation: slideIn 0.3s ease;
+    `;
+    
+    const colors = {
+        'error': 'linear-gradient(45deg, #ff6b6b, #feca57)',
+        'warning': 'linear-gradient(45deg, #feca57, #ff9ff3)',
+        'success': 'linear-gradient(45deg, #43e97b, #38f9d7)',
+        'info': 'linear-gradient(45deg, #4facfe, #00f2fe)'
+    };
+    
+    notification.style.background = colors[type] || colors.info;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // 5 saniye sonra kaldır
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
+    
+    // CSS animasyonları
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+/**
+ * Tam ekran loading ekranını gösterir - Alışveriş odaklı tasarım.
  * 
  * Bu fonksiyon, uzun süren işlemler sırasında kullanıcıya
  * görsel geri bildirim sağlar. Özellikle ürün önerileri
@@ -328,24 +493,42 @@ function showLoadingScreen() {
     if (!loadingDiv) {
         loadingDiv = document.createElement('div');
         loadingDiv.id = 'custom-loading';
-        loadingDiv.style.position = 'fixed';
-        loadingDiv.style.top = '0';
-        loadingDiv.style.left = '0';
-        loadingDiv.style.width = '100vw';
-        loadingDiv.style.height = '100vh';
-        loadingDiv.style.background = 'rgba(250,251,252,0.85)';
-        loadingDiv.style.display = 'flex';
-        loadingDiv.style.flexDirection = 'column';
-        loadingDiv.style.alignItems = 'center';
-        loadingDiv.style.justifyContent = 'center';
-        loadingDiv.style.zIndex = '9999';
+        loadingDiv.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(102, 126, 234, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        `;
         loadingDiv.innerHTML = `
-            <div style="margin-bottom:24px;">
-                <div style="width:64px;height:64px;border:8px solid #e0e0e0;border-top:8px solid #a18cd1;border-radius:50%;animation:spin 1s linear infinite;"></div>
+            <div style="margin-bottom: 30px;">
+                <div style="
+                    width: 80px;
+                    height: 80px;
+                    border: 8px solid rgba(255,255,255,0.3);
+                    border-top: 8px solid #ffffff;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                "></div>
             </div>
-            <div style="font-size:1.3em;color:#6c6c6c;">Ürünler aranıyor, lütfen bekleyin...</div>
+            <div style="font-size: 1.5em; color: #ffffff; font-weight: 600; text-align: center;">
+                🛍️ Ürünler aranıyor...
+            </div>
+            <div style="font-size: 1.1em; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center;">
+                Size en uygun ürünleri buluyoruz
+            </div>
             <style>
-            @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+            @keyframes spin { 
+                0% { transform: rotate(0deg);} 
+                100% { transform: rotate(360deg);} 
+            }
             </style>
         `;
         document.body.appendChild(loadingDiv);
@@ -427,13 +610,13 @@ function askAgent() {
         } else if (data.error) {
             hideLoadingScreen();
             document.querySelector('.loading').style.display = 'none';
-            document.querySelector('.error').textContent = data.error;
+            showNotification(data.error, 'error');
         }
     })
     .catch(err => {
         hideLoadingScreen();
         document.querySelector('.loading').style.display = 'none';
-        document.querySelector('.error').textContent = 'Sunucuya erişilemiyor: ' + err;
+        showNotification('Sunucuya erişilemiyor: ' + err, 'error');
     });
 }
 

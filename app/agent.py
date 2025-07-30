@@ -122,7 +122,10 @@ class Agent:
 
         # Step 0: ask for category if not provided
         if step == 0 or not category:
-            return {'question': 'What tech are you shopping for?', 'options': list(self.categories.keys())}
+            return {
+                'question': 'Hangi teknoloji ürününü arıyorsunuz? 🛍️', 
+                'options': list(self.categories.keys())
+            }
 
         # Validate category
         if category not in self.categories:

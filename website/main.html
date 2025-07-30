@@ -31,61 +31,218 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>SwipeStyle Ürün Tavsiye</title>
+    <title>SwipeStyle - Akıllı Alışveriş Asistanı</title>
     <script src="main.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Ana sayfa stilleri */
-        body { font-family: Arial, sans-serif; margin: 0; background: #fafbfc; }
-        .landing { max-width: 600px; margin: 0 auto; }
+        /* Ana sayfa stilleri - Alışveriş odaklı renk paleti */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2d3748;
+        }
+        
+        .landing { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        
+        /* Ana başlık stilleri */
+        .main-title {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 3.2em;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.4em;
+            margin-bottom: 50px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        /* Arama kutusu stilleri */
+        .search-container {
+            text-align: center;
+            margin-bottom: 50px;
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-input {
+            width: 400px;
+            padding: 18px 24px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            border: 2px solid #e2e8f0;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+        
+        .search-input:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255,107,107,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .search-button {
+            padding: 18px 36px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: #ffffff;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+        }
+        
+        .search-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+        }
         
         /* Kategori kartları grid düzeni */
-        .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; justify-items: center; margin-bottom: 40px; }
+        .card-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 30px; 
+            justify-items: center; 
+            margin-bottom: 50px; 
+        }
         
         /* Kategori kartı stilleri */
         .category-card {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            width: 200px;
-            height: 220px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            width: 280px;
+            height: 280px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: box-shadow 0.2s;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
+        
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .category-card:hover::before {
+            left: 100%;
+        }
+        
         .category-card:hover {
-            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
         
         /* Kategori ikon ve etiket stilleri */
         .category-icon {
-            font-size: 3.5em;
-            margin-bottom: 18px;
+            font-size: 4.5em;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
         }
+        
+        .category-card:hover .category-icon {
+            transform: scale(1.1);
+        }
+        
         .category-label {
-            font-size: 1.3em;
-            font-weight: 500;
-            color: #222;
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2d3748;
+            text-align: center;
         }
         
         /* Soru ve seçenek stilleri */
-        .question { font-size: 1.2em; margin-bottom: 20px; }
-        .options button { margin: 5px; padding: 10px 20px; }
-        .recommendation { margin-top: 30px; }
+        .question { 
+            font-size: 1.2em; 
+            margin-bottom: 20px; 
+        }
+        
+        .options button { 
+            margin: 5px; 
+            padding: 10px 20px; 
+        }
+        
+        .recommendation { 
+            margin-top: 30px; 
+        }
+        
+        /* Responsive tasarım */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5em;
+            }
+            
+            .search-input {
+                width: 280px;
+                font-size: 1.1em;
+            }
+            
+            .search-button {
+                padding: 16px 28px;
+                font-size: 1.1em;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .category-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Ana sayfa içeriği -->
     <div class="landing">
-        <h1 style="text-align:center; margin-top:40px; font-size:2.2em;">What tech are you shopping for?</h1>
-        <p style="text-align:center; color:#6c6c6c; font-size:1.2em; margin-bottom:40px;">Type what you want below or pick a category</p>
+        <h1 class="main-title">🛍️ SwipeStyle</h1>
+        <p class="subtitle">Hayal ettiğiniz ürünü bulmanın en akıllı yolu!</p>
         
         <!-- Arama kutusu ve buton -->
-        <div style="text-align:center; margin-bottom:32px;">
-            <input id="chatbox-input" type="text" placeholder="E.g. wireless headphones, gaming laptop..." style="width:320px; padding:12px; font-size:1.1em; border-radius:12px; border:1px solid #ccc;">
-            <button id="chatbox-send" style="padding:12px 24px; font-size:1.1em; border-radius:12px; border:none; background:#a18cd1; color:#fff; cursor:pointer; margin-left:8px;">Find</button>
+        <div class="search-container">
+            <input id="chatbox-input" type="text" placeholder="Örn: kablosuz kulaklık, gaming laptop..." class="search-input">
+            <button id="chatbox-send" class="search-button">
+                <i class="fas fa-search"></i> Bul
+            </button>
         </div>
         
         <!-- Kategori kartları grid'i -->
@@ -94,11 +251,13 @@
     
     <!-- Soru-cevap etkileşim alanı -->
     <div id="interaction" style="display:none;">
-        <div class="loading" style="color: gray; margin-bottom: 20px;">Yükleniyor...</div>
+        <div class="loading" style="color: #ffffff; margin-bottom: 20px; text-align: center; font-size: 1.2em;">
+            <i class="fas fa-spinner fa-spin"></i> Ürünler aranıyor...
+        </div>
         <div class="question"></div>
         <div class="options"></div>
         <div class="recommendation"></div>
-        <div class="error" style="color: red; margin-top: 20px;"></div>
+        <div class="error" style="color: #ff6b6b; margin-top: 20px; text-align: center; font-weight: 600;"></div>
     </div>
 </body>
 </html>
