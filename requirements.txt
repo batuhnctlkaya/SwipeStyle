@@ -7,6 +7,11 @@
 # - Flask: Web framework (backend API için)
 # - dotenv: Environment variables yönetimi (.env dosyası için)
 # - google-generativeai: Gemini AI entegrasyonu (ürün önerisi için)
+# - beautifulsoup4: HTML parsing (ücretsiz web scraping için)
+# - requests: HTTP istekleri
+# 
+# Opsiyonel Bağımlılıklar:
+# - serpapi: Ücretli Google Shopping API (SERPAPI_KEY gerekli)
 # 
 # Kurulum:
 #     pip install -r requirements.txt
@@ -14,14 +19,33 @@
 # Not: GEMINI_API_KEY environment variable'ı .env dosyasında tanımlanmalıdır.
 # 
 # Kullanım:
-#     python run.py
-#     # Uygulama http://localhost:8080 adresinde çalışır
-# 
-# Geliştirme Notları:
+#     python run_enhanced.py
+#     # Uygulama http://localhost:8082 adresinde çalışır
 # - Flask debug modu açık (production'da kapatılmalı)
 # - Gemini API anahtarı .env dosyasından okunur
 # - Tüm bağımlılıklar otomatik olarak kurulur
 
+# Core Flask Dependencies
 Flask
-dotenv
+Flask-CORS
+python-dotenv
+
+# AI and Machine Learning
 google-generativeai
+
+# Database
+SQLAlchemy
+Flask-SQLAlchemy
+
+# Web Scraping (Free Alternative)
+beautifulsoup4
+requests
+lxml
+
+# Optional: Google APIs
+google-api-python-client
+
+# Optional: Paid Shopping API (requires SERPAPI_KEY)
+# google-search-results
+serpapi
+requests
