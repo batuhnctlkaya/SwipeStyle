@@ -123,7 +123,7 @@ class Agent:
         # Step 0: ask for category if not provided
         if step == 0 or not category:
             return {
-                'question': 'Hangi teknoloji ürününü arıyorsunuz? 🛍️', 
+                'question': 'Hangi teknoloji ürününü arıyorsunuz?', 
                 'options': list(self.categories.keys())
             }
 
