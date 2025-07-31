@@ -33,3 +33,5 @@
 📩 /ask veri: {'step': 8, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
 📩 /ask veri: {'step': 9, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
 📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Ofis işleri (Word, Excel, web)'], 'language': 'tr'}
