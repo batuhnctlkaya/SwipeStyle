@@ -6,13 +6,15 @@ Bu dosya, SwipeStyle ürün tavsiye sisteminin ana Flask uygulamasını içerir.
 Sistem, kullanıcıların teknoloji ürünleri için kişiselleştirilmiş öneriler almasını sağlar.
 
 Ana Özellikler:
-- Kategori tespiti ve oluşturma
-- Soru-cevap tabanlı ürün filtreleme
+- Akıllı kategori tespiti ve oluşturma
+- Dinamik soru-cevap tabanlı ürün filtreleme
 - Gemini AI entegrasyonu ile akıllı öneriler
 - Web arayüzü desteği
+- Çok dilli destek (Türkçe/İngilizce)
 
 API Endpoint'leri:
 - /detect_category: Kullanıcı sorgusundan kategori tespiti
+- /search/<query>: Akıllı kategori arama
 - /categories: Mevcut kategorileri listele
 - /ask: Soru-cevap akışını yönet
 - /: Ana web sayfası
@@ -48,17 +50,22 @@ install_requirements()
 import json
 from flask import Flask, request, jsonify, send_from_directory
 from app.agent import Agent
-from app.category_agent import CategoryAgent
+from app.agent import detect_category_from_query
+from app.category_generator import add_dynamic_category_route
 
-# Flask uygulamasını başlat
 app = Flask(__name__, static_folder='website')
-category_agent = CategoryAgent()
 agent = Agent()
+
+# Dinamik kategori oluşturma özelliğini ekle
+add_dynamic_category_route(app)
 
 @app.route('/detect_category', methods=['POST'])
 def detect_category():
     """
     Kullanıcı sorgusundan kategori tespiti yapar.
+    
+    Bu endpoint, kullanıcının yazdığı metni analiz ederek
+    en uygun ürün kategorisini tespit eder. Gerekirse yeni kategori oluşturur.
     
     POST isteği bekler:
     {
@@ -67,19 +74,22 @@ def detect_category():
     
     Döner:
     {
-        "category": "Headphones",
-        "created": false
+        "category": "Headphones"
     }
     
-    Eğer kategori mevcut değilse, Gemini AI kullanarak yeni kategori oluşturur.
+    Eğer kategori mevcut değilse, akıllı kategori tespiti sistemi
+    kullanarak yeni kategori oluşturur.
     """
     data = request.json
+    print("=" * 50)
+    print("🔍 /detect_category endpointine gelen veri:", data)
+    print("=" * 50)
+    # Dosyaya da yazadıralım
+    with open('debug_log.txt', 'a', encoding='utf-8') as f:
+        f.write(f"🔍 /detect_category veri: {data}\n")
     query = data.get('query', '')
-    # Use CategoryAgent to get or create the category
-    category, created = category_agent.get_or_create_category(query)
-    if not category:
-        return jsonify({'error': 'Kategori oluşturulamadı veya tespit edilemedi. Lütfen daha açık bir istek girin veya daha sonra tekrar deneyin.'}), 400
-    return jsonify({'category': category, 'created': created})
+    category = detect_category_from_query(query)
+    return jsonify({'category': category})
 
 @app.route('/')
 def index():
@@ -88,14 +98,19 @@ def index():
     
     Bu endpoint, kullanıcıların ürün arama ve kategori seçimi
     yapabileceği ana arayüzü sunar.
+    
+    Returns:
+        HTML: Ana web sayfası
     """
     return app.send_static_file('main.html')
 
-# Serve static files (main.js, etc.)
 @app.route('/<path:filename>')
 def static_files(filename):
     """
     Statik dosyaları (CSS, JS, resimler) sunar.
+    
+    Bu endpoint, web sitesinin statik dosyalarını (JavaScript,
+    CSS, resimler vb.) sunar.
     
     Args:
         filename: İstenen dosya adı
@@ -114,22 +129,26 @@ def get_categories():
     için kullanılır. Her kategori için soru ve emoji bilgilerini içerir.
     
     Returns:
-        JSON formatında kategori listesi
+        JSON: Kategori listesi ve özellikleri
     """
-    # Use CategoryAgent to get categories and their specs
-    cats = category_agent.categories
-    return jsonify(cats)
+    with open('categories.json', 'r', encoding='utf-8') as f:
+        categories = json.load(f)
+    return jsonify(categories)
 
 @app.route('/ask', methods=['POST'])
 def ask():
     """
     Soru-cevap akışını yönetir ve ürün önerileri döndürür.
     
+    Bu endpoint, kullanıcının kategori seçiminden sonra
+    adım adım sorular sorar ve sonunda ürün önerileri sunar.
+    
     POST isteği bekler:
     {
         "step": 1,
         "category": "Headphones", 
-        "answers": ["Yes", "No"]
+        "answers": ["Yes", "No"],
+        "language": "tr"
     }
     
     Döner:
@@ -137,10 +156,19 @@ def ask():
     - Öneriler varsa: {"recommendations": [...]}
     - Hata varsa: {"error": "..."}
     
-    Bu endpoint, kullanıcının kategori seçiminden sonra
-    adım adım sorular sorar ve sonunda ürün önerileri sunar.
+    Özellikler:
+    - Dinamik soru akışı
+    - Tercih analizi
+    - Güven skoru hesaplama
+    - Çok dilli destek
     """
     data = request.json
+    print("=" * 50)
+    print("📩 /ask endpointine gelen veri:", data)
+    print("=" * 50)
+    # Dosyaya da yazdıralım
+    with open('debug_log.txt', 'a', encoding='utf-8') as f:
+        f.write(f"📩 /ask veri: {data}\n")
     response = agent.handle(data)
     return jsonify(response)
 

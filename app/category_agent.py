@@ -16,6 +16,8 @@ Fonksiyonlar:
 - Gemini AI ile yeni kategori oluşturma
 - JSON dosya yönetimi
 - Debug log'ları
+- Otomatik kategori eşleştirme
+- Yeni kategori özellikleri oluşturma
 
 Gereksinimler:
 - Google Generative AI (Gemini)
@@ -59,6 +61,11 @@ def generate_specs_for_category(category):
     Örnek:
         >>> generate_specs_for_category("Tablet")
         {"category_name": "Tablet", "specs": [...]}
+        
+    Not:
+        - Debug bilgileri output.txt dosyasına yazılır
+        - JSON parse hatası durumunda None döner
+        - Hem liste hem de sözlük formatını destekler
     """
     try:
         model = genai.GenerativeModel('gemini-2.5-flash')

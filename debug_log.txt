@@ -1,0 +1,35 @@
+📩 /ask veri: {'step': 1, 'category': 'Drill', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır', '12V (Hafif işler için)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır', '12V (Hafif işler için)', '13mm (Büyük ve çeşitli uçlar)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır', '12V (Hafif işler için)', '13mm (Büyük ve çeşitli uçlar)', '5.000-10.000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Chair', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Chair', 'answers': ['Ofis Sandalyesi'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Chair', 'answers': ['Ofis Sandalyesi', 'Orta (Yükseklik, sırt eğimi)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Chair', 'answers': ['Ofis Sandalyesi', 'Orta (Yükseklik, sırt eğimi)', 'Ahşap'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Chair', 'answers': ['Ofis Sandalyesi', 'Orta (Yükseklik, sırt eğimi)', 'Ahşap', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Car Mat', 'answers': ['Üniversal (Genel Uyum)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Car Mat', 'answers': ['Üniversal (Genel Uyum)', 'Kauçuk'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez', 'Hayır', 'Ön 2 parça'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez', 'Hayır', 'Ön 2 parça', '300-700₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Hair Dryer', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Bilgisayar', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Bilgisayar', 'answers': ['Tasarım/Video editing'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Bilgisayar', 'answers': ['Tasarım/Video editing', 'Laptop'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Bilgisayar', 'answers': ['Tasarım/Video editing', 'Laptop', '25-40k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)'], 'language': 'tr'}
+📩 /ask veri: {'step': 7, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
+📩 /ask veri: {'step': 8, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
+📩 /ask veri: {'step': 9, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
