@@ -1,262 +1,35 @@
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Yes']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Yes', 'Yes']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Yes', 'Yes', 'Yes']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Yes', 'Yes', 'Yes', 'Yes']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Yes', 'Yes', 'Yes', 'Yes', 'Yes']}
-📩 /ask veri: {'step': 7, 'category': 'Headphones', 'answers': ['Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes']}
-🔍 /detect_category veri: {'query': 'abdullah'}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', 'No']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', 'No', 'No']}
-📩 /ask veri: {'step': 7, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', 'No', 'No', '$200-400']}
-📩 /ask veri: {'step': 8, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', 'No', 'No', '$200-400', '$200-400']}
-📩 /ask veri: {'step': 9, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', 'No', 'No', '$200-400', '$200-400', '$200-400']}
-📩 /ask veri: {'step': 10, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', 'No', 'No', '$200-400', '$200-400', '$200-400', '$200-400']}
-📩 /ask veri: {'step': 11, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', 'No', 'No', '$200-400', '$200-400', '$200-400', '$200-400', '$200-400']}
-📩 /ask veri: {'step': 12, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', 'No', 'No', '$200-400', '$200-400', '$200-400', '$200-400', '$200-400', '$200-400']}
-📩 /ask veri: {'step': 13, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', 'No', 'No', '$200-400', '$200-400', '$200-400', '$200-400', '$200-400', '$200-400', '$200-400']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['In-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['In-ear', 'No preference']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['In-ear', 'No preference', 'No']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['In-ear', 'No preference', 'No', 'Yes']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['In-ear', 'No preference', 'No', 'Yes', 'Yes']}
-📩 /ask veri: {'step': 7, 'category': 'Headphones', 'answers': ['In-ear', 'No preference', 'No', 'Yes', 'Yes', 'No preference']}
-📩 /ask veri: {'step': 8, 'category': 'Headphones', 'answers': ['In-ear', 'No preference', 'No', 'Yes', 'Yes', 'No preference', '$100-200']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Large (≥6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '128GB']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '128GB', 'Heavy use (12+ hours)']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '128GB', 'Heavy use (12+ hours)', '$600-1000']}
-📩 /ask veri: {'step': 8, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '128GB', 'Heavy use (12+ hours)', '$600-1000', '$600-1000']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'No preference']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'No preference', 'No preference']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'No preference', 'No preference', 'No preference']}
-📩 /ask veri: {'step': 8, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'No preference', 'No preference', 'No preference', 'No preference']}
-📩 /ask veri: {'step': 9, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'No preference', 'No preference', 'No preference', 'No preference', '$1500+']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Large (≥6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi']}
-📩 /ask veri: {'step': 8, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi']}
-📩 /ask veri: {'step': 9, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB']}
-📩 /ask veri: {'step': 10, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB']}
-📩 /ask veri: {'step': 11, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB']}
-📩 /ask veri: {'step': 12, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB', '128GB']}
-📩 /ask veri: {'step': 13, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB', '128GB', '128GB']}
-📩 /ask veri: {'step': 14, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB', '128GB', '128GB', '128GB']}
-📩 /ask veri: {'step': 15, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB', '128GB', '128GB', '128GB', '256GB']}
-📩 /ask veri: {'step': 16, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB', '128GB', '128GB', '128GB', '256GB', '256GB']}
-📩 /ask veri: {'step': 17, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB', '128GB', '128GB', '128GB', '256GB', '256GB', '256GB']}
-📩 /ask veri: {'step': 18, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB', '128GB', '128GB', '128GB', '256GB', '256GB', '256GB', '256GB']}
-📩 /ask veri: {'step': 19, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB', '128GB', '128GB', '128GB', '256GB', '256GB', '256GB', '256GB', '256GB']}
-📩 /ask veri: {'step': 20, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi', '128GB', '128GB', '128GB', '128GB', '128GB', '128GB', '256GB', '256GB', '256GB', '256GB', '256GB', '256GB']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel']}
-📩 /ask veri: {'step': 8, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel']}
-📩 /ask veri: {'step': 9, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB']}
-📩 /ask veri: {'step': 10, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB', '256GB']}
-📩 /ask veri: {'step': 11, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB', '256GB', 'No preference']}
-📩 /ask veri: {'step': 12, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB', '256GB', 'No preference', '512GB+']}
-📩 /ask veri: {'step': 13, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB', '256GB', 'No preference', '512GB+', '64GB enough']}
-📩 /ask veri: {'step': 14, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB', '256GB', 'No preference', '512GB+', '64GB enough', '128GB']}
-📩 /ask veri: {'step': 15, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB', '256GB', 'No preference', '512GB+', '64GB enough', '128GB', 'No preference']}
-📩 /ask veri: {'step': 16, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB', '256GB', 'No preference', '512GB+', '64GB enough', '128GB', 'No preference', '512GB+']}
-📩 /ask veri: {'step': 17, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB', '256GB', 'No preference', '512GB+', '64GB enough', '128GB', 'No preference', '512GB+', '256GB']}
-📩 /ask veri: {'step': 18, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality', 'Samsung', 'OnePlus', 'Google Pixel', 'Google Pixel', '256GB', '256GB', 'No preference', '512GB+', '64GB enough', '128GB', 'No preference', '512GB+', '256GB', '128GB']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Large (≥6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '512GB+']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '512GB+', 'All day (8-12 hours)']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '512GB+', 'All day (8-12 hours)', 'All day (8-12 hours)']}
-📩 /ask veri: {'step': 8, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '512GB+', 'All day (8-12 hours)', 'All day (8-12 hours)', '$1000-1500']}
-📩 /ask veri: {'step': 9, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '512GB+', 'All day (8-12 hours)', 'All day (8-12 hours)', '$1000-1500', '$1000-1500']}
-📩 /ask veri: {'step': 10, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'iOS (iPhone)', 'Good quality', '512GB+', 'All day (8-12 hours)', 'All day (8-12 hours)', '$1000-1500', '$1000-1500', '$1000-1500']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Excellent quality']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-🔍 /detect_category veri: {'query': 'pc'}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['No preference']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['No preference', 'Yes']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['No preference', 'Yes', 'Yes']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['No preference', 'Yes', 'Yes', 'Yes']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['No preference', 'Yes', 'Yes', 'Yes', 'No']}
-📩 /ask veri: {'step': 7, 'category': 'Headphones', 'answers': ['No preference', 'Yes', 'Yes', 'Yes', 'No', '$400+']}
-📩 /ask veri: {'step': 8, 'category': 'Headphones', 'answers': ['No preference', 'Yes', 'Yes', 'Yes', 'No', '$400+', '$50-100']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes', 'No']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes', 'No', 'No']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes', 'No', 'No', 'No']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'No preference']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'No preference', 'No preference']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'No preference', 'No preference', 'No']}
-📩 /ask veri: {'step': 7, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'No preference', 'No preference', 'No', '$15-50']}
-📩 /ask veri: {'step': 8, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'No preference', 'No preference', 'No', '$15-50', '$15-50']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Basic is enough']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Basic is enough', 'Google Pixel']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Basic is enough', 'Google Pixel', 'Xiaomi']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Basic is enough', 'Google Pixel', 'Xiaomi', 'Samsung']}
-📩 /ask veri: {'step': 8, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'Android', 'Basic is enough', 'Google Pixel', 'Xiaomi', 'Samsung', 'OnePlus']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No', 'No']}
-📩 /ask veri: {'step': 7, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No', 'No', '$100-200']}
-📩 /ask veri: {'step': 8, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No', 'No', '$100-200', '$100-200']}
-📩 /ask veri: {'step': 9, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No', 'No', '$100-200', '$100-200', '$15-50']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Large (≥6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi']}
-📩 /ask veri: {'step': 8, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'Excellent quality', 'Xiaomi', 'Xiaomi', 'Xiaomi', 'Xiaomi']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No', 'No']}
-📩 /ask veri: {'step': 7, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No', 'No', 'No']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Large (≥6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'No preference']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'No preference', 'OnePlus']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'No preference', 'OnePlus', 'Samsung']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'No preference', 'OnePlus', 'Samsung', 'OnePlus']}
-📩 /ask veri: {'step': 8, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'No preference', 'OnePlus', 'Samsung', 'OnePlus', 'Xiaomi']}
-📩 /ask veri: {'step': 9, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'No preference', 'OnePlus', 'Samsung', 'OnePlus', 'Xiaomi', '512GB+']}
-📩 /ask veri: {'step': 10, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'No preference', 'OnePlus', 'Samsung', 'OnePlus', 'Xiaomi', '512GB+', '64GB enough']}
-📩 /ask veri: {'step': 11, 'category': 'Phone', 'answers': ['Large (≥6.7")', 'Android', 'No preference', 'OnePlus', 'Samsung', 'OnePlus', 'Xiaomi', '512GB+', '64GB enough', '256GB']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['$600-1000']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['$600-1000']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['$600-1000', '$600-1000']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['$600-1000', '$600-1000', '$300-600']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['$600-1000', '$600-1000', '$300-600', '$300-600']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['$600-1000', '$600-1000', '$300-600', '$300-600', '$300-600']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['$600-1000', '$600-1000', '$300-600', '$300-600', '$300-600', '$300-600']}
-📩 /ask veri: {'step': 8, 'category': 'Phone', 'answers': ['$600-1000', '$600-1000', '$300-600', '$300-600', '$300-600', '$300-600', '$300-600']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', '$50-100']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', '$50-100', '$200-400']}
-📩 /ask veri: {'step': 7, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', '$50-100', '$200-400', '$100-200']}
-📩 /ask veri: {'step': 8, 'category': 'Headphones', 'answers': ['Over-ear', 'No preference', 'No', '$50-100', '$200-400', '$100-200', '$100-200']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', '$100-200']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes', 'Yes']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes', 'No']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'Yes', 'No']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'No']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'No', 'Yes']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No', '$50-100']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Over-ear']}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Over-ear', 'No']}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes']}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No']}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Over-ear', 'No', 'Yes', 'No', '$50-100']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'No preference']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'No preference', 'Good quality']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'No preference', 'Good quality', '128GB']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'No preference', 'Good quality', '128GB', 'Heavy use (12+ hours)']}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")']}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'No preference']}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'No preference', 'Good quality']}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'No preference', 'Good quality', '128GB']}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'No preference', 'Good quality', '128GB', 'No preference']}
-📩 /ask veri: {'step': 7, 'category': 'Phone', 'answers': ['Standard (6.1-6.7")', 'No preference', 'Good quality', '128GB', 'No preference', '$600-1000']}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': []}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': []}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)', 'Evet'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)', 'Evet', 'Evet'], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)', 'Hayır'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)', 'Hayır', 'Evet'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)', 'Hayır', 'Evet', 'Evet'], 'language': 'tr'}
-📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)', 'Hayır', 'Evet', 'Evet', '12k₺+'], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Standart (6.1-6.7") - Dengeli'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Standart (6.1-6.7") - Dengeli', 'iOS (iPhone) - Basit ve güvenli'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Standart (6.1-6.7") - Dengeli', 'iOS (iPhone) - Basit ve güvenli', 'İyi olsun (Sosyal medya için)'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Standart (6.1-6.7") - Dengeli', 'iOS (iPhone) - Basit ve güvenli', 'İyi olsun (Sosyal medya için)', '64GB (Temel: ~15,000 fotoğraf)'], 'language': 'tr'}
-📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Standart (6.1-6.7") - Dengeli', 'iOS (iPhone) - Basit ve güvenli', 'İyi olsun (Sosyal medya için)', '64GB (Temel: ~15,000 fotoğraf)', '35-50k₺'], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Büyük (≥6.7") - Video ve oyun için'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Büyük (≥6.7") - Video ve oyun için', 'Android - Özelleştirilebilir'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Büyük (≥6.7") - Video ve oyun için', 'Android - Özelleştirilebilir', 'Mükemmel olsun (Profesyonel seviye)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drill', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır', '12V (Hafif işler için)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır', '12V (Hafif işler için)', '13mm (Büyük ve çeşitli uçlar)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır', '12V (Hafif işler için)', '13mm (Büyük ve çeşitli uçlar)', '5.000-10.000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Chair', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Chair', 'answers': ['Ofis Sandalyesi'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Chair', 'answers': ['Ofis Sandalyesi', 'Orta (Yükseklik, sırt eğimi)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Chair', 'answers': ['Ofis Sandalyesi', 'Orta (Yükseklik, sırt eğimi)', 'Ahşap'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Chair', 'answers': ['Ofis Sandalyesi', 'Orta (Yükseklik, sırt eğimi)', 'Ahşap', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Car Mat', 'answers': ['Üniversal (Genel Uyum)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Car Mat', 'answers': ['Üniversal (Genel Uyum)', 'Kauçuk'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez', 'Hayır', 'Ön 2 parça'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez', 'Hayır', 'Ön 2 parça', '300-700₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Hair Dryer', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Bilgisayar', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Bilgisayar', 'answers': ['Tasarım/Video editing'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Bilgisayar', 'answers': ['Tasarım/Video editing', 'Laptop'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Bilgisayar', 'answers': ['Tasarım/Video editing', 'Laptop', '25-40k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)'], 'language': 'tr'}
+📩 /ask veri: {'step': 7, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
+📩 /ask veri: {'step': 8, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
+📩 /ask veri: {'step': 9, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}

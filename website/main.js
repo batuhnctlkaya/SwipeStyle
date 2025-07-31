@@ -233,28 +233,78 @@ function handleChatboxEntry() {
     const input = document.getElementById('chatbox-input').value.trim();
     if (!input) return;
     showLoadingScreen();
-    fetch('/detect_category', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: input })
-    })
+    
+    // Yeni search API'sini kullan
+    fetch(`/search/${encodeURIComponent(input)}`)
     .then(res => res.json())
     .then(data => {
         hideLoadingScreen();
-        if (data.category) {
-            category = data.category;
+        
+        if (data.status === 'error') {
+            alert("Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.");
+            return;
+        }
+        
+        let categoryName = '';
+        
+        // API yanıt durumuna göre farklı işlemler
+        switch(data.status) {
+            case 'found':
+                categoryName = data.category;
+                break;
+                
+            case 'similar_found':
+            case 'partial_match':
+                categoryName = data.matched_category;
+                alert(`"${input}" aramanız "${categoryName}" kategorisiyle eşleştirildi.`);
+                break;
+                
+            case 'alias_match':
+                categoryName = data.matched_category;
+                alert(`"${input}" aramanız "${categoryName}" kategorisine yönlendirildi.`);
+                break;
+                
+            case 'created':
+                categoryName = data.category;
+                alert(`"${categoryName}" için yeni bir kategori oluşturuldu.`);
+                break;
+                
+            default:
+                // Fallback - eski metodu kullan
+                fetch('/detect_category', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: input })
+                })
+                .then(res => res.json())
+                .then(categoryData => {
+                    if (categoryData.category) {
+                        category = categoryData.category;
+                        step = 1;
+                        answers = [];
+                        document.querySelector('.landing').style.display = 'none';
+                        document.getElementById('interaction').style.display = '';
+                        askAgent();
+                    } else {
+                        alert('Aradığınız kategoriyi bulamadım. Lütfen başka bir şey deneyin.');
+                    }
+                });
+                return;
+        }
+        
+        if (categoryName) {
+            category = categoryName;
             step = 1;
             answers = [];
             document.querySelector('.landing').style.display = 'none';
             document.getElementById('interaction').style.display = '';
             askAgent();
-        } else {
-            alert('Could not determine a product category. Please try again.');
         }
     })
-    .catch(() => {
+    .catch(error => {
+        console.error("Arama hatası:", error);
         hideLoadingScreen();
-        alert('Could not process your request.');
+        alert("Bir hata oluştu, lütfen tekrar deneyin.");
     });
 }
 
@@ -519,24 +569,21 @@ function showLoadingScreen() {
     if (!loadingDiv) {
         loadingDiv = document.createElement('div');
         loadingDiv.id = 'custom-loading';
-        loadingDiv.style.position = 'fixed';
-        loadingDiv.style.top = '0';
-        loadingDiv.style.left = '0';
-        loadingDiv.style.width = '100vw';
-        loadingDiv.style.height = '100vh';
-        loadingDiv.style.background = 'rgba(250,251,252,0.85)';
-        loadingDiv.style.display = 'flex';
-        loadingDiv.style.flexDirection = 'column';
-        loadingDiv.style.alignItems = 'center';
-        loadingDiv.style.justifyContent = 'center';
-        loadingDiv.style.zIndex = '9999';
+        loadingDiv.className = 'loading-container';
         loadingDiv.innerHTML = `
-            <div style="margin-bottom:24px;">
-                <div style="width:64px;height:64px;border:8px solid #e0e0e0;border-top:8px solid #a18cd1;border-radius:50%;animation:spin 1s linear infinite;"></div>
+            <div class="ai-brain">
+                <div class="neural-ring"></div>
+                <div class="neural-ring"></div>
+                <div class="neural-ring"></div>
+                <div class="ai-core"></div>
             </div>
-            <div style="font-size:18px;font-weight:500;color:#666;margin-bottom:20px;">Düşünüyorum...</div>
-            <button id="emergency-reset" style="margin-top:20px;padding:8px 16px;background:#dc3545;color:white;border:none;border-radius:6px;cursor:pointer;font-size:14px;">
-                Takıldı mı? Sıfırla
+            <div class="loading-text">AI İşliyor...</div>
+            <div class="loading-subtext">Yapay zeka tercihlerinizi analiz ediyor ve size en uygun ürünleri buluyor. Bu işlem 10-45 saniye sürebilir.</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="ai-progress" style="width: 0%"></div>
+            </div>
+            <button class="emergency-reset" id="emergency-reset">
+                Çok Uzun Sürüyor mu? Sıfırla
             </button>
         `;
         
@@ -557,12 +604,44 @@ function showLoadingScreen() {
         
         document.body.appendChild(loadingDiv);
     }
+    
+    // Start progress animation
     loadingDiv.style.display = 'flex';
+    animateProgress();
+}
+
+function animateProgress() {
+    const progressBar = document.getElementById('ai-progress');
+    if (!progressBar) return;
+    
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 3 + 1; // Random increment between 1-4
+        if (progress > 90) progress = 90; // Don't go to 100% until actually done
+        
+        progressBar.style.width = progress + '%';
+        
+        if (!document.getElementById('custom-loading') || 
+            document.getElementById('custom-loading').style.display === 'none') {
+            clearInterval(interval);
+        }
+    }, 200);
 }
 
 function hideLoadingScreen() {
     let loadingDiv = document.getElementById('custom-loading');
-    if (loadingDiv) loadingDiv.style.display = 'none';
+    if (loadingDiv) {
+        // Complete the progress bar before hiding
+        const progressBar = document.getElementById('ai-progress');
+        if (progressBar) {
+            progressBar.style.width = '100%';
+            setTimeout(() => {
+                loadingDiv.style.display = 'none';
+            }, 300);
+        } else {
+            loadingDiv.style.display = 'none';
+        }
+    }
 }
 
 // Flag to track if a request is in progress
@@ -644,16 +723,16 @@ function askAgent() {
         showLoadingScreen();
     }
     
-    // 15 saniye zaman aşımı ekle
+    // 45 saniye zaman aşımı ekle (AI işlemleri için uzatıldı)
     const timeoutId = setTimeout(() => {
         if (isRequestInProgress) {
             console.log("Zaman aşımı oluştu!");
             isRequestInProgress = false;
             hideLoadingScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            document.querySelector('.error').textContent = 'İstek zaman aşımına uğradı. Lütfen sayfayı yenileyin.';
+            document.querySelector('.error').textContent = 'İstek zaman aşımına uğradı. AI analizi uzun sürdü, lütfen tekrar deneyin.';
         }
-    }, 15000);
+    }, 45000);
     
     fetch('/ask', {
         method: 'POST',
@@ -698,21 +777,11 @@ function askAgent() {
             if (loadingElement) loadingElement.style.display = 'none';
             document.querySelector('.error').textContent = data.error;
         } else {
-            // Try to recover by asking for the next question
+            // Handle unexpected response format without infinite loop
             console.error('Beklenmeyen yanıt formatı:', data);
             hideLoadingScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            
-            // Try to continue anyway
-            if (step > 0) {
-                console.log("Bir sonraki adıma geçmeye çalışılıyor...");
-                step++; // Try to move to next step
-                setTimeout(() => {
-                    askAgent(); // Try again with next step
-                }, 500);
-            } else {
-                document.querySelector('.error').textContent = 'Beklenmeyen bir yanıt alındı. Lütfen sayfayı yenileyin.';
-            }
+            document.querySelector('.error').textContent = 'Beklenmeyen bir yanıt alındı. Lütfen sayfayı yenileyin.';
         }
     })
     .catch(err => {

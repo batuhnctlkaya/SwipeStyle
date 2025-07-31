@@ -1,29 +1,76 @@
 import json
 import os
-from .config import setup_gemini, get_gemini_model
+from .config import setup_gemini, get_gemini_model, generate_with_retry
+import json
 
 def detect_category_from_query(query):
-    """Query'den kategori tespit et"""
+    """
+    Enhanced category detection using prompt-chained agent architecture
+    Handles both category recognition and creation intelligently
+    """
     try:
-        setup_gemini()
-        model = get_gemini_model()
+        print(f"🔍 Detecting category for query: '{query}'")
         
-        prompt = (
-            f"Kullanıcı şu ürünü arıyor: '{query}'. "
-            "Bu isteğe en uygun kategori hangisi? Sadece kategori adını (ör: Headphones) tek kelime olarak döndür."
-        )
-        response = model.generate_content(prompt)
-        category = response.text.strip().split()[0]
+        # Quick local mapping for common Turkish terms
+        local_mappings = {
+            'şarj aleti': 'Charger',
+            'sarj aleti': 'Charger', 
+            'şarj cihazı': 'Charger',
+            'sarj cihazi': 'Charger',
+            'charger': 'Charger',
+            'kulaklık': 'Headphones',
+            'kulaklik': 'Headphones',
+            'headphones': 'Headphones',
+            'telefon': 'Phone',
+            'phone': 'Phone',
+            'klima': 'Klima',
+            'ac': 'Klima',
+            'air conditioner': 'Klima',
+            'bilgisayar': 'Bilgisayar',
+            'computer': 'Bilgisayar',
+            'pc': 'Bilgisayar',
+            'matkap': 'Drill',
+            'drill': 'Drill',
+            'delici': 'Drill',
+            'hair dryer': 'Hair Dryer',
+            'saç kurutma': 'Hair Dryer',
+            'sac kurutma': 'Hair Dryer',
+            'föhn': 'Hair Dryer',
+            'fön': 'Hair Dryer'
+        }
         
-        # Validate against known categories
-        with open('categories.json', 'r', encoding='utf-8') as f:
-            categories = json.load(f)
+        query_lower = query.strip().lower()
         
-        for cat in categories:
-            if cat.lower() in category.lower():
-                return cat
-        return None
-    except Exception:
+        # Check local mappings first
+        if query_lower in local_mappings:
+            mapped_category = local_mappings[query_lower]
+            print(f"✅ Local mapping found: '{query}' → '{mapped_category}'")
+            return mapped_category
+        
+        from .category_generator import CategoryGenerator
+        
+        # Use the new intelligent category detection system
+        category_generator = CategoryGenerator()
+        result = category_generator.intelligent_category_detection(query)
+        
+        # Handle different match types
+        if result['match_type'] in ['exact', 'partial', 'ai_recognition']:
+            print(f"✅ Category found: {result['match_type']} - '{result['category']}'")
+            return result['category']
+            
+        elif result['match_type'] == 'ai_created':
+            print(f"🆕 New category created: '{result['category']}'")
+            return result['category']
+            
+        else:
+            print(f"❌ Category detection failed: {result.get('message', 'Unknown error')}")
+            # Return None instead of defaulting to prevent confusion
+            return None
+            
+    except Exception as e:
+        print(f"❌ Category detection error: {e}")
+        import traceback
+        print(traceback.format_exc())
         return None
 
 class Agent:
@@ -39,6 +86,8 @@ class Agent:
             return {}
 
     def handle(self, data):
+        # Auto-reload categories to pick up manual edits
+        self.categories = self.load_categories()
         step = data.get('step', 0)
         category = data.get('category', '')
         answers = data.get('answers', [])
@@ -82,6 +131,11 @@ class Agent:
                 return self._generate_recommendations(category, preferences, specs, language)
         
         else:
+            print(f"❌ Invalid category or step!")
+            print(f"   Step: {step}")
+            print(f"   Category: '{category}'")
+            print(f"   Category exists in self.categories: {category in self.categories if category else 'N/A'}")
+            print(f"   Available categories: {list(self.categories.keys())}")
             return {'error': 'Invalid category or step'}
 
     def _analyze_current_preferences(self, answers, specs):
@@ -496,18 +550,26 @@ class Agent:
         return question_data
 
     def _generate_recommendations(self, category, preferences, specs, language):
-        """Gemini kullanarak öneri oluştur"""
+        """Gemini kullanarak öneri oluştur - Enhanced with retry mechanism"""
         try:
+            print(f"🤖 AI öneri oluşturuluyor: {category}")
+            
             # Gemini için prompt oluştur
             prompt = self._build_gemini_prompt(category, preferences, language)
             
-            # Gemini'den öneri al
+            # Gemini'den öneri al - retry mekanizması ile
             setup_gemini()
             model = get_gemini_model()
-            response = model.generate_content(prompt)
+            
+            print(f"⏳ Gemini API'ye istek gönderiliyor... (Bu işlem 10-30 saniye sürebilir)")
+            response = generate_with_retry(model, prompt, max_retries=3, delay=3)
+            
+            if not response or not response.text:
+                raise Exception("Gemini API'den geçerli yanıt alınamadı")
             
             # Response'u parse et
             recommendations = self._parse_gemini_response(response.text)
+            print(f"✅ {len(recommendations)} öneri oluşturuldu")
             
             return {
                 'type': 'recommendation',
@@ -521,8 +583,8 @@ class Agent:
             print(f"❌ Gemini hatası: {e}")
             return {
                 'type': 'error',
-                'message': 'Sorry, I could not generate recommendations at this time.' if language == 'en' 
-                          else 'Üzgünüm, şu anda öneri oluşturamıyorum.'
+                'message': 'Sorry, I could not generate recommendations at this time. Please try again.' if language == 'en' 
+                          else 'Üzgünüm, şu anda öneri oluşturamıyorum. Lütfen tekrar deneyin.'
             }
 
     def _build_gemini_prompt(self, category, preferences, language):

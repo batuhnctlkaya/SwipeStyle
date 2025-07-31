@@ -3,9 +3,13 @@ import json
 from flask import Flask, request, jsonify, send_from_directory
 from app.agent import Agent
 from app.agent import detect_category_from_query
+from app.category_generator import add_dynamic_category_route
 
 app = Flask(__name__, static_folder='website')
 agent = Agent()
+
+# Dinamik kategori oluşturma özelliğini ekle
+add_dynamic_category_route(app)
 @app.route('/detect_category', methods=['POST'])
 # Bu fonksiyon http://localhost:8080/detect_category adresine POST isteği geldiğinde çalışır
 def detect_category():
