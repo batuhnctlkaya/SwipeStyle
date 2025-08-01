@@ -7,6 +7,10 @@
 let currentLanguage = 'tr';
 let currentTheme = 'light';
 
+// Otomatik tamamlama için global değişkenler
+let autocompleteData = [];
+let selectedAutocompleteIndex = -1;
+
 // Tema değiştirme fonksiyonu
 function changeTheme(theme) {
     currentTheme = theme;
@@ -86,12 +90,12 @@ function handleChatboxEntry() {
     showLoadingScreen();
     
     // API çağrısı
-    fetch('/detect_category', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: input })
-    })
-    .then(res => res.json())
+                fetch('/detect_category', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: input })
+                })
+                .then(res => res.json())
     .then(data => {
         hideLoadingScreen();
         
@@ -101,14 +105,14 @@ function handleChatboxEntry() {
         
         if (data.category) {
             category = data.category;
-            step = 1;
-            answers = [];
+                        step = 1;
+                        answers = [];
             
             // Basit geçiş
-            document.querySelector('.landing').style.display = 'none';
-            document.getElementById('interaction').style.display = '';
-            askAgent();
-        } else {
+                        document.querySelector('.landing').style.display = 'none';
+                        document.getElementById('interaction').style.display = '';
+                        askAgent();
+                    } else {
             const errorMsg = currentLanguage === 'tr' ? 'Aradığınız kategoriyi bulamadım. Lütfen başka bir şey deneyin.' : 'Could not find the category you are looking for. Please try something else.';
             alert(errorMsg);
         }
@@ -143,6 +147,195 @@ const categoryIcons = {
     'Smartwatch': 'fas fa-clock'
 };
 
+// Otomatik tamamlama verileri
+const autocompleteSuggestions = {
+    'k': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' },
+        { text: 'Klavye', icon: 'fas fa-keyboard', category: 'Keyboard' },
+        { text: 'Kamera', icon: 'fas fa-camera', category: 'Camera' },
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Koltuk', icon: 'fas fa-couch', category: 'Furniture' },
+        { text: 'Kettle', icon: 'fas fa-mug-hot', category: 'Kitchen' },
+        { text: 'Konsol', icon: 'fas fa-gamepad', category: 'Gaming' },
+        { text: 'Kulak İçi', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kl': [
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klavye', icon: 'fas fa-keyboard', category: 'Keyboard' },
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' },
+        { text: 'Koltuk', icon: 'fas fa-couch', category: 'Furniture' }
+    ],
+    'kli': [
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klima Split', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klima Mobil', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+    ],
+    'klim': [
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klima Split', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klima Mobil', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klima Duvar', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+    ],
+    'klima': [
+        { text: 'Klima Split', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klima Mobil', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klima Duvar', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klima Tavan', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klima Inverter', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+    ],
+    'l': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop HP', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Lenovo', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'la': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'lap': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'lapt': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'lapto': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop HP', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'laptop': [
+        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop HP', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Lenovo', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Asus', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'm': [
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse SteelSeries', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Corsair', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    'mo': [
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    'mou': [
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    'mous': [
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    'mouse': [
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse SteelSeries', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Corsair', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse HyperX', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    't': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Tablet', icon: 'fas fa-tablet-alt', category: 'Tablet' },
+        { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'te': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Tablet', icon: 'fas fa-tablet-alt', category: 'Tablet' },
+        { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
+    ],
+    'tel': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'tele': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'telef': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'telefo': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Nokia', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'telefon': [
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Nokia', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Sony', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ]
+};
+
 // Kategori isimlerini çevir
 const categoryTranslations = {
     'Mouse': { tr: 'Mouse', en: 'Mouse' },
@@ -156,6 +349,158 @@ const categoryTranslations = {
     'Tablet': { tr: 'Tablet', en: 'Tablet' },
     'Smartwatch': { tr: 'Akıllı Saat', en: 'Smartwatch' }
 };
+
+// Otomatik tamamlama fonksiyonları
+function handleAutocomplete() {
+    const input = document.getElementById('chatbox-input');
+    const dropdown = document.getElementById('autocomplete-dropdown');
+    const query = input.value.toLowerCase().trim();
+    
+    if (query.length < 1) {
+        hideAutocomplete();
+        return;
+    }
+    
+    // Önerileri bul
+    const suggestions = getAutocompleteSuggestions(query);
+    
+    if (suggestions.length > 0) {
+        showAutocompleteSuggestions(suggestions);
+    } else {
+        hideAutocomplete();
+    }
+}
+
+function getAutocompleteSuggestions(query) {
+    const suggestions = [];
+    
+    // Tam eşleşme kontrolü
+    if (autocompleteSuggestions[query]) {
+        suggestions.push(...autocompleteSuggestions[query]);
+    }
+    
+    // Kısmi eşleşme kontrolü - sadece query ile başlayan anahtarlar
+    Object.keys(autocompleteSuggestions).forEach(key => {
+        if (key.startsWith(query) && key !== query) {
+            suggestions.push(...autocompleteSuggestions[key]);
+        }
+    });
+    
+    // Eğer hiç öneri bulunamadıysa, sadece query ile başlayan ürünleri ara
+    if (suggestions.length === 0) {
+        Object.values(autocompleteSuggestions).forEach(categorySuggestions => {
+            categorySuggestions.forEach(suggestion => {
+                if (suggestion.text.toLowerCase().startsWith(query.toLowerCase()) && 
+                    !suggestions.some(s => s.text === suggestion.text)) {
+                    suggestions.push(suggestion);
+                }
+            });
+        });
+    }
+    
+    return suggestions.slice(0, 8); // Maksimum 8 öneri
+}
+
+function showAutocompleteSuggestions(suggestions) {
+    const dropdown = document.getElementById('autocomplete-dropdown');
+    
+    dropdown.innerHTML = '';
+    autocompleteData = suggestions; // Global değişkene ata
+    
+    suggestions.forEach((suggestion, index) => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        item.setAttribute('data-index', index);
+        item.setAttribute('data-category', suggestion.category);
+        
+        item.innerHTML = `
+            <span>${suggestion.text}</span>
+            <i class="${suggestion.icon} icon" title="${suggestion.category}"></i>
+        `;
+        
+        item.addEventListener('click', () => {
+            selectAutocompleteItem(suggestion);
+        });
+        
+        item.addEventListener('mouseenter', () => {
+            selectAutocompleteIndex(index);
+        });
+        
+        // Add subtle animation delay for each item
+        item.style.animationDelay = `${index * 0.05}s`;
+        item.style.animation = 'fadeInUp 0.3s ease forwards';
+        
+        dropdown.appendChild(item);
+    });
+    
+    dropdown.style.display = 'block';
+    selectedAutocompleteIndex = -1;
+}
+
+function hideAutocomplete() {
+    const dropdown = document.getElementById('autocomplete-dropdown');
+    dropdown.style.display = 'none';
+    selectedAutocompleteIndex = -1;
+}
+
+function selectAutocompleteIndex(index) {
+    const items = document.querySelectorAll('.autocomplete-item');
+    
+    // Önceki seçimi temizle
+    items.forEach(item => item.classList.remove('selected'));
+    
+    if (index >= 0 && index < items.length) {
+        items[index].classList.add('selected');
+        selectedAutocompleteIndex = index;
+    }
+}
+
+function selectAutocompleteItem(suggestion) {
+    const input = document.getElementById('chatbox-input');
+    input.value = suggestion.text;
+    hideAutocomplete();
+    
+    // Otomatik olarak arama yap
+    handleChatboxEntry();
+}
+
+function handleAutocompleteKeydown(e) {
+    const dropdown = document.getElementById('autocomplete-dropdown');
+    const items = document.querySelectorAll('.autocomplete-item');
+    
+    if (dropdown.style.display === 'none') return;
+    
+    switch (e.key) {
+        case 'ArrowDown':
+            e.preventDefault();
+            selectedAutocompleteIndex = Math.min(selectedAutocompleteIndex + 1, items.length - 1);
+            selectAutocompleteIndex(selectedAutocompleteIndex);
+            break;
+            
+        case 'ArrowUp':
+            e.preventDefault();
+            selectedAutocompleteIndex = Math.max(selectedAutocompleteIndex - 1, -1);
+            selectAutocompleteIndex(selectedAutocompleteIndex);
+            break;
+            
+        case 'Enter':
+            e.preventDefault();
+            if (selectedAutocompleteIndex >= 0 && selectedAutocompleteIndex < items.length) {
+                const selectedItem = items[selectedAutocompleteIndex];
+                const suggestion = autocompleteData[selectedAutocompleteIndex];
+                if (suggestion) {
+                    selectAutocompleteItem(suggestion);
+                }
+            } else {
+                handleChatboxEntry();
+            }
+            break;
+            
+        case 'Escape':
+            hideAutocomplete();
+            break;
+    }
+}
 
 function getCategoryName(categoryName) {
     const translation = categoryTranslations[categoryName];
@@ -606,6 +951,12 @@ window.onload = () => {
             changeTheme(newTheme);
         });
     });
+    
+    // Otomatik tamamlama için input event listener
+    const searchInput = document.getElementById('chatbox-input');
+    searchInput.addEventListener('input', handleAutocomplete);
+    searchInput.addEventListener('keydown', handleAutocompleteKeydown);
+    searchInput.addEventListener('blur', hideAutocomplete);
     
     // CSS ekle
     document.head.insertAdjacentHTML('beforeend', `

@@ -156,7 +156,7 @@
         }
         
         [data-theme="dark"] .theme-switch .moon-icon {
-            right: 6px;
+            right: 3px;
         }
         
         /* Siyah-beyaz minimalist theme switch */
@@ -438,10 +438,15 @@
             flex-wrap: wrap;
         }
         
-        .search-input {
+        .search-input-wrapper {
+            position: relative;
             flex: 1;
             min-width: 250px;
             max-width: 400px;
+        }
+        
+        .search-input {
+            width: 100%;
             padding: 12px 16px;
             font-size: 1rem;
             border-radius: 6px;
@@ -450,6 +455,128 @@
             color: var(--text-dark);
             font-family: 'Inter', sans-serif;
             transition: all 0.2s ease;
+        }
+        
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            position: relative;
+        }
+        
+        .autocomplete-item span {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.4;
+            order: 1;
+        }
+        
+        .autocomplete-item .icon {
+            font-size: 16px;
+            color: var(--text-gray);
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            order: 2;
+            align-self: flex-end;
+        }
+        
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+        
+        .autocomplete-item:hover {
+            background: var(--bg-gray);
+            transform: translateX(2px);
+        }
+        
+        .autocomplete-item.selected {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateX(4px);
+        }
+        
+        .autocomplete-item.selected span {
+            color: white;
+        }
+        
+        .autocomplete-item .icon {
+            font-size: 16px;
+            color: var(--text-gray);
+            opacity: 0.7;
+            transition: all 0.2s ease;
+        }
+        
+        .autocomplete-item:hover .icon {
+            opacity: 1;
+            color: var(--primary-blue);
+        }
+        
+        .autocomplete-item.selected .icon {
+            color: white;
+            opacity: 1;
+        }
+        
+        .autocomplete-item.selected span {
+            color: white;
+        }
+        
+        [data-theme="dark"] .autocomplete-dropdown {
+            background: rgba(26, 26, 46, 0.95);
+            border-color: var(--border-color);
+            backdrop-filter: blur(15px);
+        }
+        
+        [data-theme="dark"] .autocomplete-item {
+            border-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .autocomplete-item span {
+            color: var(--text-dark);
+        }
+        
+        [data-theme="dark"] .autocomplete-item:hover {
+            background: rgba(79, 70, 229, 0.1);
+            border-left: 3px solid var(--primary-blue);
+        }
+        
+        [data-theme="dark"] .autocomplete-item.selected {
+            background: var(--primary-blue);
+            border-left: 3px solid var(--primary-blue);
+        }
+        
+        /* Animation for autocomplete items */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .search-input:focus {
@@ -833,7 +960,10 @@
         <!-- Search Section -->
         <div class="search-section">
             <div class="search-container">
-                <input id="chatbox-input" type="text" placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." class="search-input" data-tr-placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." data-en-placeholder="Example: wireless headphones, gaming laptop, smartphone...">
+                <div class="search-input-wrapper">
+                    <input id="chatbox-input" type="text" placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." class="search-input" data-tr-placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." data-en-placeholder="Example: wireless headphones, gaming laptop, smartphone...">
+                    <div id="autocomplete-dropdown" class="autocomplete-dropdown"></div>
+                </div>
                 <button id="chatbox-send" class="search-btn">
                     <i class="fas fa-search"></i> <span data-tr="AI ile Bul" data-en="Find with AI">AI ile Bul</span>
                 </button>
