@@ -57,3 +57,4 @@
 📩 /ask veri: {'step': 2, 'category': 'Mouse', 'answers': ['Ofis/Günlük kullanım'], 'language': 'tr'}
 📩 /ask veri: {'step': 3, 'category': 'Mouse', 'answers': ['Ofis/Günlük kullanım', 'Evet'], 'language': 'tr'}
 📩 /ask veri: {'step': 4, 'category': 'Mouse', 'answers': ['Ofis/Günlük kullanım', 'Evet', '1.2-2.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
