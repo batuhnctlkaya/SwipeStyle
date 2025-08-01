@@ -709,12 +709,13 @@ class EnhancedDatabaseCategoryAgent:
         if language == 'tr':
             prompt = (
                 f"Türk pazarında '{category}' kategorisinde, şu özelliklere sahip ürünler öner: {specs_str}. "
-                "Her ürün için isim, FIYAT (TL cinsinden) ve kısa açıklama ver. "
+                "Her ürün için SADECE ÜRÜN ADI, FIYAT (TL cinsinden) ve kısa açıklama ver. "
                 "5 ürün öner. Sadece aşağıdaki örnekteki gibi kısa bir liste olarak dön.\n\n"
                 "Örnek çıktı:\n"
-                "Sony WH-1000XM4 - FIYAT - Kablosuz, noise cancelling\n"
-                "Apple AirPods Pro - FIYAT - True wireless, ANC\n\n"
-                "Lütfen sadece bu formatta dön: Ürün Adı - Fiyat - Kısa Açıklama."
+                "Sony WH-1000XM4 - 2500₺ - Kablosuz, noise cancelling\n"
+                "Apple AirPods Pro 2 - 2200₺ - True wireless, ANC\n\n"
+                "Lütfen sadece bu formatta dön: Ürün Adı - Fiyat - Kısa Açıklama. "
+                "Ürün adları sadece model adı olmalı, 'EN ÇOK ÖNERİLEN' gibi kelimeler EKLEME."
             )
         else:
             prompt = (
@@ -746,7 +747,7 @@ class EnhancedDatabaseCategoryAgent:
         
         for line in lines:
             line = line.strip()
-            if not line or 'Fiyat' in line or 'Price' in line or line.startswith('#'):
+            if not line or line.startswith('#') or line.startswith('Örnek') or line.startswith('Example'):
                 continue
                 
             # Satırı ayrıştır: Ürün Adı - Fiyat - Açıklama
@@ -756,6 +757,11 @@ class EnhancedDatabaseCategoryAgent:
                 name = parts[0]
                 price = parts[1]
                 description = parts[2] if len(parts) > 2 else ""
+            else:
+                # Eğer - ile ayrılmamışsa, satırı olduğu gibi al
+                name = line
+                price = "Fiyat belirtilmemiş"
+                description = ""
                 
                 # Fiyattan sayısal değeri çıkar
                 price_match = re.search(r'[\d,]+', price)
@@ -764,10 +770,13 @@ class EnhancedDatabaseCategoryAgent:
                 else:
                     price_num = "N/A"
                 
-                # Akakce arama linki oluştur
+                # Akakce arama linki oluştur - sadece ürün adı
                 search_query = re.sub(r'[^\w\s]', '', name)
                 search_query = re.sub(r'\s+', '+', search_query)
-                link = f'https://www.google.com/search?q={search_query}'
+                # Gereksiz kelimeleri temizle
+                search_query = re.sub(r'\b(EN ÇOK ÖNERİLEN|MOST RECOMMENDED|ÖNERİLEN|RECOMMENDED)\b', '', search_query, flags=re.IGNORECASE)
+                search_query = search_query.strip()
+                link = f'https://www.akakce.com/arama/?q={search_query}'
                 
                 recommendations.append({
                     'name': name,
@@ -787,16 +796,72 @@ class EnhancedDatabaseCategoryAgent:
     def _get_fallback_recommendations(self, category: str) -> List[Dict]:
         """
         Gemini AI başarısız olduğunda kullanılacak yedek öneriler.
-        Artık boş liste döndürüyor ki frontend shopping API'sını kullansın.
         
         Args:
             category (str): Ürün kategorisi
             
         Returns:
-            List[Dict]: Boş liste - frontend shopping API'sını kullanacak
+            List[Dict]: Yedek ürün önerileri
         """
-        logger.info(f"Gemini AI başarısız, frontend shopping API'sını kullanacak: {category}")
-        return []  # Boş liste döndür ki frontend shopping API'sını kullansın
+        logger.info(f"Gemini AI başarısız, yedek öneriler kullanılıyor: {category}")
+        
+        if category.lower() == "headphones":
+            return [
+                {
+                    'name': 'Sony WH-1000XM4',
+                    'price': '2.500₺',
+                    'description': 'Kablosuz, noise cancelling',
+                    'link': 'https://www.akakce.com/arama/?q=Sony+WH-1000XM4+headphones',
+                    'rating': 4.5,
+                    'image': 'https://via.placeholder.com/200x200'
+                },
+                {
+                    'name': 'Apple AirPods Pro 2',
+                    'price': '2.200₺',
+                    'description': 'True wireless, ANC',
+                    'link': 'https://www.akakce.com/arama/?q=Apple+AirPods+Pro+2+headphones',
+                    'rating': 4.3,
+                    'image': 'https://via.placeholder.com/200x200'
+                },
+                {
+                    'name': 'Samsung Galaxy Buds2 Pro',
+                    'price': '1.800₺',
+                    'description': 'Kablosuz, 360 audio',
+                    'link': 'https://www.akakce.com/arama/?q=Samsung+Galaxy+Buds2+Pro+headphones',
+                    'rating': 4.2,
+                    'image': 'https://via.placeholder.com/200x200'
+                }
+            ]
+        elif category.lower() == "laptops":
+            return [
+                {
+                    'name': 'MacBook Air M2',
+                    'price': '25.000₺',
+                    'description': 'Apple Silicon, 13.6 inch',
+                    'link': 'https://www.akakce.com/arama/?q=MacBook+Air+M2+laptop',
+                    'rating': 4.6,
+                    'image': 'https://via.placeholder.com/200x200'
+                },
+                {
+                    'name': 'Dell XPS 13',
+                    'price': '22.000₺',
+                    'description': 'Intel i7, 13.4 inch',
+                    'link': 'https://www.akakce.com/arama/?q=Dell+XPS+13+laptop',
+                    'rating': 4.4,
+                    'image': 'https://via.placeholder.com/200x200'
+                }
+            ]
+        else:
+            return [
+                {
+                    'name': f'Önerilen {category}',
+                    'price': '1.000₺',
+                    'description': 'Kaliteli ürün',
+                    'link': f'https://www.akakce.com/arama/?q={category}',
+                    'rating': 4.0,
+                    'image': 'https://via.placeholder.com/200x200'
+                }
+            ]
     
     def get_supported_countries(self) -> Dict[str, str]:
         """

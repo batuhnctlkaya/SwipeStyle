@@ -131,16 +131,16 @@ let category = null;
 let answers = [];
 
 const categoryIcons = {
-    'Mouse': '🖱️',
-    'Headphones': '🎧',
-    'Phone': '📱',
-    'Laptop': '💻',
-    'Keyboard': '⌨️',
-    'Monitor': '🖥️',
-    'Speaker': '🔊',
-    'Camera': '📷',
-    'Tablet': '📱',
-    'Smartwatch': '⌚'
+    'Mouse': 'fas fa-mouse',
+    'Headphones': 'fas fa-headphones',
+    'Phone': 'fas fa-mobile-alt',
+    'Laptop': 'fas fa-laptop',
+    'Keyboard': 'fas fa-keyboard',
+    'Monitor': 'fas fa-desktop',
+    'Speaker': 'fas fa-volume-up',
+    'Camera': 'fas fa-camera',
+    'Tablet': 'fas fa-tablet-alt',
+    'Smartwatch': 'fas fa-clock'
 };
 
 // Kategori isimlerini çevir
@@ -188,7 +188,11 @@ function renderLanding(categories) {
         
         const icon = document.createElement('div');
         icon.className = 'category-icon';
-        icon.textContent = categoryIcons[cat] || '🔍';
+        
+        // Font Awesome ikonu için
+        const iconElement = document.createElement('i');
+        iconElement.className = categoryIcons[cat] || 'fas fa-search';
+        icon.appendChild(iconElement);
         
         const label = document.createElement('div');
         label.className = 'category-label';
