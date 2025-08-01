@@ -1,314 +1,130 @@
-// Main.js'e CSS stillerini ekleyin veya ayrı bir CSS dosyası oluşturun
+/**
+ * SwipeStyle Frontend JavaScript
+ * Basit ve temiz JavaScript kodu
+ */
 
-const tooltipStyles = `
-<style>
-.question-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
+// Global dil değişkeni
+let currentLanguage = 'tr';
+let currentTheme = 'light';
 
-.question-container h2 {
-    display: inline-block;
-    margin-right: 10px;
-    flex: 1;
-}
-
-.tooltip-container {
-    position: relative;
-    display: inline-block;
-    margin-left: 5px;
-    z-index: 10;
-}
-
-.info-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    cursor: help;
-    opacity: 0.8;
-    transition: all 0.3s ease;
-    user-select: none;
-    padding: 4px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    width: 22px;
-    height: 22px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    border: 1px solid #e0e0e0;
-}
-
-.info-icon:hover {
-    opacity: 1;
-    transform: scale(1.1);
-    background-color: #e6e6e6;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-}
-
-.tooltip-text {
-    visibility: hidden;
-    opacity: 0;
-    position: absolute;
-    bottom: 130%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    text-align: left;
-    padding: 14px;
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.5;
-    width: 300px;
-    z-index: 1000;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    word-wrap: break-word;
-    border-left: 4px solid #a18cd1;
-}
-
-.tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -6px;
-    border-width: 6px;
-    border-style: solid;
-    border-color: #333 transparent transparent transparent;
-}
-
-/* Mobil cihazlar için özel düzenlemeler */
-@media (max-width: 768px) {
-    .question-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 0 10px;
-    }
+// Tema değiştirme fonksiyonu
+function changeTheme(theme) {
+    currentTheme = theme;
     
-    .tooltip-container {
-        margin-top: -5px;
-        align-self: flex-start;
-    }
+    // HTML'e tema attribute'u ekle
+    document.documentElement.setAttribute('data-theme', theme);
     
-    .tooltip-text {
-        width: 280px;
-        left: 0;
-        transform: none;
-        bottom: 140%;
-        font-size: 13px;
-        padding: 12px;
-    }
+    // Theme switch'i güncelle
+    document.querySelectorAll('.theme-switch').forEach(switch_el => {
+        switch_el.dataset.theme = theme;
+        if (theme === 'dark') {
+            switch_el.classList.add('active');
+        } else {
+            switch_el.classList.remove('active');
+        }
+    });
     
-    .tooltip-text::after {
-        left: 10px;
-        margin-left: 0;
-    }
+    // LocalStorage'a kaydet
+    localStorage.setItem('swipestyle-theme', theme);
+}
+
+// Dil değiştirme fonksiyonu
+function changeLanguage(lang) {
+    currentLanguage = lang;
     
-    .info-icon {
-        font-size: 16px;
-    }
+    // Dil butonlarını güncelle
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.lang === lang) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Tüm çevrilebilir elementleri güncelle
+    document.querySelectorAll('[data-tr], [data-en]').forEach(element => {
+        const trText = element.dataset.tr;
+        const enText = element.dataset.en;
+        
+        if (lang === 'tr' && trText) {
+            element.textContent = trText;
+        } else if (lang === 'en' && enText) {
+            element.textContent = enText;
+        }
+    });
+    
+    // Placeholder'ları güncelle
+    document.querySelectorAll('[data-tr-placeholder], [data-en-placeholder]').forEach(element => {
+        const trPlaceholder = element.dataset.trPlaceholder;
+        const enPlaceholder = element.dataset.enPlaceholder;
+        
+        if (lang === 'tr' && trPlaceholder) {
+            element.placeholder = trPlaceholder;
+        } else if (lang === 'en' && enPlaceholder) {
+            element.placeholder = enPlaceholder;
+        }
+    });
+    
+    // Kategorileri yeniden yükle
+    loadCategories();
 }
 
-/* Çok küçük ekranlar için */
-@media (max-width: 480px) {
-    .tooltip-text {
-        width: calc(100vw - 40px);
-        max-width: 280px;
-        left: -10px;
-        font-size: 12px;
-        padding: 10px;
-    }
-}
-
-/* Tooltip animasyonları */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.tooltip-text.show {
-    visibility: visible;
-    opacity: 1;
-    animation: fadeIn 0.3s ease;
-}
-
-/* Options container */
-.options-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 0 10px;
-}
-
-/* Option butonları için iyileştirmeler */
-.option-btn {
-    margin: 6px 0;
-    padding: 14px 18px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 15px;
-    line-height: 1.4;
-    text-align: left;
-    position: relative;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    font-weight: 500;
-    color: #333;
-}
-
-.option-btn:hover {
-    background: #f9f9f9;
-    border-color: #a18cd1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.option-btn:active {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.option-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-@media (max-width: 768px) {
-    .option-btn {
-        width: 100%;
-        margin: 5px 0;
-        padding: 16px 18px;
-        font-size: 16px;
-    }
-}
-
-/* İnteraksiyon konteynerinde iyileştirmeler */
-#interaction {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px 10px;
-}
-
-.loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: #666;
-    font-size: 16px;
-}
-
-.error {
-    background-color: #ffebee;
-    color: #d32f2f;
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 20px;
-    border-left: 4px solid #d32f2f;
-    font-size: 14px;
-}
-</style>`;
-
-// Sayfaya CSS ekle
-document.head.insertAdjacentHTML('beforeend', tooltipStyles);
-
-// Chatbox logic
 function handleChatboxEntry() {
     const input = document.getElementById('chatbox-input').value.trim();
-    if (!input) return;
+    if (!input) {
+        const alertMsg = currentLanguage === 'tr' ? 'Lütfen bir ürün yazın' : 'Please enter a product';
+        alert(alertMsg);
+        return;
+    }
+    
+    // Arama butonunu devre dışı bırak
+    const searchBtn = document.getElementById('chatbox-send');
+    const originalText = searchBtn.innerHTML;
+    const loadingText = currentLanguage === 'tr' ? '<i class="fas fa-spinner fa-spin"></i> Aranıyor...' : '<i class="fas fa-spinner fa-spin"></i> Searching...';
+    searchBtn.innerHTML = loadingText;
+    searchBtn.disabled = true;
+    
     showLoadingScreen();
     
-    // Yeni search API'sini kullan
-    fetch(`/search/${encodeURIComponent(input)}`)
+    // API çağrısı
+    fetch('/detect_category', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: input })
+    })
     .then(res => res.json())
     .then(data => {
         hideLoadingScreen();
         
-        if (data.status === 'error') {
-            alert("Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.");
-            return;
-        }
+        // Butonu eski haline getir
+        searchBtn.innerHTML = originalText;
+        searchBtn.disabled = false;
         
-        let categoryName = '';
-        
-        // API yanıt durumuna göre farklı işlemler
-        switch(data.status) {
-            case 'found':
-                categoryName = data.category;
-                break;
-                
-            case 'similar_found':
-            case 'partial_match':
-                categoryName = data.matched_category;
-                alert(`"${input}" aramanız "${categoryName}" kategorisiyle eşleştirildi.`);
-                break;
-                
-            case 'alias_match':
-                categoryName = data.matched_category;
-                alert(`"${input}" aramanız "${categoryName}" kategorisine yönlendirildi.`);
-                break;
-                
-            case 'created':
-                categoryName = data.category;
-                alert(`"${categoryName}" için yeni bir kategori oluşturuldu.`);
-                break;
-                
-            default:
-                // Fallback - eski metodu kullan
-                fetch('/detect_category', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: input })
-                })
-                .then(res => res.json())
-                .then(categoryData => {
-                    if (categoryData.category) {
-                        category = categoryData.category;
-                        step = 1;
-                        answers = [];
-                        document.querySelector('.landing').style.display = 'none';
-                        document.getElementById('interaction').style.display = '';
-                        askAgent();
-                    } else {
-                        alert('Aradığınız kategoriyi bulamadım. Lütfen başka bir şey deneyin.');
-                    }
-                });
-                return;
-        }
-        
-        if (categoryName) {
-            category = categoryName;
+        if (data.category) {
+            category = data.category;
             step = 1;
             answers = [];
+            
+            // Basit geçiş
             document.querySelector('.landing').style.display = 'none';
             document.getElementById('interaction').style.display = '';
             askAgent();
+        } else {
+            const errorMsg = currentLanguage === 'tr' ? 'Aradığınız kategoriyi bulamadım. Lütfen başka bir şey deneyin.' : 'Could not find the category you are looking for. Please try something else.';
+            alert(errorMsg);
         }
     })
     .catch(error => {
         console.error("Arama hatası:", error);
         hideLoadingScreen();
-        alert("Bir hata oluştu, lütfen tekrar deneyin.");
+        
+        // Butonu eski haline getir
+        searchBtn.innerHTML = originalText;
+        searchBtn.disabled = false;
+        
+        const errorMsg = currentLanguage === 'tr' ? "Bir hata oluştu, lütfen tekrar deneyin." : "An error occurred, please try again.";
+        alert(errorMsg);
     });
 }
-
-// Bu window.onload sonraki ile çakıştığı için kaldırılacak
 
 let step = 0;
 let category = null;
@@ -318,27 +134,72 @@ const categoryIcons = {
     'Mouse': '🖱️',
     'Headphones': '🎧',
     'Phone': '📱',
-    'Laptop': '💻'
+    'Laptop': '💻',
+    'Keyboard': '⌨️',
+    'Monitor': '🖥️',
+    'Speaker': '🔊',
+    'Camera': '📷',
+    'Tablet': '📱',
+    'Smartwatch': '⌚'
 };
+
+// Kategori isimlerini çevir
+const categoryTranslations = {
+    'Mouse': { tr: 'Mouse', en: 'Mouse' },
+    'Headphones': { tr: 'Kulaklık', en: 'Headphones' },
+    'Phone': { tr: 'Telefon', en: 'Phone' },
+    'Laptop': { tr: 'Laptop', en: 'Laptop' },
+    'Keyboard': { tr: 'Klavye', en: 'Keyboard' },
+    'Monitor': { tr: 'Monitör', en: 'Monitor' },
+    'Speaker': { tr: 'Hoparlör', en: 'Speaker' },
+    'Camera': { tr: 'Kamera', en: 'Camera' },
+    'Tablet': { tr: 'Tablet', en: 'Tablet' },
+    'Smartwatch': { tr: 'Akıllı Saat', en: 'Smartwatch' }
+};
+
+function getCategoryName(categoryName) {
+    const translation = categoryTranslations[categoryName];
+    if (translation) {
+        return translation[currentLanguage] || categoryName;
+    }
+    return categoryName;
+}
+
+function loadCategories() {
+    fetch('/categories')
+        .then(res => res.json())
+        .then(data => {
+            const categories = Object.keys(data);
+            renderLanding(categories);
+        })
+        .catch(error => {
+            console.error("Kategoriler yüklenirken hata:", error);
+        });
+}
 
 function renderLanding(categories) {
     const grid = document.getElementById('category-cards');
     grid.innerHTML = '';
+    
     categories.forEach(cat => {
         const card = document.createElement('div');
         card.className = 'category-card';
         card.onclick = () => startInteraction(cat);
+        
         const icon = document.createElement('div');
         icon.className = 'category-icon';
         icon.textContent = categoryIcons[cat] || '🔍';
+        
         const label = document.createElement('div');
         label.className = 'category-label';
-        label.textContent = cat;
+        label.textContent = getCategoryName(cat);
+        
         card.appendChild(icon);
         card.appendChild(label);
         grid.appendChild(card);
     });
-    // Attach chatbox event listeners after rendering
+    
+    // Event listeners
     const chatboxSend = document.getElementById('chatbox-send');
     const chatboxInput = document.getElementById('chatbox-input');
     if (chatboxSend && chatboxInput) {
@@ -353,6 +214,8 @@ function startInteraction(selectedCategory) {
     category = selectedCategory;
     step = 1;
     answers = [];
+    
+    // Basit geçiş
     document.querySelector('.landing').style.display = 'none';
     document.getElementById('interaction').style.display = '';
     askAgent();
@@ -361,56 +224,25 @@ function startInteraction(selectedCategory) {
 function renderQuestion(question, options, emoji) {
     const interaction = document.getElementById('interaction');
     
-    console.log("Rendering question:", question);
-    console.log("With tooltip:", window.currentQuestionTooltip);
-    
-    // İlk önce soru ve seçenekleri temizle
     const questionDiv = interaction.querySelector('.question');
     const optionsDiv = interaction.querySelector('.options');
     
     if (!questionDiv || !optionsDiv) {
         console.error("Question or options div not found!");
-        document.querySelector('.error').textContent = 'Sayfa yapısında sorun var. Lütfen sayfayı yenileyin.';
+        const errorMsg = currentLanguage === 'tr' ? 'Sayfa yapısında sorun var. Lütfen sayfayı yenileyin.' : 'There is a problem with the page structure. Please refresh the page.';
+        document.querySelector('.error').textContent = errorMsg;
         return;
     }
     
     questionDiv.innerHTML = '';
     optionsDiv.innerHTML = '';
     
-    // Soru container'ını oluştur
-    const questionContainer = document.createElement('div');
-    questionContainer.className = 'question-container';
-    
     // Soru başlığı
     const questionTitle = document.createElement('h2');
     questionTitle.innerHTML = `${emoji} ${question}`;
-    questionContainer.appendChild(questionTitle);
-    
-    // Tooltip varsa ekle
-    if (window.currentQuestionTooltip) {
-        const tooltipContainer = document.createElement('div');
-        tooltipContainer.className = 'tooltip-container';
-        
-        const infoIcon = document.createElement('span');
-        infoIcon.className = 'info-icon';
-        infoIcon.textContent = 'ℹ️';
-        infoIcon.addEventListener('mouseover', showTooltip);
-        infoIcon.addEventListener('mouseout', hideTooltip);
-        
-        const tooltipText = document.createElement('div');
-        tooltipText.className = 'tooltip-text';
-        tooltipText.id = 'tooltip';
-        tooltipText.innerHTML = window.currentQuestionTooltip;
-        
-        tooltipContainer.appendChild(infoIcon);
-        tooltipContainer.appendChild(tooltipText);
-        questionContainer.appendChild(tooltipContainer);
-    }
+    questionDiv.appendChild(questionTitle);
     
     // Seçenekleri oluştur
-    const optionsContainer = document.createElement('div');
-    optionsContainer.className = 'options-container';
-    
     options.forEach(opt => {
         const button = document.createElement('button');
         button.className = 'option-btn';
@@ -418,172 +250,136 @@ function renderQuestion(question, options, emoji) {
         button.addEventListener('click', function() {
             handleOption(opt);
         });
-        optionsContainer.appendChild(button);
+        optionsDiv.appendChild(button);
     });
     
-    // Soru ve seçenekleri ekle
-    questionDiv.appendChild(questionContainer);
-    optionsDiv.appendChild(optionsContainer);
-    
-    // Loading'i gizle ve interaction'ı göster
+    // Loading'i gizle
     const loadingDiv = interaction.querySelector('.loading');
     if (loadingDiv) loadingDiv.style.display = 'none';
     
     interaction.style.display = 'block';
-    
-    console.log("Question rendered successfully");
 }
-
-function showTooltip(event) {
-    console.log("Tooltip gösteriliyor...");
-    
-    // Event hedefinin tooltip container'ını bul
-    const infoIcon = event.currentTarget;
-    const tooltipContainer = infoIcon.parentElement;
-    const tooltip = tooltipContainer.querySelector('.tooltip-text');
-    
-    if (tooltip) {
-        // Class kullanarak tooltip'i göster
-        tooltip.classList.add('show');
-        tooltip.style.visibility = 'visible';
-        tooltip.style.opacity = '1';
-        
-        // Tooltip konumunu hesapla
-        const iconRect = infoIcon.getBoundingClientRect();
-        const tooltipRect = tooltip.getBoundingClientRect();
-        
-        // Ekranın sağ kenarında olup olmadığını kontrol et
-        const rightEdgeDistance = window.innerWidth - (iconRect.right + tooltipRect.width/2);
-        if (rightEdgeDistance < 0) {
-            tooltip.style.left = 'auto';
-            tooltip.style.right = '0';
-            tooltip.style.transform = 'translateX(0)';
-        }
-        
-        // Ekranın üst kısmında olup olmadığını kontrol et
-        if (iconRect.top < tooltipRect.height + 20) {
-            tooltip.style.bottom = 'auto';
-            tooltip.style.top = '130%';
-            
-            // Ok yönünü değiştir
-            tooltip.style.setProperty('--arrow-direction', 'up');
-        }
-        
-        console.log("Tooltip gösterildi");
-        
-        // Tooltip dışında bir yere tıklanırsa tooltip'i gizle
-        document.addEventListener('click', closeTooltipOnClickOutside);
-        
-    } else {
-        console.log("Tooltip bulunamadı");
-    }
-    
-    // Event'in daha fazla yayılmasını engelle
-    event.stopPropagation();
-}
-
-// Tooltip dışında bir yere tıklandığında tooltip'i kapatır
-function closeTooltipOnClickOutside(event) {
-    const tooltips = document.querySelectorAll('.tooltip-text.show');
-    if (tooltips.length > 0) {
-        let clickedOnTooltip = false;
-        
-        tooltips.forEach(tooltip => {
-            if (tooltip.contains(event.target) || event.target.classList.contains('info-icon')) {
-                clickedOnTooltip = true;
-            }
-        });
-        
-        if (!clickedOnTooltip) {
-            hideTooltip();
-            document.removeEventListener('click', closeTooltipOnClickOutside);
-        }
-    } else {
-        document.removeEventListener('click', closeTooltipOnClickOutside);
-    }
-}
-
-function hideTooltip(event) {
-    console.log("Tooltip gizleniyor...");
-    
-    // Event hedefinin tooltip container'ını bul
-    if (event && event.currentTarget) {
-        const infoIcon = event.currentTarget;
-        const tooltipContainer = infoIcon.parentElement;
-        const tooltip = tooltipContainer.querySelector('.tooltip-text');
-        
-        if (tooltip) {
-            tooltip.classList.remove('show');
-            tooltip.style.visibility = 'hidden';
-            tooltip.style.opacity = '0';
-        }
-    } else {
-        // Eğer event yoksa (veya event.target yoksa) tüm tooltipleri gizle
-        const tooltips = document.querySelectorAll('.tooltip-text');
-        tooltips.forEach(tooltip => {
-            tooltip.classList.remove('show');
-            tooltip.style.visibility = 'hidden';
-            tooltip.style.opacity = '0';
-        });
-    }
-    
-    console.log("Tooltip gizlendi");
-}
-
-// Bu fonksiyon ikinci tanımlanışı ile çakışıyor, kaldırılacak
 
 function renderRecommendations(recs) {
     hideLoadingScreen();
-    const recDiv = document.querySelector('.recommendation');
-    let html = '<h2>Önerilen Ürünler</h2>' + recs.map(r => {
+    const recDiv = document.querySelector('.recommendations');
+    
+    const titleText = currentLanguage === 'tr' ? 'Önerilen Ürünler' : 'Recommended Products';
+    
+    let html = `
+        <h2><i class="fas fa-star"></i> ${titleText}</h2>
+        <div class="recommendations-grid">
+    `;
+    
+    recs.forEach((r, index) => {
         let linkHtml = '';
         let url = r.link || '';
         if (url && !url.startsWith('http') && url.length > 5) {
             url = 'https://' + url.replace(/^(www\.)?/, '');
         }
         if (url && url.startsWith('http')) {
-            linkHtml = ` <a href="${url}" target="_blank" style="color:#3b82f6; text-decoration:underline;">Satın Al</a>`;
+            const linkText = currentLanguage === 'tr' ? 'Satın Al' : 'Buy Now';
+            linkHtml = `<a href="${url}" target="_blank" class="buy-link">
+                <i class="fas fa-external-link-alt"></i> ${linkText}
+            </a>`;
         }
-        return `<div style="margin-bottom:18px;">${r.name} - ${r.price}${linkHtml}</div>`;
-    }).join('');
-    html += `<div style="margin-top:32px;text-align:center;"><button id="back-to-categories" style="padding:12px 32px;font-size:1.1em;border-radius:12px;border:none;background:#a18cd1;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.08);">Yeni arama yap</button></div>`;
+        
+        // Badge'leri ekle
+        let badges = '';
+        
+        // Premium badge (her 3. ürün için)
+        if (index % 3 === 0) {
+            badges += '<div class="premium-badge">Premium</div>';
+        }
+        
+        // İndirim badge (her 4. ürün için)
+        if (index % 4 === 0) {
+            const discountText = currentLanguage === 'tr' ? '%25 İndirim' : '%25 Discount';
+            badges += `<div class="discount-badge">${discountText}</div>`;
+        }
+        
+        // Oyunlaştırma badge (her 5. ürün için)
+        if (index % 5 === 0) {
+            const popularText = currentLanguage === 'tr' ? '🔥 Popüler' : '🔥 Popular';
+            badges += `<div class="game-badge">${popularText}</div>`;
+        }
+        
+        html += `
+            <div class="recommendation-item">
+                ${badges}
+                <div class="recommendation-content">
+                    <div class="recommendation-name">${r.name}</div>
+                    <div class="recommendation-price">${r.price}</div>
+                    ${linkHtml}
+                </div>
+            </div>
+        `;
+    });
+    
+    const backButtonText = currentLanguage === 'tr' ? 'Yeni Arama Yap' : 'New Search';
+    
+    html += `
+        </div>
+        <div class="back-section">
+            <button id="back-to-categories" class="back-btn">
+                <i class="fas fa-arrow-left"></i> ${backButtonText}
+            </button>
+        </div>
+    `;
+    
     recDiv.innerHTML = html;
     document.querySelector('.error').textContent = '';
+    
     document.getElementById('back-to-categories').onclick = () => {
-        document.getElementById('interaction').style.display = 'none';
-        document.querySelector('.landing').style.display = '';
-        document.querySelector('.recommendation').innerHTML = '';
+        resetToLanding();
+    };
+}
+
+function resetToLanding() {
+    const interaction = document.getElementById('interaction');
+    const landing = document.querySelector('.landing');
+    
+    interaction.style.display = 'none';
+    landing.style.display = '';
+    
+    // Reset all content
+    document.querySelector('.recommendations').innerHTML = '';
         document.querySelector('.question').innerHTML = '';
         document.querySelector('.options').innerHTML = '';
         document.querySelector('.error').textContent = '';
+    
+    // Reset variables
         step = 0;
         category = null;
         answers = [];
-    };
+    
+    // Clear search input
+    const searchInput = document.getElementById('chatbox-input');
+    if (searchInput) searchInput.value = '';
 }
 
 function showLoadingScreen() {
     hideLoadingScreen();
-    const interaction = document.getElementById('interaction');
     let loadingDiv = document.getElementById('custom-loading');
     if (!loadingDiv) {
+        const loadingText = currentLanguage === 'tr' ? 'AI İşliyor...' : 'AI Processing...';
+        const loadingSubtext = currentLanguage === 'tr' 
+            ? 'Yapay zeka tercihlerinizi analiz ediyor ve size en uygun ürünleri buluyor.'
+            : 'AI is analyzing your preferences and finding the most suitable products for you.';
+        const resetText = currentLanguage === 'tr' ? 'Sıfırla' : 'Reset';
+        
         loadingDiv = document.createElement('div');
         loadingDiv.id = 'custom-loading';
         loadingDiv.className = 'loading-container';
         loadingDiv.innerHTML = `
-            <div class="ai-brain">
-                <div class="neural-ring"></div>
-                <div class="neural-ring"></div>
-                <div class="neural-ring"></div>
-                <div class="ai-core"></div>
-            </div>
-            <div class="loading-text">AI İşliyor...</div>
-            <div class="loading-subtext">Yapay zeka tercihlerinizi analiz ediyor ve size en uygun ürünleri buluyor. Bu işlem 10-45 saniye sürebilir.</div>
+            <div class="loading-spinner"></div>
+            <div class="loading-text">${loadingText}</div>
+            <div class="loading-subtext">${loadingSubtext}</div>
             <div class="progress-container">
                 <div class="progress-bar" id="ai-progress" style="width: 0%"></div>
             </div>
             <button class="emergency-reset" id="emergency-reset">
-                Çok Uzun Sürüyor mu? Sıfırla
+                <i class="fas fa-redo"></i> ${resetText}
             </button>
         `;
         
@@ -592,20 +388,12 @@ function showLoadingScreen() {
         resetButton.onclick = () => {
             isRequestInProgress = false;
             hideLoadingScreen();
-            document.getElementById('interaction').style.display = 'none';
-            document.querySelector('.landing').style.display = '';
-            document.querySelector('.recommendation').innerHTML = '';
-            document.querySelector('.error').textContent = '';
-            step = 0;
-            category = null;
-            answers = [];
-            window.currentQuestionTooltip = null;
+            resetToLanding();
         };
         
         document.body.appendChild(loadingDiv);
     }
     
-    // Start progress animation
     loadingDiv.style.display = 'flex';
     animateProgress();
 }
@@ -616,8 +404,8 @@ function animateProgress() {
     
     let progress = 0;
     const interval = setInterval(() => {
-        progress += Math.random() * 3 + 1; // Random increment between 1-4
-        if (progress > 90) progress = 90; // Don't go to 100% until actually done
+        progress += Math.random() * 3 + 1;
+        if (progress > 90) progress = 90;
         
         progressBar.style.width = progress + '%';
         
@@ -631,7 +419,6 @@ function animateProgress() {
 function hideLoadingScreen() {
     let loadingDiv = document.getElementById('custom-loading');
     if (loadingDiv) {
-        // Complete the progress bar before hiding
         const progressBar = document.getElementById('ai-progress');
         if (progressBar) {
             progressBar.style.width = '100%';
@@ -644,11 +431,9 @@ function hideLoadingScreen() {
     }
 }
 
-// Flag to track if a request is in progress
 let isRequestInProgress = false;
 
 function handleOption(opt) {
-    // Prevent multiple clicks while a request is in progress
     if (isRequestInProgress) {
         console.log("Request already in progress, ignoring click");
         return;
@@ -657,10 +442,9 @@ function handleOption(opt) {
     console.log("Option selected:", opt);
     
     try {
-        // Set the flag to indicate a request is in progress
         isRequestInProgress = true;
         
-        // Disable all option buttons to prevent further clicks
+        // Disable all option buttons
         const optionButtons = document.querySelectorAll('.option-btn');
         optionButtons.forEach(btn => {
             btn.disabled = true;
@@ -671,45 +455,41 @@ function handleOption(opt) {
         // Seçimi görsel olarak göster
         const selectedButton = Array.from(optionButtons).find(btn => btn.textContent === opt);
         if (selectedButton) {
-            selectedButton.style.backgroundColor = '#f0f0ff';
-            selectedButton.style.borderColor = '#a18cd1';
+            selectedButton.style.backgroundColor = 'var(--cta-orange)';
+            selectedButton.style.borderColor = 'var(--cta-orange)';
+            selectedButton.style.color = 'white';
         }
         
-        // Cevabı kaydet ve bir sonraki adıma geç
         answers.push(opt);
         step++;
         
-        // Error göstergesini temizle
         document.querySelector('.error').textContent = '';
         
         console.log("İlerliyor: Adım", step, "Cevaplar:", answers);
         
-        // Kısa bir gecikme ile askAgent'i çağır (animasyon için)
         setTimeout(function() {
             askAgent();
         }, 300);
     } catch(e) {
         console.error("handleOption'da hata:", e);
         isRequestInProgress = false;
-        document.querySelector('.error').textContent = 'İşlem sırasında bir hata oluştu. Lütfen sayfayı yenileyin.';
+        const errorMsg = currentLanguage === 'tr' ? 'İşlem sırasında bir hata oluştu. Lütfen sayfayı yenileyin.' : 'An error occurred during processing. Please refresh the page.';
+        document.querySelector('.error').textContent = errorMsg;
     }
 }
 
 function askAgent() {
     console.log(`Soru soruluyor: Step ${step}, Category ${category}, Answers:`, answers);
     
-    // İstek devam ediyor kontrolünü kaldırdım çünkü handleOption zaten kontrol ediyor
-    
     document.querySelector('.error').textContent = '';
     
-    // Loading ekranını göster
     const loadingElement = document.querySelector('.loading');
     if (loadingElement) {
         loadingElement.style.display = 'block';
-        loadingElement.textContent = 'Yükleniyor...';
+        const loadingText = currentLanguage === 'tr' ? '<i class="fas fa-spinner fa-spin"></i> Yükleniyor...' : '<i class="fas fa-spinner fa-spin"></i> Loading...';
+        loadingElement.innerHTML = loadingText;
     }
     
-    // Debug için mevcut durumu konsola yazdır
     console.log("İstek başlatılıyor:", {
         step: step,
         category: category,
@@ -717,20 +497,19 @@ function askAgent() {
         isRequestInProgress: isRequestInProgress
     });
     
-    // Tavsiyeler alınırken özel yükleme ekranını göster
     let specs = window.currentSpecs && window.currentSpecs[category] ? window.currentSpecs[category] : [];
     if (step > specs.length) {
         showLoadingScreen();
     }
     
-    // 45 saniye zaman aşımı ekle (AI işlemleri için uzatıldı)
     const timeoutId = setTimeout(() => {
         if (isRequestInProgress) {
             console.log("Zaman aşımı oluştu!");
             isRequestInProgress = false;
             hideLoadingScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            document.querySelector('.error').textContent = 'İstek zaman aşımına uğradı. AI analizi uzun sürdü, lütfen tekrar deneyin.';
+            const timeoutMsg = currentLanguage === 'tr' ? 'İstek zaman aşımına uğradı. AI analizi uzun sürdü, lütfen tekrar deneyin.' : 'Request timed out. AI analysis took too long, please try again.';
+            document.querySelector('.error').textContent = timeoutMsg;
         }
     }, 45000);
     
@@ -741,7 +520,7 @@ function askAgent() {
             step: step, 
             category: category, 
             answers: answers,
-            language: 'tr' // Türkçe dilini varsayılan olarak kullan
+            language: currentLanguage
         })
     })
     .then(res => {
@@ -756,7 +535,6 @@ function askAgent() {
         isRequestInProgress = false;
         console.log("Sunucudan gelen yanıt:", data);
         
-        // Debugging: Log the exact structure of the data object
         console.log("Response has question:", !!data.question);
         console.log("Response has options:", !!data.options);
         console.log("Response has recommendations:", !!data.recommendations);
@@ -765,7 +543,6 @@ function askAgent() {
         
         if (data.question && data.options) {
             hideLoadingScreen();
-            // Tooltip bilgisini global değişkene kaydet
             window.currentQuestionTooltip = data.tooltip || null;
             renderQuestion(data.question, data.options, data.emoji || '🔍');
         } else if (data.recommendations) {
@@ -777,21 +554,21 @@ function askAgent() {
             if (loadingElement) loadingElement.style.display = 'none';
             document.querySelector('.error').textContent = data.error;
         } else {
-            // Handle unexpected response format without infinite loop
             console.error('Beklenmeyen yanıt formatı:', data);
             hideLoadingScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            document.querySelector('.error').textContent = 'Beklenmeyen bir yanıt alındı. Lütfen sayfayı yenileyin.';
+            const unexpectedMsg = currentLanguage === 'tr' ? 'Beklenmeyen bir yanıt alındı. Lütfen sayfayı yenileyin.' : 'An unexpected response was received. Please refresh the page.';
+            document.querySelector('.error').textContent = unexpectedMsg;
         }
     })
     .catch(err => {
-        clearTimeout(timeoutId);  // Zaman aşımını iptal et
-        // Reset the request in progress flag even if there's an error
+        clearTimeout(timeoutId);
         isRequestInProgress = false;
         
         hideLoadingScreen();
         if (loadingElement) loadingElement.style.display = 'none';
-        document.querySelector('.error').textContent = 'Sunucuya erişilemiyor: ' + err.message;
+        const errorMsg = currentLanguage === 'tr' ? 'Sunucuya erişilemiyor: ' : 'Cannot access server: ';
+        document.querySelector('.error').textContent = errorMsg + err.message;
         console.error('Hata:', err);
     });
 }
@@ -799,20 +576,94 @@ function askAgent() {
 window.onload = () => {
     console.log("SwipeStyle uygulaması başlatılıyor...");
     
-    // Sayfaya CSS ekle
-    document.head.insertAdjacentHTML('beforeend', tooltipStyles);
+    // Tema tercihini localStorage'dan yükle
+    const savedTheme = localStorage.getItem('swipestyle-theme') || 'light';
+    changeTheme(savedTheme);
     
-    // CSS keyframes için animasyon tanımı ekle
+    // Dil değiştirme event listener'ları
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const lang = this.dataset.lang;
+            changeLanguage(lang);
+        });
+    });
+    
+    // Tema değiştirme event listener'ları
+    document.querySelectorAll('.theme-switch').forEach(switch_el => {
+        switch_el.addEventListener('click', function() {
+            const currentTheme = this.dataset.theme;
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            // Switch'i güncelle
+            this.dataset.theme = newTheme;
+            this.classList.toggle('active');
+            
+            // Temayı değiştir
+            changeTheme(newTheme);
+        });
+    });
+    
+    // CSS ekle
     document.head.insertAdjacentHTML('beforeend', `
         <style>
             @keyframes spin {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
             }
+            
+            .recommendations-grid {
+                display: grid;
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+            
+            .recommendation-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .recommendation-name {
+                font-weight: 600;
+                color: var(--text-dark);
+                flex: 1;
+            }
+            
+            .recommendation-price {
+                color: var(--primary-blue);
+                font-weight: 500;
+            }
+            
+            .buy-link {
+                background: var(--cta-orange);
+                color: white;
+                padding: 8px 15px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-size: 0.9rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+            }
+            
+            .buy-link:hover {
+                background: var(--cta-orange-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            }
+            
+            .back-section {
+                text-align: center;
+                margin-top: 20px;
+            }
         </style>
     `);
     
-    // Get categories and specs from backend
+    // Get categories from backend
     fetch('/categories')
         .then(res => {
             if (!res.ok) {
@@ -826,14 +677,12 @@ window.onload = () => {
             const categories = Object.keys(data);
             window.currentSpecs = {};
             
-            // Kategori ve spec bilgilerini kaydet
             for (const cat of categories) {
                 window.currentSpecs[cat] = data[cat].specs || [];
             }
             
             renderLanding(categories);
             
-            // Chatbox event listeners
             const chatboxSend = document.getElementById('chatbox-send');
             const chatboxInput = document.getElementById('chatbox-input');
             
@@ -844,30 +693,11 @@ window.onload = () => {
                 });
             }
             
-            // Sayfa başına sıfırlama düğmesi ekle
-            const loadingElement = document.querySelector('.loading');
-            if (loadingElement) {
-                loadingElement.innerHTML += '<button id="reset-app" style="margin-top:20px;padding:8px 16px;background:#f44336;color:white;border:none;border-radius:6px;cursor:pointer;">İşlemi Sıfırla</button>';
-                document.getElementById('reset-app').onclick = () => {
-                    isRequestInProgress = false;
-                    hideLoadingScreen();
-                    loadingElement.style.display = 'none';
-                    document.getElementById('interaction').style.display = 'none';
-                    document.querySelector('.landing').style.display = '';
-                    document.querySelector('.question').innerHTML = '';
-                    document.querySelector('.options').innerHTML = '';
-                    step = 0;
-                    category = null;
-                    answers = [];
-                    window.currentQuestionTooltip = null;
-                    console.log("Uygulama sıfırlandı");
-                };
-            }
-            
             console.log("SwipeStyle başarıyla başlatıldı");
         })
         .catch(error => {
             console.error("Kategoriler yüklenirken hata oluştu:", error);
-            document.querySelector('.error').textContent = "Kategoriler yüklenemedi. Lütfen sayfayı yenileyin.";
+            const errorMsg = currentLanguage === 'tr' ? "Kategoriler yüklenemedi. Lütfen sayfayı yenileyin." : "Categories could not be loaded. Please refresh the page.";
+            document.querySelector('.error').textContent = errorMsg;
         });
 };

@@ -1,238 +1,842 @@
 """
-SwipeStyle Kategori Agent Modülü
-================================
+Geliştirilmiş Veritabanı Tabanlı Kategori Yöneticisi
+===================================================
 
-Bu modül, SwipeStyle uygulamasının kategori yönetimi işlevlerini içerir.
-Kategorileri yükler, kaydeder ve yeni kategoriler oluşturur.
+Bu modül, kategorilerin veritabanında saklanması ve yönetilmesini sağlar.
+Gemini AI ile otomatik kategori oluşturma, çoklu dil desteği ve Google Shopping entegrasyonu sunar.
 
-Ana Sınıflar:
-- CategoryAgent: Kategori yönetimi ana sınıfı
+Ana Özellikler:
+- SQLAlchemy ile veritabanı yönetimi
+- Gemini AI ile otomatik kategori ve soru oluşturma
+- Türkçe ve İngilizce dil desteği
+- Google Shopping entegrasyonu
+- Akıllı kategori eşleştirme
+- Çeviri servisi entegrasyonu
 
-Fonksiyonlar:
-- generate_specs_for_category: Yeni kategori için özellikler oluşturur
+Sınıflar:
+- EnhancedDatabaseCategoryAgent: Geliştirilmiş kategori yönetim sınıfı
 
-Özellikler:
-- Kategori tespiti ve eşleştirme
-- Gemini AI ile yeni kategori oluşturma
-- JSON dosya yönetimi
-- Debug log'ları
-- Otomatik kategori eşleştirme
-- Yeni kategori özellikleri oluşturma
-
-Gereksinimler:
-- Google Generative AI (Gemini)
-- categories.json dosyası
-- .env dosyasında GEMINI_API_KEY
+Kullanım:
+    agent = EnhancedDatabaseCategoryAgent()
+    category, created = agent.get_or_create_category("kablosuz kulaklık", language="tr")
+    categories = agent.get_categories_dict(language="en")
+    products = agent.get_shopping_recommendations("laptop", "TR", "tr")
 """
 
 import json
+import re
 import os
-from dotenv import load_dotenv
 import google.generativeai as genai
+from typing import Optional, Tuple, Dict, List
+from app.models import db, Category, CategorySpec, UserSettings
+from app.shopping_api import GoogleShoppingAPI
+import logging
 
-load_dotenv()
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def generate_specs_for_category(category):
+class EnhancedDatabaseCategoryAgent:
     """
-    Gemini AI kullanarak yeni kategori için özellikler ve sorular oluşturur.
+    Geliştirilmiş veritabanı tabanlı kategori yöneticisi.
     
-    Bu fonksiyon, Gemini AI'ya kategori adını gönderir ve o kategori
-    için uygun sorular, emojiler ve anahtar kelimeler oluşturmasını ister.
-    Sonuç JSON formatında döner ve debug için output.txt'ye yazılır.
-    
-    Args:
-        category (str): Yeni kategori adı (örn: "Tablet")
-        
-    Returns:
-        dict or list or None: Oluşturulan özellikler veya None
-        
-    Dönen Format:
-        {
-            "category_name": "Tablet",
-            "specs": [
-                {"key": "Ekran Boyutu", "question": "Büyük ekran ister misiniz?", "emoji": "📱"},
-                {"key": "Depolama", "question": "Fazla depolama alanı ister misiniz?", "emoji": "💾"}
-            ]
-        }
-        
-    Örnek:
-        >>> generate_specs_for_category("Tablet")
-        {"category_name": "Tablet", "specs": [...]}
-        
-    Not:
-        - Debug bilgileri output.txt dosyasına yazılır
-        - JSON parse hatası durumunda None döner
-        - Hem liste hem de sözlük formatını destekler
-    """
-    try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        prompt = (
-            f"'{category}' kategorisi için Türkçe olarak 3-5 soru ve emoji öner. "
-            "Her soru için bir anahtar (key), bir soru (question), bir emoji (emoji) içeren bir JSON listesi döndür.\n"
-            """" Example Output: Headphones": {
-    "specs": [
-      {"key": "Kablosuz", "question": "Kablosuz kulaklık ister misiniz?", "emoji": "🎧"},
-      {"key": "ANC", "question": "Aktif gürültü engelleme önemli mi?", "emoji": "🔇"},
-      {"key": "Bass", "question": "Güçlü bass ister misiniz?", "emoji": "🎵"},
-      {"key": "Mikrofon Kalitesi", "question": "Mikrofon kalitesi önemli mi?", "emoji": "🎤"},
-      {"key": "Kulak İçi", "question": "Kulak içi mi tercih edersiniz?", "emoji": "👂"},
-      {"key": "Kulak Üstü", "question": "Kulak üstü mü tercih edersiniz?", "emoji": "🦻"}
-    ]
-  },"""
-        )
-        response = model.generate_content(prompt)
-        # Debug: Write prompt and output to output.txt
-        # Try to pretty-print the output if it's valid JSON, else print raw
-        try:
-            parsed = json.loads(response.text)
-            pretty_output = json.dumps(parsed, ensure_ascii=False, indent=2)
-        except Exception:
-            pretty_output = response.text
-        with open('output.txt', 'a', encoding='utf-8') as debug_file:
-            debug_file.write(f"PROMPT:\n{prompt}\n\nOUTPUT:\n{pretty_output}\n{'='*40}\n")
-        arr = None
-        try:
-            arr = json.loads(response.text)
-        except Exception:
-            # If Gemini output is not valid JSON, return None
-            return None
-        # Accept both list and dict with 'specs' key
-        if isinstance(arr, list) and all(isinstance(x, dict) and 'key' in x and 'question' in x and 'emoji' in x for x in arr):
-            return arr
-        if isinstance(arr, dict):
-            # If output is {"Category": {"specs": [...]}}
-            for v in arr.values():
-                if isinstance(v, dict) and 'specs' in v and isinstance(v['specs'], list):
-                    specs = v['specs']
-                    if all(isinstance(x, dict) and 'key' in x and 'question' in x and 'emoji' in x for x in specs):
-                        return {'category_name': list(arr.keys())[0], 'specs': specs}
-            # If output is {"specs": [...]}
-            if 'specs' in arr and isinstance(arr['specs'], list):
-                specs = arr['specs']
-                if all(isinstance(x, dict) and 'key' in x and 'question' in x and 'emoji' in x for x in specs):
-                    return {'category_name': category, 'specs': specs}
-        return None
-    except Exception as e:
-        # Debug: Write exception to output.txt
-        with open('output.txt', 'a', encoding='utf-8') as debug_file:
-            debug_file.write(f"EXCEPTION:\n{str(e)}\n{'='*40}\n")
-        # If Gemini API call fails, return None
-        return None
-
-class CategoryAgent:
-    """
-    SwipeStyle Kategori Yönetimi Ana Sınıfı
-    
-    Bu sınıf, ürün kategorilerini yönetir ve yeni kategoriler oluşturur.
-    Kategorileri JSON dosyasından yükler, kaydeder ve kullanıcı sorgularına
-    göre kategori eşleştirmesi yapar.
-    
-    Özellikler:
-    - categories_path: Kategori dosyası yolu
-    - categories: Yüklenen kategori sözlüğü
-    
-    Ana Metodlar:
-    - get_or_create_category(): Kategori tespiti/oluşturma
-    - _load_categories(): Kategorileri yükler
-    - _save_categories(): Kategorileri kaydeder
-    - get_categories(): Kategori listesi döner
-    
-    Kullanım:
-        >>> agent = CategoryAgent()
-        >>> category, created = agent.get_or_create_category("kablosuz kulaklık")
-        >>> print(category, created)
-        "Headphones" False
+    Bu sınıf kategorilerin veritabanında saklanması, yönetilmesi ve
+    Gemini AI ile otomatik oluşturulması işlemlerini gerçekleştirir.
+    Çoklu dil desteği ve Google Shopping entegrasyonu içerir.
     """
     
-    def __init__(self, categories_path='categories.json'):
+    def __init__(self):
         """
-        CategoryAgent'ı başlatır.
+        EnhancedDatabaseCategoryAgent'ı başlatır.
         
-        Args:
-            categories_path (str): Kategori dosyasının yolu (varsayılan: 'categories.json')
+        Gemini AI'ı konfigüre eder ve çeviri servisi ile shopping API'sını başlatır.
         """
-        self.categories_path = categories_path
-        self._load_categories()
-
-    def _load_categories(self):
-        """
-        Kategorileri JSON dosyasından yükler.
-        
-        Eğer dosya mevcut değilse, boş bir sözlük oluşturur.
-        Bu metod, __init__ tarafından otomatik olarak çağrılır.
-        """
-        if os.path.exists(self.categories_path):
-            with open(self.categories_path, 'r', encoding='utf-8') as f:
-                self.categories = json.load(f)
+        # Gemini AI konfigürasyonu
+        api_key = os.getenv('GEMINI_API_KEY')
+        if api_key:
+            genai.configure(api_key=api_key)
+            self.model = genai.GenerativeModel('gemini-1.5-flash')  # Changed to 1.5-flash for higher quota
         else:
-            self.categories = {}
-
-    def _save_categories(self):
-        """
-        Mevcut kategorileri JSON dosyasına kaydeder.
+            logger.error("GEMINI_API_KEY environment variable bulunamadı!")
+            self.model = None
         
-        Kategoriler UTF-8 encoding ile kaydedilir ve
-        Türkçe karakterler korunur.
-        """
-        with open(self.categories_path, 'w', encoding='utf-8') as f:
-            json.dump(self.categories, f, ensure_ascii=False, indent=2)
-
-    def get_or_create_category(self, user_query_or_category):
-        """
-        Kullanıcı sorgusuna göre kategori tespiti yapar veya yeni kategori oluşturur.
+        # Rate limiting for Gemini API
+        self.last_api_call = 0
+        self.api_call_interval = 2  # Reduced interval for 1.5-flash (much higher quota)
         
-        Bu metod önce mevcut kategorilerde eşleşme arar. Eğer bulamazsa,
-        Gemini AI kullanarak yeni kategori oluşturur ve dosyaya kaydeder.
+        # Çeviri servisi ve shopping API
+        self.shopping_api = GoogleShoppingAPI()
+        
+        # Türkçe kategori anahtar kelimeleri (genişletilmiş)
+        self.turkish_keywords = {
+            'phones': ['telefon', 'akıllı telefon', 'smartphone', 'cep telefonu', 'mobil', 'iphone', 'android'],
+            'laptops': ['laptop', 'bilgisayar', 'notebook', 'dizüstü', 'macbook', 'ultrabook'],
+            'headphones': ['kulaklık', 'kablosuz kulaklık', 'bluetooth kulaklık', 'kulak içi', 'kulak üstü', 'airpods'],
+            'tablets': ['tablet', 'ipad', 'android tablet', 'dokunmatik tablet'],
+            'smartwatches': ['akıllı saat', 'smart watch', 'apple watch', 'samsung watch', 'fitness tracker'],
+            'cameras': ['kamera', 'fotoğraf makinesi', 'video kamera', 'dslr', 'mirrorless'],
+            'keyboards': ['klavye', 'mekanik klavye', 'gaming klavye', 'wireless klavye'],
+            'mice': ['mouse', 'fare', 'gaming mouse', 'wireless mouse', 'bluetooth mouse'],
+            'monitors': ['monitör', 'ekran', 'gaming monitör', '4k monitör', 'ultrawide'],
+            'speakers': ['hoparlör', 'bluetooth hoparlör', 'speaker', 'ses sistemi'],
+            'printers': ['yazıcı', 'printer', 'lazer yazıcı', 'inkjet yazıcı'],
+            'routers': ['modem', 'router', 'wifi router', 'ağ cihazı'],
+            'drones': ['drone', 'quadcopter', 'uav', 'drön'],
+            'gaming': ['oyun', 'gaming', 'playstation', 'xbox', 'nintendo'],
+            'storage': ['harddisk', 'ssd', 'usb', 'flash disk', 'external disk']
+        }
+    
+    def _wait_for_rate_limit(self):
+        """Rate limiting için bekleme yapar."""
+        import time
+        current_time = time.time()
+        time_since_last_call = current_time - self.last_api_call
+        
+        if time_since_last_call < self.api_call_interval:
+            wait_time = self.api_call_interval - time_since_last_call
+            logger.info(f"Rate limit koruması: {wait_time:.1f} saniye bekleniyor...")
+            time.sleep(wait_time)
+        
+        self.last_api_call = time.time()
+    
+    def translate_text(self, text: str, source_lang: str, target_lang: str) -> str:
+        """
+        Gemini AI kullanarak metin çevirisi yapar.
         
         Args:
-            user_query_or_category (str): Kullanıcı sorgusu veya kategori adı
+            text (str): Çevrilecek metin
+            source_lang (str): Kaynak dil kodu
+            target_lang (str): Hedef dil kodu
             
         Returns:
-            tuple: (category_name, created)
-                - category_name (str): Tespit edilen/oluşturulan kategori adı
-                - created (bool): Yeni oluşturuldu mu? (True/False)
-                
-        Örnek:
-            >>> agent = CategoryAgent()
-            >>> category, created = agent.get_or_create_category("kablosuz kulaklık")
-            >>> print(f"Kategori: {category}, Yeni mi: {created}")
-            Kategori: Headphones, Yeni mi: False
+            str: Çevrilmiş metin
         """
-        # Try to match user input to an existing category
-        for cat in self.categories:
-            if cat.lower() in user_query_or_category.lower() or user_query_or_category.lower() in cat.lower():
-                return cat, False
-        # If not found, create new category
-        specs_result = generate_specs_for_category(user_query_or_category)
-        if specs_result:
-            # If specs_result is a dict with 'category_name' and 'specs', use that
-            if isinstance(specs_result, dict) and 'category_name' in specs_result and 'specs' in specs_result:
-                cat_name = specs_result['category_name']
-                specs = specs_result['specs']
-                self.categories[cat_name] = {"specs": specs}
-                self._save_categories()
-                return cat_name, True
-            # If specs_result is a list, use the original category name
-            elif isinstance(specs_result, list):
-                self.categories[user_query_or_category] = {"specs": specs_result}
-                self._save_categories()
-                return user_query_or_category, True
-        return None, False
+        if not self.model:
+            logger.warning("Gemini model not available, returning original text")
+            return text
+            
+        # Rate limiting
+        self._wait_for_rate_limit()
+            
+        try:
+            lang_names = {
+                'tr': 'Turkish',
+                'en': 'English'
+            }
+            
+            source_name = lang_names.get(source_lang, source_lang)
+            target_name = lang_names.get(target_lang, target_lang)
+            
+            prompt = f"""Translate the following text from {source_name} to {target_name}.
+            Provide only the translation, no additional text or explanation.
+            
+            Text to translate: {text}
+            
+            Translation:"""
+            
+            response = self.model.generate_content(prompt)
+            translation = response.text.strip()
+            
+            logger.info(f"Translated '{text}' from {source_lang} to {target_lang}: '{translation}'")
+            return translation
+            
+        except Exception as e:
+            logger.error(f"Translation error: {e}")
+            return text  # Fallback to original text
+    
+    def get_or_create_category(self, user_query: str, language: str = "tr") -> Tuple[Optional[Category], bool]:
+        """
+        Kullanıcı sorgusuna göre kategori bulur veya oluşturur.
+        
+        Args:
+            user_query (str): Kullanıcının arama sorgusu
+            language (str): Dil kodu ("tr" veya "en")
+            
+        Returns:
+            Tuple[Optional[Category], bool]: (Kategori objesi, oluşturuldu mu?)
+            
+        Örnekler:
+            # Mevcut kategori
+            category, created = agent.get_or_create_category("kablosuz kulaklık")
+            # created = False
+            
+            # Yeni kategori
+            category, created = agent.get_or_create_category("robot süpürge")  
+            # created = True
+        """
+        try:
+            # Önce mevcut kategorilerde ara
+            existing_category = self._find_existing_category(user_query, language)
+            if existing_category:
+                logger.info(f"Mevcut kategori bulundu: {existing_category.name}")
+                return existing_category, False
+            
+            # Yeni kategori oluştur
+            new_category = self._create_new_category(user_query, language)
+            if new_category:
+                logger.info(f"Yeni kategori oluşturuldu: {new_category.name}")
+                return new_category, True
+            
+            logger.error(f"Kategori oluşturulamadı: {user_query}")
+            return None, False
+            
+        except Exception as e:
+            logger.error(f"get_or_create_category hatası: {str(e)}")
+            return None, False
+    
+    def _find_existing_category(self, user_query: str, language: str) -> Optional[Category]:
+        """
+        Mevcut kategorilerde eşleşme arar.
+        
+        Args:
+            user_query (str): Kullanıcı sorgusu
+            language (str): Dil kodu
+            
+        Returns:
+            Optional[Category]: Bulunan kategori veya None
+        """
+        query_lower = user_query.lower()
+        
+        # Tüm kategorileri al
+        all_categories = Category.query.all()
+        
+        # Direkt isim eşleşmesi
+        for category in all_categories:
+            if category.name.lower() in query_lower or query_lower in category.name.lower():
+                return category
+        
+        # Türkçe anahtar kelime eşleşmesi
+        if language == "tr":
+            for category_type, keywords in self.turkish_keywords.items():
+                if any(keyword in query_lower for keyword in keywords):
+                    # Bu anahtar kelimeye uygun kategori var mı?
+                    for category in all_categories:
+                        if category_type.lower() in category.name.lower():
+                            return category
+        
+        # İngilizce için benzer mantık
+        elif language == "en":
+            english_keywords = {
+                'phone': ['phone', 'smartphone', 'mobile', 'iphone', 'android'],
+                'laptop': ['laptop', 'computer', 'notebook', 'macbook'],
+                'headphone': ['headphone', 'earphone', 'bluetooth', 'wireless', 'airpods'],
+                'tablet': ['tablet', 'ipad'],
+                'watch': ['watch', 'smartwatch', 'apple watch'],
+                'camera': ['camera', 'dslr', 'mirrorless'],
+                'keyboard': ['keyboard', 'mechanical', 'gaming'],
+                'mouse': ['mouse', 'gaming mouse'],
+                'monitor': ['monitor', 'display', 'screen'],
+                'speaker': ['speaker', 'bluetooth speaker'],
+                'printer': ['printer', 'laser', 'inkjet'],
+                'router': ['router', 'modem', 'wifi'],
+                'drone': ['drone', 'quadcopter'],
+                'gaming': ['gaming', 'playstation', 'xbox', 'nintendo'],
+                'storage': ['storage', 'harddisk', 'ssd', 'usb']
+            }
+            
+            for category_type, keywords in english_keywords.items():
+                if any(keyword in query_lower for keyword in keywords):
+                    for category in all_categories:
+                        if category_type.lower() in category.name.lower():
+                            return category
+        
+        return None
+    
+    def _create_new_category(self, user_query: str, language: str) -> Optional[Category]:
+        """
+        Gemini AI kullanarak yeni kategori oluşturur.
+        
+        Args:
+            user_query (str): Kullanıcı sorgusu
+            language (str): Dil kodu
+            
+        Returns:
+            Optional[Category]: Oluşturulan kategori veya None
+        """
+        if not self.model:
+            logger.error("Gemini AI model bulunamadı, kategori oluşturulamıyor")
+            return None
+        
+        try:
+            # Kategori adı üretmek için prompt
+            category_prompt = f"""
+            Kullanıcı şu ürünü arıyor: "{user_query}"
+            
+            Bu ürün için uygun bir kategori adı öner. Kategori adı:
+            - İngilizce olmalı (örn: "Headphones", "Laptops", "Gaming Chairs")
+            - Tek kelime veya iki kelime olabilir
+            - Genel bir kategori olmalı (çok spesifik olmamalı)
+            - E-ticaret sitelerinde kullanılan standart kategori adları olmalı
+            
+            Sadece kategori adını ver, başka hiçbir şey yazma.
+            """
+            
+            response = self.model.generate_content(category_prompt)
+            if not response or not response.text:
+                return None
+            
+            category_name = response.text.strip()
+            # Temizlik
+            category_name = re.sub(r'[^a-zA-Z\s]', '', category_name).strip()
+            
+            if not category_name:
+                return None
+            
+            # Kategori varsa döndür
+            existing = Category.query.filter_by(name=category_name).first()
+            if existing:
+                return existing
+            
+            # Yeni kategori oluştur
+            category = Category(name=category_name)
+            db.session.add(category)
+            db.session.flush()  # ID'yi al
+            
+            # Sorular oluştur
+            specs = self.generate_specs_for_category(category_name, language)
+            
+            # Sorular varsa ekle
+            if specs:
+                for spec_data in specs:
+                    question_tr = spec_data.get('question_tr', spec_data.get('question', ''))
+                    
+                    spec = CategorySpec(
+                        category_id=category.id,
+                        key=spec_data.get('key', ''),
+                        question=question_tr,  # Set legacy question field
+                        question_tr=question_tr,
+                        question_en=spec_data.get('question_en', None),
+                        emoji=spec_data.get('emoji', '❓'),
+                        question_type='yesno',  # Always yesno
+                        options=None  # Always None for yesno questions
+                    )
+                    db.session.add(spec)
+            
+            db.session.commit()
+            return category
+            
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Kategori oluşturma hatası: {str(e)}")
+            return None
 
-    def get_categories(self):
+    def generate_specs_for_category(self, category_name: str, language: str = "tr") -> List[Dict]:
         """
-        Tüm kategori adlarının listesini döndürür.
+        Gemini AI kullanarak kategori için sorular oluşturur.
+        
+        Args:
+            category_name (str): Kategori adı
+            language (str): Dil kodu
+            
+        Returns:
+            List[Dict]: Oluşturulan sorular listesi
+        """
+        if not self.model:
+            return []
+        
+        try:
+            prompt = f"""
+            "{category_name}" kategorisi için ürün filtreleme soruları oluştur.
+            
+            Kurallar:
+            - 4-5 soru olsun
+            - Soruları {language} dilinde yaz
+            - Her soru için uygun emoji ekle
+            - JSON formatında döndür
+            - Sorular SADECE Yes/No tipinde olmalı
+            - Her soru "Evet" veya "Hayır" ile cevaplanabilir olmalı
+            - Açık uçlu veya çoktan seçmeli sorular yazmayın
+            
+            Format:
+            [
+                {{"key": "Wireless", "question": "Kablosuz olmasını ister misiniz?", "emoji": "📶"}},
+                {{"key": "Budget", "question": "Bütçeniz 1000 TL altında mı?", "emoji": "💰"}},
+                {{"key": "Portable", "question": "Taşınabilir olmasını istiyor musunuz?", "emoji": "🎒"}}
+            ]
+            
+            ÖNEMLI: Tüm sorular "mı/mi", "musunuz", "ister misiniz" gibi Yes/No cevap gerektiren yapıda olmalı.
+            """
+            
+            response = self.model.generate_content(prompt)
+            if not response or not response.text:
+                return []
+            
+            # Markdown temizliği
+            clean_text = response.text.strip()
+            if clean_text.startswith('```json'):
+                clean_text = clean_text[7:]
+            if clean_text.endswith('```'):
+                clean_text = clean_text[:-3]
+            clean_text = clean_text.strip()
+            
+            specs = json.loads(clean_text)
+            
+            # Çift dil desteği ekle
+            if language == "tr":
+                # Türkçe sorular İngilizceye çevir
+                for spec in specs:
+                    if "question" in spec:
+                        spec["question_tr"] = spec["question"]
+                        spec["question_en"] = self.translate_text(spec["question"], "tr", "en")
+            
+            elif language == "en":
+                # İngilizce sorular Türkçeye çevir
+                for spec in specs:
+                    if "question" in spec:
+                        spec["question_en"] = spec["question"]
+                        spec["question_tr"] = self.translate_text(spec["question"], "en", "tr")
+            
+            return specs
+            
+        except Exception as e:
+            logger.error(f"Soru oluşturma hatası: {str(e)}")
+            return []
+    
+    def get_categories_dict(self, language: str = "tr") -> Dict:
+        """
+        Kategorileri JSON formatında döndürür.
+        
+        Args:
+            language (str): Dil kodu
+            
+        Returns:
+            Dict: Kategori sözlüğü
+        """
+        categories = Category.query.all()
+        result = {}
+        
+        for category in categories:
+            result[category.name] = category.to_dict(language)
+        
+        return result
+    
+    def get_categories(self, language: str = "tr") -> List[Dict]:
+        """
+        Kategorileri liste formatında döndürür (API için).
+        
+        Args:
+            language (str): Dil kodu
+            
+        Returns:
+            List[Dict]: Kategori listesi [{"name": "...", "emoji": "..."}, ...]
+        """
+        categories = Category.query.all()
+        result = []
+        
+        for category in categories:
+            category_dict = category.to_dict(language)
+            result.append({
+                "name": category.name,
+                "emoji": category_dict.get("emoji", "📱")
+            })
+        
+        return result
+    
+    def get_shopping_recommendations(self, query: str, country: str = "TR", language: str = "tr") -> Dict:
+        """
+        Google Shopping'ten ürün önerileri getirir.
+        
+        Args:
+            query (str): Arama sorgusu
+            country (str): Ülke kodu
+            language (str): Dil kodu
+            
+        Returns:
+            Dict: Ürün önerileri
+        """
+        try:
+            products = self.shopping_api.search_products(query, country, language, max_results=8)
+            
+            return {
+                "query": query,
+                "country": country,
+                "language": language,
+                "total_results": len(products),
+                "products": products
+            }
+        
+        except Exception as e:
+            logger.error(f"Shopping recommendations hatası: {str(e)}")
+            return {
+                "query": query,
+                "country": country,
+                "language": language,
+                "total_results": 0,
+                "products": [],
+                "error": str(e)
+            }
+    
+    def save_user_settings(self, session_id: str, language: str, country: str) -> bool:
+        """
+        Kullanıcı ayarlarını kaydeder.
+        
+        Args:
+            session_id (str): Oturum ID'si
+            language (str): Dil tercihi
+            country (str): Ülke tercihi
+            
+        Returns:
+            bool: Başarılı mı?
+        """
+        try:
+            # Mevcut ayarları ara
+            settings = UserSettings.query.filter_by(session_id=session_id).first()
+            
+            if settings:
+                # Güncelle
+                settings.language = language
+                settings.country = country
+            else:
+                # Yeni oluştur
+                settings = UserSettings(
+                    session_id=session_id,
+                    language=language,
+                    country=country
+                )
+                db.session.add(settings)
+            
+            db.session.commit()
+            return True
+            
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Ayar kaydetme hatası: {str(e)}")
+            return False
+    
+    def get_user_settings(self, session_id: str) -> Dict:
+        """
+        Kullanıcı ayarlarını getirir.
+        
+        Args:
+            session_id (str): Oturum ID'si
+            
+        Returns:
+            Dict: Kullanıcı ayarları
+        """
+        try:
+            settings = UserSettings.query.filter_by(session_id=session_id).first()
+            
+            if settings:
+                return settings.to_dict()
+            else:
+                # Varsayılan ayarlar
+                return {
+                    "session_id": session_id,
+                    "language": "tr",
+                    "country": "TR"
+                }
+                
+        except Exception as e:
+            logger.error(f"Ayar getirme hatası: {str(e)}")
+            return {
+                "session_id": session_id,
+                "language": "tr",
+                "country": "TR"
+            }
+    
+    def save_user_settings(self, session_id: str, language: str = "tr", country: str = "TR") -> Dict:
+        """
+        Kullanıcı ayarlarını kaydeder.
+        
+        Args:
+            session_id (str): Oturum ID'si
+            language (str): Dil kodu
+            country (str): Ülke kodu
+            
+        Returns:
+            Dict: Kaydedilen ayarlar
+        """
+        try:
+            settings = UserSettings.query.filter_by(session_id=session_id).first()
+            
+            if settings:
+                settings.language = language
+                settings.country = country
+            else:
+                settings = UserSettings(
+                    session_id=session_id,
+                    language=language,
+                    country=country
+                )
+                db.session.add(settings)
+            
+            db.session.commit()
+            
+            return settings.to_dict()
+            
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Ayar kaydetme hatası: {str(e)}")
+            return {
+                "session_id": session_id,
+                "language": "tr",
+                "country": "TR"
+            }
+    
+    def handle(self, data: Dict, language: str = "tr", session_id: str = None) -> Dict:
+        """
+        Soru-cevap akışını yönetir.
+        
+        Args:
+            data (Dict): İstek verisi
+            language (str): Dil kodu
+            session_id (str): Oturum ID'si
+            
+        Returns:
+            Dict: Yanıt verisi
+        """
+        try:
+            step = data.get('step', 0)
+            category_name = data.get('category', '')
+            answers = data.get('answers', [])
+            
+            if not category_name:
+                return {'error': 'Category name is required'}
+            
+            # Kategoriyi bul veya oluştur
+            category, created = self.get_or_create_category(category_name, language)
+            
+            if not category:
+                return {'error': 'Failed to find or create category'}
+            
+            category_dict = category.to_dict(language)
+            specs = category_dict.get('specs', [])
+            
+            # Step 0-based indexing için step'i kontrol et
+            if step < len(specs) and step >= 0:
+                # Sonraki soruyu döndür
+                spec = specs[step]
+                
+                # Always use Yes/No options
+                options = ['Evet', 'Hayır'] if language == 'tr' else ['Yes', 'No']
+                
+                return {
+                    'question': spec.get('question', ''),
+                    'options': options,
+                    'emoji': spec.get('emoji', '📱'),
+                    'step': step
+                }
+            else:
+                # Tüm sorular cevaplandı - Gemini AI ile öneriler üret
+                selected_specs = []
+                
+                # Kullanıcının "Evet"/"Yes" dediği özellikleri topla
+                for i, answer in enumerate(answers):
+                    if i < len(specs):
+                        if (language == 'tr' and answer == 'Evet') or (language == 'en' and answer == 'Yes'):
+                            selected_specs.append(specs[i].get('key', ''))
+                
+                # Gemini AI ile ürün önerileri al
+                try:
+                    recommendations = self._generate_gemini_recommendations(category_name, selected_specs, language)
+                    return {'recommendations': recommendations}
+                except Exception as e:
+                    logger.error(f"Gemini recommendation error: {e}")
+                    # Fallback to mock data if Gemini fails
+                    return {
+                        'recommendations': [
+                            {
+                                'name': f'Recommended {category_name} 1',
+                                'price': '$99.99',
+                                'rating': 4.5,
+                                'image': 'https://via.placeholder.com/200x200'
+                            },
+                            {
+                                'name': f'Recommended {category_name} 2', 
+                                'price': '$129.99',
+                                'rating': 4.7,
+                                'image': 'https://via.placeholder.com/200x200'
+                            }
+                        ]
+                    }
+                
+        except Exception as e:
+            logger.error(f"Handle error: {e}")
+            return {'error': 'Failed to process request'}
+    
+    def _generate_gemini_recommendations(self, category: str, selected_specs: List[str], language: str = "tr") -> List[Dict]:
+        """
+        Gemini AI kullanarak ürün önerileri üretir.
+        
+        Args:
+            category (str): Ürün kategorisi
+            selected_specs (List[str]): Kullanıcının seçtiği özellikler
+            language (str): Dil kodu
+            
+        Returns:
+            List[Dict]: Ürün önerileri listesi
+        """
+        try:
+            if not self.model:
+                logger.error("Gemini model bulunamadı")
+                return self._get_fallback_recommendations(category)
+            
+            # Rate limiting koruması
+            self._wait_for_rate_limit()
+            
+            prompt = self._build_recommendation_prompt(category, selected_specs, language)
+            response = self.model.generate_content(prompt)
+            
+            if response and response.text:
+                recommendations = self._parse_gemini_response(response.text, category)
+                print(recommendations)
+                return recommendations
+            else:
+                logger.error("Gemini'den boş yanıt alındı")
+                return self._get_fallback_recommendations(category)
+                
+        except Exception as e:
+            if "429" in str(e) or "quota" in str(e).lower():
+                logger.warning(f"Gemini API günlük limitine ulaşıldı (50 istek/gün). Shopping API kullanılacak: {category}")
+            else:
+                logger.error(f"Gemini recommendation hatası: {e}")
+            return self._get_fallback_recommendations(category)
+    
+    def _build_recommendation_prompt(self, category: str, selected_specs: List[str], language: str) -> str:
+        """
+        Gemini AI için ürün önerisi prompt'u oluşturur.
+        
+        Args:
+            category (str): Ürün kategorisi
+            selected_specs (List[str]): Seçilen özellikler
+            language (str): Dil kodu
+            
+        Returns:
+            str: Hazırlanmış prompt
+        """
+        specs_str = ', '.join(selected_specs) if selected_specs else "temel özellikler"
+        
+        if language == 'tr':
+            prompt = (
+                f"Türk pazarında '{category}' kategorisinde, şu özelliklere sahip ürünler öner: {specs_str}. "
+                "Her ürün için isim, FIYAT (TL cinsinden) ve kısa açıklama ver. "
+                "5 ürün öner. Sadece aşağıdaki örnekteki gibi kısa bir liste olarak dön.\n\n"
+                "Örnek çıktı:\n"
+                "Sony WH-1000XM4 - FIYAT - Kablosuz, noise cancelling\n"
+                "Apple AirPods Pro - FIYAT - True wireless, ANC\n\n"
+                "Lütfen sadece bu formatta dön: Ürün Adı - Fiyat - Kısa Açıklama."
+            )
+        else:
+            prompt = (
+                f"Recommend products in the '{category}' category with these features: {specs_str}. "
+                "For each product, provide name, estimated price (in USD), and brief description. "
+                "Recommend 5 products. Return as a simple list like the example below.\n\n"
+                "Example output:\n"
+                "Sony WH-1000XM4 - $350 - Wireless, noise cancelling\n"
+                "Apple AirPods Pro - $250 - True wireless, ANC\n\n"
+                "Please return only in this format: Product Name - Price - Brief Description."
+            )
+        
+        return prompt
+    
+    def _parse_gemini_response(self, text: str, category: str) -> List[Dict]:
+        """
+        Gemini AI yanıtını ayrıştırır ve ürün önerilerini formatlar.
+        
+        Args:
+            text (str): Gemini AI'dan gelen ham yanıt
+            category (str): Ürün kategorisi
+            
+        Returns:
+            List[Dict]: Formatlanmış ürün önerileri
+        """
+        import re
+        lines = text.split('\n')
+        recommendations = []
+        
+        for line in lines:
+            line = line.strip()
+            if not line or 'Fiyat' in line or 'Price' in line or line.startswith('#'):
+                continue
+                
+            # Satırı ayrıştır: Ürün Adı - Fiyat - Açıklama
+            parts = [p.strip() for p in re.split(r'-', line) if p.strip()]
+            
+            if len(parts) >= 2:
+                name = parts[0]
+                price = parts[1]
+                description = parts[2] if len(parts) > 2 else ""
+                
+                # Fiyattan sayısal değeri çıkar
+                price_match = re.search(r'[\d,]+', price)
+                if price_match:
+                    price_num = price_match.group()
+                else:
+                    price_num = "N/A"
+                
+                # Akakce arama linki oluştur
+                search_query = re.sub(r'[^\w\s]', '', name)
+                search_query = re.sub(r'\s+', '+', search_query)
+                link = f'https://www.google.com/search?q={search_query}'
+                
+                recommendations.append({
+                    'name': name,
+                    'price': price,
+                    'description': description,
+                    'link': link,
+                    'rating': 4.0 + (len(recommendations) * 0.2),  # Simulated rating
+                    'image': 'https://via.placeholder.com/200x200'
+                })
+        
+        # En az 2 öneri döndür
+        if len(recommendations) < 2:
+            recommendations.extend(self._get_fallback_recommendations(category))
+            
+        return recommendations[:5]  # Maksimum 5 öneri
+    
+    def _get_fallback_recommendations(self, category: str) -> List[Dict]:
+        """
+        Gemini AI başarısız olduğunda kullanılacak yedek öneriler.
+        Artık boş liste döndürüyor ki frontend shopping API'sını kullansın.
+        
+        Args:
+            category (str): Ürün kategorisi
+            
+        Returns:
+            List[Dict]: Boş liste - frontend shopping API'sını kullanacak
+        """
+        logger.info(f"Gemini AI başarısız, frontend shopping API'sını kullanacak: {category}")
+        return []  # Boş liste döndür ki frontend shopping API'sını kullansın
+    
+    def get_supported_countries(self) -> Dict[str, str]:
+        """
+        Desteklenen ülke listesini döndürür.
         
         Returns:
-            list: Kategori adları listesi
-            
-        Örnek:
-            >>> agent = CategoryAgent()
-            >>> categories = agent.get_categories()
-            >>> print(categories)
-            ['Mouse', 'Headphones', 'Phone', 'Laptop']
+            Dict[str, str]: Ülke kod - isim eşleştirmesi
         """
-        return list(self.categories.keys())
+        return self.shopping_api.get_supported_countries()
+    
+    def get_supported_languages(self) -> Dict[str, str]:
+        """
+        Desteklenen dil listesini döndürür.
+        
+        Returns:
+            Dict[str, str]: Dil kod - isim eşleştirmesi  
+        """
+        return ['tr', 'en']  # Supported languages
+
+
+# Test fonksiyonu
+if __name__ == "__main__":
+    agent = EnhancedDatabaseCategoryAgent()
+    
+    # Test senaryoları
+    test_cases = [
+        ("kablosuz kulaklık", "tr"),
+        ("gaming laptop", "en"),
+        ("drone", "tr")
+    ]
+    
+    for query, language in test_cases:
+        print(f"\n=== Test: {query} ({language}) ===")
+        
+        # Kategori tespiti/oluşturma
+        category, created = agent.get_or_create_category(query, language)
+        print(f"Kategori: {category.name if category else 'None'}, Yeni: {created}")
+        
+        # Shopping önerileri
+        if category:
+            country = "TR" if language == "tr" else "US"
+            recommendations = agent.get_shopping_recommendations(query, country, language)
+            print(f"Ürün sayısı: {recommendations['total_results']}")
