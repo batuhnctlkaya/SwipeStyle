@@ -41,7 +41,7 @@ CORS(app)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
 # Database configuration
-database_path = os.path.join(os.path.dirname(__file__), 'instance', 'swipestyle.db')
+database_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance', 'swipestyle.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{database_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
