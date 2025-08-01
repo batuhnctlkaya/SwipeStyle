@@ -244,6 +244,147 @@ def shopping_recommendations():
         return jsonify({'error': 'Failed to get shopping recommendations'}), 500
 
 
+@app.route('/api/autocomplete', methods=['GET'])
+def autocomplete_suggestions():
+    """
+    Arama için otomatik tamamlama önerilerini döndürür.
+    
+    Query parametreleri:
+    - q: Arama sorgusu
+    - language: 'tr' veya 'en' (varsayılan: 'tr')
+    - limit: Maksimum sonuç sayısı (varsayılan: 6)
+    
+    Döner:
+    {
+        "suggestions": [
+            {
+                "text": "wireless headphones",
+                "icon": "🎧",
+                "category": "Audio"
+            }
+        ]
+    }
+    """
+    query = request.args.get('q', '').strip().lower()
+    language = request.args.get('language', 'tr')
+    limit = int(request.args.get('limit', 6))
+    
+    if not query:
+        return jsonify({'suggestions': []})
+    
+    try:
+        # Get categories for autocomplete
+        categories = category_agent.get_categories(language)
+        suggestions = []
+        
+        # Add category-based suggestions
+        for cat in categories:
+            if cat['name'].lower().startswith(query):
+                suggestions.append({
+                    'text': cat['name'],
+                    'icon': cat.get('emoji', '🔍'),
+                    'category': 'Kategori' if language == 'tr' else 'Category'
+                })
+        
+        # Add predefined popular searches
+        popular_searches = {
+            'tr': [
+                {'text': 'kablosuz kulaklık', 'icon': '🎧', 'category': 'Ses'},
+                {'text': 'gaming laptop', 'icon': '💻', 'category': 'Bilgisayar'},
+                {'text': 'akıllı telefon', 'icon': '📱', 'category': 'Mobil'},
+                {'text': 'bluetooth hoparlör', 'icon': '🔊', 'category': 'Ses'},
+                {'text': 'tablet', 'icon': '📱', 'category': 'Mobil'},
+                {'text': 'akıllı saat', 'icon': '⌚', 'category': 'Giyilebilir'},
+                {'text': 'drone', 'icon': '🚁', 'category': 'Hobi'},
+                {'text': 'kamera', 'icon': '📷', 'category': 'Fotoğraf'},
+                {'text': 'oyuncu klavyesi', 'icon': '⌨️', 'category': 'Gaming'},
+                {'text': 'gaming mouse', 'icon': '🖱️', 'category': 'Gaming'},
+                {'text': 'powerbank', 'icon': '🔋', 'category': 'Aksesuar'},
+                {'text': 'wifi router', 'icon': '📶', 'category': 'Ağ'},
+                {'text': 'harici disk', 'icon': '💾', 'category': 'Depolama'},
+                {'text': 'mikrofon', 'icon': '🎤', 'category': 'Ses'},
+                {'text': 'web kamerası', 'icon': '📹', 'category': 'Video'},
+                {'text': 'vr gözlük', 'icon': '🥽', 'category': 'VR'},
+                {'text': 'akıllı tv', 'icon': '📺', 'category': 'Ev'},
+                {'text': 'konsol', 'icon': '🎮', 'category': 'Gaming'},
+                {'text': 'fitness tracker', 'icon': '⌚', 'category': 'Sağlık'}
+            ],
+            'en': [
+                {'text': 'wireless headphones', 'icon': '🎧', 'category': 'Audio'},
+                {'text': 'gaming laptop', 'icon': '💻', 'category': 'Computer'},
+                {'text': 'smartphone', 'icon': '📱', 'category': 'Mobile'},
+                {'text': 'bluetooth speaker', 'icon': '🔊', 'category': 'Audio'},
+                {'text': 'tablet', 'icon': '📱', 'category': 'Mobile'},
+                {'text': 'smartwatch', 'icon': '⌚', 'category': 'Wearable'},
+                {'text': 'drone', 'icon': '🚁', 'category': 'Hobby'},
+                {'text': 'camera', 'icon': '📷', 'category': 'Photo'},
+                {'text': 'gaming keyboard', 'icon': '⌨️', 'category': 'Gaming'},
+                {'text': 'gaming mouse', 'icon': '🖱️', 'category': 'Gaming'},
+                {'text': 'power bank', 'icon': '🔋', 'category': 'Accessory'},
+                {'text': 'wifi router', 'icon': '📶', 'category': 'Network'},
+                {'text': 'external drive', 'icon': '💾', 'category': 'Storage'},
+                {'text': 'microphone', 'icon': '🎤', 'category': 'Audio'},
+                {'text': 'webcam', 'icon': '📹', 'category': 'Video'},
+                {'text': 'vr headset', 'icon': '🥽', 'category': 'VR'},
+                {'text': 'smart tv', 'icon': '📺', 'category': 'Home'},
+                {'text': 'gaming console', 'icon': '🎮', 'category': 'Gaming'},
+                {'text': 'fitness tracker', 'icon': '⌚', 'category': 'Health'}
+            ]
+        }
+        
+        # Add popular searches that match the query
+        for item in popular_searches.get(language, popular_searches['en']):
+            if item['text'].lower().startswith(query) and len(suggestions) < limit:
+                # Avoid duplicates
+                if not any(s['text'].lower() == item['text'].lower() for s in suggestions):
+                    suggestions.append(item)
+        
+        # Limit results
+        suggestions = suggestions[:limit]
+        
+        return jsonify({'suggestions': suggestions})
+        
+    except Exception as e:
+        logger.error(f"Error getting autocomplete suggestions: {e}")
+        return jsonify({'suggestions': []})
+
+
+@app.route('/api/category-images', methods=['GET'])
+def get_category_images():
+    """
+    Kategori için Google Images'dan resim URL'lerini döndürür.
+    
+    Query parametreleri:
+    - category: Kategori adı (zorunlu)
+    - max_images: Maksimum resim sayısı (varsayılan: 3)
+    
+    Döner:
+    {
+        "images": ["url1", "url2", "url3"],
+        "category": "Electronics"
+    }
+    """
+    category = request.args.get('category', '').strip()
+    max_images = int(request.args.get('max_images', 3))
+    
+    if not category:
+        return jsonify({'error': 'Category parameter is required'}), 400
+    
+    try:
+        # Get category images from enhanced category agent
+        images = category_agent.get_category_images(category, max_images)
+        
+        return jsonify({
+            'images': images,
+            'category': category,
+            'count': len(images)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting category images: {e}")
+        return jsonify({'error': 'Failed to get category images'}), 500
+
+
 @app.route('/api/create-category', methods=['POST'])
 def create_category():
     """

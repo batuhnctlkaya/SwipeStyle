@@ -68,6 +68,28 @@
         [data-theme="dark"] .recommendation-item:hover {
             background: linear-gradient(135deg, #16213e, #1a1a2e);
         }
+        
+        /* Dark Mode - Rating and Description */
+        [data-theme="dark"] .rating-value {
+            color: var(--text-dark);
+        }
+        
+        [data-theme="dark"] .review-count {
+            color: var(--text-gray);
+        }
+        
+        [data-theme="dark"] .product-description {
+            color: var(--text-gray);
+            border-top-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .recommendation-name {
+            color: var(--text-dark);
+        }
+        
+        [data-theme="dark"] .recommendation-price {
+            color: #60a5fa;
+        }
 
         /* Dark Mode için özel stiller */
         [data-theme="dark"] .header {
@@ -78,6 +100,36 @@
             background: linear-gradient(145deg, #0a0a0a 0%, #000000 100%);
             border: 1px solid #2d3748;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Dark mode autocomplete styles */
+        [data-theme="dark"] .autocomplete-dropdown {
+            background: var(--bg-white);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 99999;
+        }
+        
+        [data-theme="dark"] .autocomplete-item {
+            border-bottom-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .autocomplete-item:hover,
+        [data-theme="dark"] .autocomplete-item.highlighted {
+            background: var(--bg-gray);
+        }
+        
+        [data-theme="dark"] .autocomplete-text {
+            color: var(--text-dark);
+        }
+        
+        [data-theme="dark"] .autocomplete-text strong {
+            color: #60a5fa;
+        }
+        
+        [data-theme="dark"] .autocomplete-icon,
+        [data-theme="dark"] .autocomplete-category {
+            color: var(--text-gray);
         }
         
         [data-theme="dark"] .category-card {
@@ -109,6 +161,27 @@
             background: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%);
             border-color: #4f46e5;
             box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+        }
+        
+        [data-theme="dark"] .budget-dropdown {
+            background: linear-gradient(145deg, #0a0a0a 0%, #000000 100%);
+            border: 1px solid #2d3748;
+            color: #ffffff;
+        }
+        
+        [data-theme="dark"] .budget-dropdown:hover {
+            background: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-color: #4f46e5;
+        }
+        
+        [data-theme="dark"] .budget-dropdown:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        
+        [data-theme="dark"] .budget-dropdown option {
+            background: #0a0a0a;
+            color: #ffffff;
         }
         
         [data-theme="dark"] .recommendations {
@@ -428,6 +501,8 @@
             margin-bottom: 30px;
             box-shadow: var(--shadow);
             animation: fadeIn 0.8s ease-out 0.2s both;
+            overflow: visible;
+            position: relative;
         }
         
         .search-container {
@@ -436,12 +511,18 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
+            position: relative;
         }
         
-        .search-input {
+        .search-input-wrapper {
             flex: 1;
             min-width: 250px;
             max-width: 400px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
             padding: 12px 16px;
             font-size: 1rem;
             border-radius: 6px;
@@ -450,12 +531,79 @@
             color: var(--text-dark);
             font-family: 'Inter', sans-serif;
             transition: all 0.2s ease;
+            box-sizing: border-box;
         }
         
         .search-input:focus {
             outline: none;
             border-color: var(--primary-blue);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .search-input:focus + .autocomplete-dropdown {
+            border-radius: 0 0 6px 6px;
+        }
+        
+        /* Autocomplete Dropdown Styles */
+        .autocomplete-dropdown {
+            position: fixed;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 99999;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 250px;
+        }
+        
+        .autocomplete-dropdown.show {
+            display: block;
+        }
+        
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .autocomplete-item:hover,
+        .autocomplete-item.highlighted {
+            background: var(--bg-gray);
+        }
+        
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+        
+        .autocomplete-icon {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .autocomplete-text {
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+        
+        .autocomplete-text strong {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+        
+        .autocomplete-category {
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            margin-left: auto;
         }
         
         .search-input::placeholder {
@@ -577,6 +725,46 @@
             background: var(--bg-gray);
         }
 
+        /* Budget Dropdown */
+        .budget-dropdown {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 200px;
+            max-width: 300px;
+            width: 100%;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+        
+        .budget-dropdown:hover {
+            border-color: var(--primary-blue);
+            background-color: var(--bg-gray);
+        }
+        
+        .budget-dropdown:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+        
+        .budget-dropdown option {
+            background: var(--bg-white);
+            color: var(--text-dark);
+            padding: 8px;
+        }
+
         /* Loading Screen */
         .loading-container {
             position: fixed;
@@ -688,6 +876,75 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
+        /* Product Rating Styles */
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+        
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .stars i {
+            color: #fbbf24;
+            font-size: 0.85rem;
+        }
+        
+        .rating-value {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-left: 4px;
+        }
+        
+        .review-count {
+            color: var(--text-gray);
+            font-size: 0.8rem;
+        }
+        
+        /* Product Description Styles */
+        .product-description {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin: 8px 0;
+            padding: 8px 0;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* Recommendation Content Layout */
+        .recommendation-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .recommendation-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            line-height: 1.3;
+            letter-spacing: 0.02em;
+            /* Ensure hyphens are visible and preserved */
+            font-feature-settings: "kern" 1;
+            word-break: keep-all;
+            hyphens: none;
+            /* Allow text to wrap properly */
+            white-space: normal;
+            overflow-wrap: break-word;
+        }
+        
+        .recommendation-price {
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            margin: 4px 0;
+        }
+        
         /* Premium Badge */
         .premium-badge {
             position: absolute;
@@ -781,6 +1038,49 @@
             .landing { padding: 25px 15px; }
             .header-controls { position: static; justify-content: center; margin-top: 15px; }
             .theme-toggle { position: static; justify-content: center; margin-top: 15px; }
+            
+            /* Mobile-specific recommendation styles */
+            .product-rating {
+                flex-wrap: wrap;
+                gap: 4px;
+                font-size: 0.8rem;
+            }
+            
+            .product-description {
+                font-size: 0.8rem;
+                line-height: 1.3;
+            }
+            
+            .recommendation-name {
+                font-size: 0.9rem;
+            }
+            
+            .recommendation-price {
+                font-size: 1rem;
+            }
+            
+            /* Mobile autocomplete styles */
+            .search-input-wrapper {
+                min-width: 100%;
+                max-width: none;
+            }
+            
+            .autocomplete-dropdown {
+                max-height: 150px;
+            }
+            
+            .autocomplete-item {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .autocomplete-icon {
+                font-size: 0.8rem;
+            }
+            
+            .autocomplete-category {
+                display: none; /* Hide category on mobile to save space */
+            }
         }
         
         @media (max-width: 480px) {
@@ -834,7 +1134,9 @@
         <!-- Search Section -->
         <div class="search-section">
             <div class="search-container">
-                <input id="chatbox-input" type="text" placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." class="search-input" data-tr-placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." data-en-placeholder="Example: wireless headphones, gaming laptop, smartphone...">
+                <div class="search-input-wrapper">
+                    <input id="chatbox-input" type="text" placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." class="search-input" data-tr-placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." data-en-placeholder="Example: wireless headphones, gaming laptop, smartphone..." autocomplete="off">
+                </div>
                 <button id="chatbox-send" class="search-btn">
                     <i class="fas fa-search"></i> <span data-tr="AI ile Bul" data-en="Find with AI">AI ile Bul</span>
                 </button>
@@ -854,6 +1156,9 @@
         <div class="recommendations"></div>
         <div class="error"></div>
     </div>
+    
+    <!-- Autocomplete Dropdown - positioned absolutely relative to body -->
+    <div id="autocomplete-dropdown" class="autocomplete-dropdown"></div>
     
     <!-- Script -->
     <script src="main_enhanced.js"></script>
