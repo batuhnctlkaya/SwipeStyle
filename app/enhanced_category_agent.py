@@ -679,6 +679,7 @@ class EnhancedDatabaseCategoryAgent:
             
             if response and response.text:
                 recommendations = self._parse_gemini_response(response.text, category)
+                print(recommendations)
                 return recommendations
             else:
                 logger.error("Gemini'den boş yanıt alındı")
@@ -708,11 +709,11 @@ class EnhancedDatabaseCategoryAgent:
         if language == 'tr':
             prompt = (
                 f"Türk pazarında '{category}' kategorisinde, şu özelliklere sahip ürünler öner: {specs_str}. "
-                "Her ürün için isim, tahmini fiyat (TL cinsinden) ve kısa açıklama ver. "
+                "Her ürün için isim, FIYAT (TL cinsinden) ve kısa açıklama ver. "
                 "5 ürün öner. Sadece aşağıdaki örnekteki gibi kısa bir liste olarak dön.\n\n"
                 "Örnek çıktı:\n"
-                "Sony WH-1000XM4 - 2.500 TL - Kablosuz, noise cancelling\n"
-                "Apple AirPods Pro - 3.000 TL - True wireless, ANC\n\n"
+                "Sony WH-1000XM4 - FIYAT - Kablosuz, noise cancelling\n"
+                "Apple AirPods Pro - FIYAT - True wireless, ANC\n\n"
                 "Lütfen sadece bu formatta dön: Ürün Adı - Fiyat - Kısa Açıklama."
             )
         else:
@@ -766,7 +767,7 @@ class EnhancedDatabaseCategoryAgent:
                 # Akakce arama linki oluştur
                 search_query = re.sub(r'[^\w\s]', '', name)
                 search_query = re.sub(r'\s+', '+', search_query)
-                link = f'https://www.akakce.com/arama/?q={search_query}'
+                link = f'https://www.google.com/search?q={search_query}'
                 
                 recommendations.append({
                     'name': name,
