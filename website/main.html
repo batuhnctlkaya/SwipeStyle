@@ -428,6 +428,8 @@
             margin-bottom: 30px;
             box-shadow: var(--shadow);
             animation: fadeIn 0.8s ease-out 0.2s both;
+            position: relative;
+            z-index: 1002;
         }
         
         .search-container {
@@ -613,6 +615,8 @@
 
         /* Category Grid */
         .card-grid {
+            position: relative;
+            z-index: 1;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
