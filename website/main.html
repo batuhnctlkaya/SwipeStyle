@@ -43,21 +43,30 @@
             --game-gradient: linear-gradient(135deg, #fbbf24, #fb923c);
         }
 
-        /* Dark Mode Variables - İyileştirilmiş */
+        /* Dark Mode Variables */
         [data-theme="dark"] {
-            --bg-white: #000000;
-            --bg-gray: #0a0a0a;
+            --bg-white: #1a1a2e;
+            --bg-gray: #16213e;
             --text-dark: #ffffff;
             --text-gray: #a8b2d1;
             --border-color: #2d3748;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --discount-red-light: #2d1b1b;
-            
-            /* Dark mode için özel renkler */
-            --primary-blue: #4f46e5;
-            --primary-green: #10b981;
-            --cta-orange: #f59e0b;
-            --cta-orange-hover: #d97706;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --discount-red-light: rgba(239, 68, 68, 0.2);
+        }
+        
+        /* Dark mode hover effects */
+        [data-theme="dark"] .category-card:hover {
+            background: linear-gradient(135deg, #16213e, #1a1a2e);
+            border-color: #4f46e5;
+        }
+        
+        [data-theme="dark"] .option-btn:hover {
+            background: linear-gradient(135deg, #16213e, #1a1a2e);
+            border-color: #4f46e5;
+        }
+        
+        [data-theme="dark"] .recommendation-item:hover {
+            background: linear-gradient(135deg, #16213e, #1a1a2e);
         }
 
         /* Dark Mode için özel stiller */
@@ -141,6 +150,15 @@
             color: #a8b2d1;
         }
         
+        /* Dark mode için theme switch ikonlarını düzelt */
+        [data-theme="dark"] .theme-switch .sun-icon {
+            left: 6px;
+        }
+        
+        [data-theme="dark"] .theme-switch .moon-icon {
+            right: 6px;
+        }
+        
         /* Siyah-beyaz minimalist theme switch */
         .theme-switch {
             position: relative;
@@ -153,6 +171,12 @@
             border: 2px solid #000000;
         }
         
+        /* Dark mode theme switch */
+        [data-theme="dark"] .theme-switch {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
         .theme-switch::before {
             content: '';
             position: absolute;
@@ -163,6 +187,11 @@
             background: #000000;
             border-radius: 50%;
             transition: all 0.3s ease;
+        }
+        
+        /* Dark mode slider */
+        [data-theme="dark"] .theme-switch::before {
+            background: #ffffff;
         }
         
         .theme-switch.active::before {
@@ -196,6 +225,15 @@
         
         .theme-switch.active .icon {
             color: #ffffff;
+        }
+        
+        /* Dark mode active durumu */
+        [data-theme="dark"] .theme-switch.active {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        [data-theme="dark"] .theme-switch.active .icon {
+            color: rgba(255, 255, 255, 0.8);
         }
 
         /* Simple Animations */
@@ -325,7 +363,7 @@
         }
         
         .theme-switch.active::before {
-            transform: translateX(30px);
+            transform: translateX(32px);
         }
         
         .theme-switch .icon {
@@ -338,11 +376,11 @@
         }
         
         .theme-switch .sun-icon {
-            left: 8px;
+            left: 6px;
         }
         
         .theme-switch .moon-icon {
-            right: 8px;
+            right: 6px;
         }
         
         .theme-switch:hover {
@@ -764,8 +802,8 @@
         <!-- Theme Toggle - Sol üstte -->
         <div class="theme-toggle">
             <div class="theme-switch active" data-theme="light" title="Toggle Theme">
-                <span class="icon sun-icon">☀️</span>
-                <span class="icon moon-icon">🌙</span>
+                <span class="icon sun-icon">🌕</span>
+                <span class="icon moon-icon">🌑</span>
             </div>
         </div>
         
