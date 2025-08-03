@@ -280,7 +280,7 @@ class EnhancedDatabaseCategoryAgent:
             category_name = re.sub(r'[^a-zA-Z\s]', '', category_name).strip()
             
             if not category_name:
-        return None
+                return None
             
             # Kategori varsa döndür
             existing = Category.query.filter_by(name=category_name).first()
@@ -315,10 +315,10 @@ class EnhancedDatabaseCategoryAgent:
             db.session.commit()
             return category
             
-    except Exception as e:
-            db.session.rollback()
-            logger.error(f"Kategori oluşturma hatası: {str(e)}")
-        return None
+        except Exception as e:
+                db.session.rollback()
+                logger.error(f"Kategori oluşturma hatası: {str(e)}")
+                return None
 
     def generate_specs_for_category(self, category_name: str, language: str = "tr") -> List[Dict]:
         """
@@ -616,7 +616,7 @@ class EnhancedDatabaseCategoryAgent:
                     'emoji': spec.get('emoji', '📱'),
                     'step': step
                 }
-        else:
+            else:
                 # Tüm sorular cevaplandı - Gemini AI ile öneriler üret
                 selected_specs = []
                 
