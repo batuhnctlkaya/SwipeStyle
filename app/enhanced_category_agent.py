@@ -82,6 +82,14 @@ class EnhancedDatabaseCategoryAgent:
         self.last_api_call = 0
         self.api_call_interval = 2  # Reduced interval for 1.5-flash (much higher quota)
         
+        # Simple translation cache to reduce API calls
+        self.translation_cache = {}
+        
+        # Daily API usage tracking
+        self.daily_api_calls = 0
+        self.daily_limit = 50  # Free tier limit
+        self.last_reset_date = None
+        
         # Shopping API configuration
         self.serpapi_key = os.getenv('SERPAPI_KEY')
         if not self.serpapi_key:
@@ -94,23 +102,23 @@ class EnhancedDatabaseCategoryAgent:
             'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         ]
         
-        # Türkçe kategori anahtar kelimeleri (genişletilmiş)
+        # Türkçe kategori anahtar kelimeleri (genişletilmiş ve düzenlenmiş)
         self.turkish_keywords = {
-            'phones': ['telefon', 'akıllı telefon', 'smartphone', 'cep telefonu', 'mobil', 'iphone', 'android'],
-            'laptops': ['laptop', 'bilgisayar', 'notebook', 'dizüstü', 'macbook', 'ultrabook'],
-            'headphones': ['kulaklık', 'kablosuz kulaklık', 'bluetooth kulaklık', 'kulak içi', 'kulak üstü', 'airpods'],
+            'phones': ['akıllı telefon', 'smartphone', 'cep telefonu', 'mobil telefon', 'telefon', 'iphone', 'android telefon'],
+            'laptops': ['laptop', 'dizüstü bilgisayar', 'notebook', 'dizüstü', 'macbook', 'ultrabook', 'gaming laptop'],
+            'headphones': ['kulaklık', 'kablosuz kulaklık', 'bluetooth kulaklık', 'kulak içi kulaklık', 'kulak üstü kulaklık', 'airpods', 'wireless kulaklık'],
             'tablets': ['tablet', 'ipad', 'android tablet', 'dokunmatik tablet'],
-            'smartwatches': ['akıllı saat', 'smart watch', 'apple watch', 'samsung watch', 'fitness tracker'],
-            'cameras': ['kamera', 'fotoğraf makinesi', 'video kamera', 'dslr', 'mirrorless'],
-            'keyboards': ['klavye', 'mekanik klavye', 'gaming klavye', 'wireless klavye'],
-            'mice': ['mouse', 'fare', 'gaming mouse', 'wireless mouse', 'bluetooth mouse'],
-            'monitors': ['monitör', 'ekran', 'gaming monitör', '4k monitör', 'ultrawide'],
-            'speakers': ['hoparlör', 'bluetooth hoparlör', 'speaker', 'ses sistemi'],
+            'smartwatches': ['akıllı saat', 'smart watch', 'apple watch', 'samsung watch', 'fitness tracker', 'spor saati'],
+            'cameras': ['kamera', 'fotoğraf makinesi', 'video kamera', 'dslr kamera', 'mirrorless kamera', 'dijital kamera'],
+            'keyboards': ['klavye', 'mekanik klavye', 'gaming klavye', 'kablosuz klavye', 'oyuncu klavyesi'],
+            'mice': ['mouse', 'fare', 'gaming mouse', 'kablosuz mouse', 'bluetooth mouse', 'oyuncu mouse'],
+            'monitors': ['monitör', 'ekran', 'gaming monitör', '4k monitör', 'ultrawide monitör', 'bilgisayar ekranı'],
+            'speakers': ['hoparlör', 'bluetooth hoparlör', 'kablosuz hoparlör', 'speaker', 'ses sistemi'],
             'printers': ['yazıcı', 'printer', 'lazer yazıcı', 'inkjet yazıcı'],
-            'routers': ['modem', 'router', 'wifi router', 'ağ cihazı'],
-            'drones': ['drone', 'quadcopter', 'uav', 'drön'],
-            'gaming': ['oyun', 'gaming', 'playstation', 'xbox', 'nintendo'],
-            'storage': ['harddisk', 'ssd', 'usb', 'flash disk', 'external disk']
+            'routers': ['modem', 'router', 'wifi router', 'kablosuz router', 'ağ cihazı'],
+            'drones': ['drone', 'quadcopter', 'uav', 'drön', 'hava aracı'],
+            'gaming': ['oyun konsolu', 'gaming konsol', 'playstation', 'xbox', 'nintendo', 'oyun'],
+            'storage': ['harddisk', 'ssd', 'usb bellek', 'flash disk', 'harici disk', 'depolama']
         }
     
     def _wait_for_rate_limit(self):
@@ -126,9 +134,26 @@ class EnhancedDatabaseCategoryAgent:
         
         self.last_api_call = time.time()
     
+    def _check_daily_limit(self) -> bool:
+        """Günlük API limitini kontrol eder."""
+        from datetime import date
+        today = date.today()
+        
+        # Yeni gün başladıysa sayacı sıfırla
+        if self.last_reset_date != today:
+            self.daily_api_calls = 0
+            self.last_reset_date = today
+        
+        return self.daily_api_calls < self.daily_limit
+    
+    def _increment_api_usage(self):
+        """API kullanım sayacını artırır."""
+        self.daily_api_calls += 1
+        logger.debug(f"API kullanımı: {self.daily_api_calls}/{self.daily_limit}")
+    
     def translate_text(self, text: str, source_lang: str, target_lang: str) -> str:
         """
-        Gemini AI kullanarak metin çevirisi yapar.
+        Gemini AI kullanarak metin çevirisi yapar. Cache kullanır.
         
         Args:
             text (str): Çevrilecek metin
@@ -138,6 +163,19 @@ class EnhancedDatabaseCategoryAgent:
         Returns:
             str: Çevrilmiş metin
         """
+        # Cache key oluştur
+        cache_key = f"{text}_{source_lang}_{target_lang}"
+        
+        # Cache'de var mı kontrol et
+        if cache_key in self.translation_cache:
+            logger.debug(f"Translation cache hit: {text[:50]}...")
+            return self.translation_cache[cache_key]
+        
+        # Günlük limit kontrolü
+        if not self._check_daily_limit():
+            logger.warning(f"Günlük API limiti aşıldı ({self.daily_limit}). Orijinal metin döndürülüyor.")
+            return text
+        
         if not self.model:
             logger.warning("Gemini model not available, returning original text")
             return text
@@ -163,6 +201,10 @@ class EnhancedDatabaseCategoryAgent:
             
             response = self.model.generate_content(prompt)
             translation = response.text.strip()
+            
+            # Cache'e kaydet
+            self.translation_cache[cache_key] = translation
+            self._increment_api_usage()
             
             logger.info(f"Translated '{text}' from {source_lang} to {target_lang}: '{translation}'")
             return translation
@@ -227,45 +269,128 @@ class EnhancedDatabaseCategoryAgent:
         # Tüm kategorileri al
         all_categories = Category.query.all()
         
-        # Direkt isim eşleşmesi
+        # Direkt isim eşleşmesi (daha akıllı eşleştirme)
         for category in all_categories:
-            if category.name.lower() in query_lower or query_lower in category.name.lower():
+            category_name_lower = category.name.lower()
+            # Tam eşleşme kontrolü
+            if query_lower == category_name_lower:
+                return category
+            # Kategori adı sorguyu içeriyorsa (ama tersi değil - bu false positive yaratır)
+            if query_lower in category_name_lower and len(query_lower) > 3:
+                # Özel kontrol: "phone" gibi kısa kelimeler "headphones" ile eşleşmesin
+                if query_lower == "phone" and "headphone" in category_name_lower:
+                    continue
                 return category
         
         # Türkçe anahtar kelime eşleşmesi
         if language == "tr":
+            # Kategori tipi ile veritabanındaki kategori adları arasında eşleştirme (daha kesin eşleşme)
+            category_mapping = {
+                'phones': ['smartphone', 'telefon', 'mobile'],  # More specific mappings
+                'headphones': ['headphone', 'kulaklık', 'earphone', 'earbud'],
+                'laptops': ['laptop', 'notebook', 'dizüstü'],
+                'tablets': ['tablet', 'ipad'],
+                'smartwatches': ['smartwatch', 'smart watch', 'akıllı saat'],
+                'cameras': ['camera', 'kamera'],
+                'keyboards': ['keyboard', 'klavye'],
+                'mice': ['mouse', 'fare'],
+                'monitors': ['monitor', 'monitör', 'ekran'],
+                'speakers': ['speaker', 'hoparlör'],
+                'printers': ['printer', 'yazıcı'],
+                'routers': ['router', 'modem'],
+                'drones': ['drone', 'drön'],
+                'gaming': ['gaming', 'oyun'],
+                'storage': ['storage', 'disk', 'depolama']
+            }
+            
+            # Önce daha spesifik kategoriler için arama yap
+            matched_categories = []
             for category_type, keywords in self.turkish_keywords.items():
-                if any(keyword in query_lower for keyword in keywords):
-                    # Bu anahtar kelimeye uygun kategori var mı?
-                    for category in all_categories:
-                        if category_type.lower() in category.name.lower():
-                            return category
+                # Spesifik eşleşme skorunu hesapla
+                for keyword in keywords:
+                    if keyword in query_lower:
+                        # Bu anahtar kelimeye uygun kategori var mı?
+                        mapping_keywords = category_mapping.get(category_type, [category_type])
+                        for category in all_categories:
+                            category_name_lower = category.name.lower()
+                            for mapping_keyword in mapping_keywords:
+                                if mapping_keyword in category_name_lower:
+                                    # Özel kontrol: telefon ile kulaklık karışmasın
+                                    if category_type == 'phones' and ('headphone' in category_name_lower or 'kulaklık' in category_name_lower):
+                                        continue  # Bu eşleşmeyi atla
+                                    # Eşleşme skoru: daha uzun/spesifik kelimeler daha yüksek skor
+                                    score = len(keyword) + (10 if query_lower == keyword else 0)
+                                    matched_categories.append((category, score, keyword, category_type))
+            
+            # En yüksek skorlu kategoriyi döndür
+            if matched_categories:
+                matched_categories.sort(key=lambda x: x[1], reverse=True)
+                logger.info(f"Turkish keyword match: '{matched_categories[0][2]}' (type: {matched_categories[0][3]}) -> {matched_categories[0][0].name}")
+                return matched_categories[0][0]
         
         # İngilizce için benzer mantık
         elif language == "en":
             english_keywords = {
-                'phone': ['phone', 'smartphone', 'mobile', 'iphone', 'android'],
-                'laptop': ['laptop', 'computer', 'notebook', 'macbook'],
-                'headphone': ['headphone', 'earphone', 'bluetooth', 'wireless', 'airpods'],
-                'tablet': ['tablet', 'ipad'],
-                'watch': ['watch', 'smartwatch', 'apple watch'],
-                'camera': ['camera', 'dslr', 'mirrorless'],
-                'keyboard': ['keyboard', 'mechanical', 'gaming'],
-                'mouse': ['mouse', 'gaming mouse'],
-                'monitor': ['monitor', 'display', 'screen'],
-                'speaker': ['speaker', 'bluetooth speaker'],
-                'printer': ['printer', 'laser', 'inkjet'],
-                'router': ['router', 'modem', 'wifi'],
-                'drone': ['drone', 'quadcopter'],
-                'gaming': ['gaming', 'playstation', 'xbox', 'nintendo'],
-                'storage': ['storage', 'harddisk', 'ssd', 'usb']
+                'phones': ['smartphone', 'phone', 'mobile phone', 'iphone', 'android phone', 'cell phone'],
+                'headphones': ['headphones', 'headphone', 'earphones', 'earbuds', 'airpods', 'wireless headphones', 'bluetooth headphones'],
+                'laptops': ['laptop', 'notebook', 'macbook', 'computer laptop', 'gaming laptop'],
+                'tablets': ['tablet', 'ipad', 'android tablet'],
+                'smartwatches': ['smartwatch', 'smart watch', 'apple watch', 'fitness tracker'],
+                'cameras': ['camera', 'dslr', 'mirrorless', 'digital camera'],
+                'keyboards': ['keyboard', 'mechanical keyboard', 'gaming keyboard'],
+                'mice': ['mouse', 'gaming mouse', 'computer mouse'],
+                'monitors': ['monitor', 'display', 'screen', 'gaming monitor'],
+                'speakers': ['speaker', 'bluetooth speaker', 'wireless speaker'],
+                'printers': ['printer', 'laser printer', 'inkjet printer'],
+                'routers': ['router', 'wifi router', 'wireless router'],
+                'drones': ['drone', 'quadcopter', 'uav'],
+                'gaming': ['gaming console', 'playstation', 'xbox', 'nintendo'],
+                'storage': ['hard drive', 'ssd', 'external drive', 'usb drive']
             }
             
+            # Kategori tipi ile veritabanındaki kategori adları arasında eşleştirme (daha kesin eşleşme)
+            category_mapping = {
+                'phones': ['smartphone', 'mobile phone', 'mobile'],  # Removed 'phone' to avoid confusion with 'headphone'
+                'headphones': ['headphone', 'earphone', 'earbud'],
+                'laptops': ['laptop', 'notebook'],
+                'tablets': ['tablet', 'ipad'],
+                'smartwatches': ['smartwatch', 'smart watch'],
+                'cameras': ['camera'],
+                'keyboards': ['keyboard'],
+                'mice': ['mouse'],
+                'monitors': ['monitor', 'display', 'screen'],
+                'speakers': ['speaker'],
+                'printers': ['printer'],
+                'routers': ['router', 'modem'],
+                'drones': ['drone'],
+                'gaming': ['gaming', 'console'],
+                'storage': ['storage', 'drive']
+            }
+            
+            # Önce daha spesifik kategoriler için arama yap
+            matched_categories = []
             for category_type, keywords in english_keywords.items():
-                if any(keyword in query_lower for keyword in keywords):
-                    for category in all_categories:
-                        if category_type.lower() in category.name.lower():
-                            return category
+                for keyword in keywords:
+                    if keyword in query_lower:
+                        # Bu anahtar kelimeye uygun kategori var mı?
+                        mapping_keywords = category_mapping.get(category_type, [category_type])
+                        for category in all_categories:
+                            category_name_lower = category.name.lower()
+                            for mapping_keyword in mapping_keywords:
+                                # Daha kesin eşleşme: mapping_keyword'ün tam olarak category name'de olması
+                                if mapping_keyword in category_name_lower:
+                                    # Ayrıca 'phone' kelimesi için özel kontrol: 'headphone' ile karışmasın
+                                    if category_type == 'phones' and 'headphone' in category_name_lower:
+                                        continue  # Bu eşleşmeyi atla
+                                    # Eşleşme skoru: daha uzun/spesifik kelimeler daha yüksek skor
+                                    score = len(keyword) + (10 if query_lower == keyword else 0)
+                                    matched_categories.append((category, score, keyword, category_type))
+            
+            # En yüksek skorlu kategoriyi döndür
+            if matched_categories:
+                matched_categories.sort(key=lambda x: x[1], reverse=True)
+                logger.info(f"English keyword match: '{matched_categories[0][2]}' (type: {matched_categories[0][3]}) -> {matched_categories[0][0].name}")
+                return matched_categories[0][0]
         
         return None
     
@@ -280,11 +405,19 @@ class EnhancedDatabaseCategoryAgent:
         Returns:
             Optional[Category]: Oluşturulan kategori veya None
         """
+        # Günlük limit kontrolü
+        if not self._check_daily_limit():
+            logger.warning(f"Günlük API limiti aşıldı ({self.daily_limit}). Kategori oluşturulamıyor.")
+            return None
+            
         if not self.model:
             logger.error("Gemini AI model bulunamadı, kategori oluşturulamıyor")
             return None
         
         try:
+            # Rate limiting
+            self._wait_for_rate_limit()
+            
             # Kategori adı üretmek için prompt
             category_prompt = f"""
             Kullanıcı şu ürünü arıyor: "{user_query}"
@@ -302,6 +435,7 @@ class EnhancedDatabaseCategoryAgent:
             if not response or not response.text:
                 return None
             
+            self._increment_api_usage()
             category_name = response.text.strip()
             # Temizlik
             category_name = re.sub(r'[^a-zA-Z\s]', '', category_name).strip()
@@ -602,7 +736,7 @@ class EnhancedDatabaseCategoryAgent:
     
     def handle(self, data: Dict, language: str = "tr", session_id: str = None) -> Dict:
         """
-        Soru-cevap akışını yönetir. İlk olarak bütçe sorusu, sonra kategori soruları.
+        Soru-cevap akışını yönetir.
         
         Args:
             data (Dict): İstek verisi
@@ -613,7 +747,7 @@ class EnhancedDatabaseCategoryAgent:
             Dict: Yanıt verisi
         """
         try:
-            step = data.get('step', 0)
+            step = data.get('step', 1)
             category_name = data.get('category', '')
             answers = data.get('answers', [])
             
@@ -629,29 +763,8 @@ class EnhancedDatabaseCategoryAgent:
             category_dict = category.to_dict(language)
             specs = category_dict.get('specs', [])
             
-            # Step 0: Budget question (always first)
-            if step == 0:
-                budget_question = {
-                    'tr': 'Bütçenizi belirtir misiniz?',
-                    'en': 'What is your budget?'
-                }
-                
-                # Budget ranges by country
-                user_settings = self.get_user_settings(session_id) if session_id else {}
-                country = user_settings.get('country', 'TR')
-                
-                budget_options = self._get_budget_options(country, language)
-                
-                return {
-                    'question': budget_question[language],
-                    'options': budget_options,
-                    'emoji': '💰',
-                    'step': step,
-                    'is_budget_step': True
-                }
-            
-            # Step 1 and beyond: Category specifications
-            spec_step = step - 1  # Adjust for budget step
+            # Category specifications (start from step 1)
+            spec_step = step - 1  # Convert to 0-based index
             
             if spec_step < len(specs) and spec_step >= 0:
                 # Sonraki soruyu döndür
@@ -663,27 +776,23 @@ class EnhancedDatabaseCategoryAgent:
                 return {
                     'question': spec.get('question', ''),
                     'options': options,
-                    'emoji': spec.get('emoji', '📱'),
-                    'step': step,
-                    'is_budget_step': False
+                    'emoji': spec.get('emoji', '�'),
+                    'step': step
                 }
             else:
                 # Tüm sorular cevaplandı - Gemini AI ile öneriler üret
-                budget = answers[0] if answers else None  # First answer is budget
-                spec_answers = answers[1:] if len(answers) > 1 else []  # Rest are spec answers
-                
                 selected_specs = []
                 
                 # Kullanıcının "Evet"/"Yes" dediği özellikleri topla
-                for i, answer in enumerate(spec_answers):
+                for i, answer in enumerate(answers):
                     if i < len(specs):
                         if (language == 'tr' and answer == 'Evet') or (language == 'en' and answer == 'Yes'):
                             selected_specs.append(specs[i].get('key', ''))
                 
-                # Gemini AI ile ürün önerileri al (budget dahil)
+                # Gemini AI ile ürün önerileri al
                 try:
-                    recommendations = self._generate_gemini_recommendations_with_budget(
-                        category_name, selected_specs, budget, language, session_id
+                    recommendations = self._generate_gemini_recommendations(
+                        category_name, selected_specs, language
                     )
                     return {'recommendations': recommendations}
                 except Exception as e:

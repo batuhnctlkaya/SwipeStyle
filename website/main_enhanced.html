@@ -163,27 +163,6 @@
             box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
         }
         
-        [data-theme="dark"] .budget-dropdown {
-            background: linear-gradient(145deg, #0a0a0a 0%, #000000 100%);
-            border: 1px solid #2d3748;
-            color: #ffffff;
-        }
-        
-        [data-theme="dark"] .budget-dropdown:hover {
-            background: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%);
-            border-color: #4f46e5;
-        }
-        
-        [data-theme="dark"] .budget-dropdown:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
-        }
-        
-        [data-theme="dark"] .budget-dropdown option {
-            background: #0a0a0a;
-            color: #ffffff;
-        }
-        
         [data-theme="dark"] .recommendations {
             background: linear-gradient(145deg, #0a0a0a 0%, #000000 100%);
             border: 1px solid #2d3748;
@@ -370,6 +349,28 @@
             display: flex;
             gap: 8px;
             align-items: center;
+        }
+        
+        .creator-link {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 8px 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .creator-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            color: #ffd700;
         }
         
         .lang-btn {
@@ -725,46 +726,6 @@
             background: var(--bg-gray);
         }
 
-        /* Budget Dropdown */
-        .budget-dropdown {
-            background: var(--bg-white);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 12px 16px;
-            color: var(--text-dark);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 200px;
-            max-width: 300px;
-            width: 100%;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 16px;
-            padding-right: 40px;
-        }
-        
-        .budget-dropdown:hover {
-            border-color: var(--primary-blue);
-            background-color: var(--bg-gray);
-        }
-        
-        .budget-dropdown:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-        }
-        
-        .budget-dropdown option {
-            background: var(--bg-white);
-            color: var(--text-dark);
-            padding: 8px;
-        }
-
         /* Loading Screen */
         .loading-container {
             position: fixed;
@@ -1114,6 +1075,10 @@
         
         <!-- Header Controls - Sağ üstte -->
         <div class="header-controls">
+            <!-- Category Creator Link -->
+            <a href="/category-creator" class="creator-link" title="Category Creator Agent">
+                <i class="fas fa-robot"></i>
+            </a>
             <!-- Language Selector -->
             <button class="lang-btn active" data-lang="tr">
                 <span class="lang-icon">��</span>TR

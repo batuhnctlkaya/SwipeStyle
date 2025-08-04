@@ -404,11 +404,14 @@ function handleChatboxEntry() {
     
     showLoadingScreen();
     
-    // API çağrısı
-    fetch('/api/create-category', {
+    // API çağrısı - Use the new search endpoint
+    fetch('/api/search-category', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category_name: input })
+        body: JSON.stringify({ 
+            query: input,
+            language: currentLanguage 
+        })
     })
     .then(res => res.json())
     .then(data => {
@@ -420,7 +423,7 @@ function handleChatboxEntry() {
         
         if (data.success && data.category) {
             category = data.category.name || data.category;
-            step = 0;  // Start from 0 to include budget step
+            step = 1;  // Start from step 1 (no budget step)
             answers = [];
             
             // Basit geçiş
@@ -536,7 +539,7 @@ function renderLanding(categories) {
 
 function startInteraction(selectedCategory) {
     category = selectedCategory;
-    step = 0;  // Start from 0 to include budget step
+    step = 1;  // Start from step 1 (no budget step)
     answers = [];
     
     // Basit geçiş
@@ -545,7 +548,7 @@ function startInteraction(selectedCategory) {
     askAgent();
 }
 
-function renderQuestion(question, options, emoji, isBudgetStep = false) {
+function renderQuestion(question, options, emoji) {
     const interaction = document.getElementById('interaction');
     
     const questionDiv = interaction.querySelector('.question');
@@ -566,52 +569,16 @@ function renderQuestion(question, options, emoji, isBudgetStep = false) {
     questionTitle.innerHTML = `${emoji} ${question}`;
     questionDiv.appendChild(questionTitle);
     
-    // Budget step: Render as dropdown
-    if (isBudgetStep) {
-        const selectContainer = document.createElement('div');
-        selectContainer.className = 'budget-select-container';
-        
-        const select = document.createElement('select');
-        select.className = 'budget-select';
-        select.id = 'budget-select';
-        
-        // Add placeholder option
-        const placeholderOption = document.createElement('option');
-        placeholderOption.value = '';
-        placeholderOption.textContent = currentLanguage === 'tr' ? 'Bütçe aralığınızı seçin...' : 'Select your budget range...';
-        placeholderOption.disabled = true;
-        placeholderOption.selected = true;
-        select.appendChild(placeholderOption);
-        
-        // Add budget options
-        options.forEach(opt => {
-            const option = document.createElement('option');
-            option.value = opt;
-            option.textContent = opt;
-            select.appendChild(option);
-        });
-        
-        // Add change event listener
-        select.addEventListener('change', function() {
-            if (this.value) {
-                handleOption(this.value);
-            }
-        });
-        
-        selectContainer.appendChild(select);
-        optionsDiv.appendChild(selectContainer);
-    } else {
-        // Regular questions: Render as buttons
-        options.forEach(opt => {
-            const button = document.createElement('button');
-            button.className = 'option-btn';
-            button.textContent = opt;
-            button.addEventListener('click', function() {
-                handleOption(opt);
-            });
-            optionsDiv.appendChild(button);
-        });
-    }
+    // Render options as buttons
+    options.forEach(opt => {
+        const button = document.createElement('button');
+        button.textContent = opt;
+        button.className = 'option-btn';
+        button.onclick = function() {
+            handleOption(opt);
+        };
+        optionsDiv.appendChild(button);
+    });
     
     // Loading'i gizle
     const loadingDiv = interaction.querySelector('.loading');
@@ -955,7 +922,7 @@ function askAgent() {
         if (data.question && data.options) {
             hideLoadingScreen();
             window.currentQuestionTooltip = data.tooltip || null;
-            renderQuestion(data.question, data.options, data.emoji || '🔍', data.is_budget_step || false);
+            renderQuestion(data.question, data.options, data.emoji || '🔍');
         } else if (data.recommendations) {
             renderRecommendations(data.recommendations);
         } else if (data.categories) {

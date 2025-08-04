@@ -79,6 +79,25 @@ def index():
     return render_template('main_enhanced.html')
 
 
+@app.route('/category-creator')
+def category_creator():
+    """
+    Kategori oluşturucu sayfası
+    """
+    return render_template('category_creator.html')
+
+
+@app.route('/status')
+def status_page():
+    """
+    API durumu ve sistem istatistikleri sayfası
+    """
+    return render_template('status.html')
+
+
+# ===== API ENDPOINTS =====
+
+
 @app.route('/main_enhanced.js')
 def main_enhanced_js():
     """JavaScript dosyasını servis eder."""
@@ -349,6 +368,84 @@ def autocomplete_suggestions():
         return jsonify({'suggestions': []})
 
 
+@app.route('/api/search-category', methods=['POST'])
+def search_category():
+    """
+    Kategori arama ve otomatik oluşturma.
+    
+    POST isteği bekler:
+    {
+        "query": "gaming chairs",
+        "language": "tr" | "en",
+        "session_id": "optional"
+    }
+    
+    Döner:
+    {
+        "success": true,
+        "category": {
+            "name": "Gaming Chairs",
+            "emoji": "🪑",
+            "specs": [...]
+        },
+        "created": true
+    }
+    """
+    data = request.json
+    query = data.get('query', '').strip()
+    session_id = data.get('session_id') or session.get('session_id') or str(uuid.uuid4())
+    session['session_id'] = session_id
+    
+    if not query:
+        return jsonify({'error': 'Query parameter is required'}), 400
+    
+    # Kullanıcı ayarlarını al
+    user_settings = category_agent.get_user_settings(session_id)
+    language = data.get('language', user_settings.get('language', 'tr'))
+    
+    try:
+        logger.info(f"Search Category - Query: '{query}' (Language: {language})")
+        
+        # Try to find or create the category
+        category, created = category_agent.get_or_create_category(query, language)
+        
+        if category:
+            category_dict = category.to_dict(language)
+            
+            message = {
+                'tr': f"Kategori {'oluşturuldu' if created else 'bulundu'}: {category.name}",
+                'en': f"Category {'created' if created else 'found'}: {category.name}"
+            }
+            
+            return jsonify({
+                'success': True,
+                'category': category_dict,
+                'created': created,
+                'message': message[language],
+                'session_id': session_id
+            })
+        else:
+            error_message = {
+                'tr': f"'{query}' kategorisi bulunamadı veya oluşturulamadı.",
+                'en': f"Category '{query}' could not be found or created."
+            }
+            return jsonify({
+                'success': False,
+                'error': error_message[language]
+            }), 404
+            
+    except Exception as e:
+        logger.error(f"Search category error: {e}")
+        error_message = {
+            'tr': f"Kategori arama hatası: {str(e)}",
+            'en': f"Category search error: {str(e)}"
+        }
+        return jsonify({
+            'success': False,
+            'error': error_message[language]
+        }), 500
+
+
 @app.route('/api/category-images', methods=['GET'])
 def get_category_images():
     """
@@ -435,8 +532,168 @@ def create_category():
         return jsonify({'error': 'Failed to create category'}), 500
 
 
+@app.route('/api/category-creator', methods=['POST'])
+def category_creator_agent():
+    """
+    Kategori Oluşturucu Agent - Girilen kategori için otomatik soru ve emoji üretir.
+    
+    POST isteği bekler:
+    {
+        "category_name": "Gaming Chairs",
+        "language": "tr" | "en",
+        "force_create": false,
+        "session_id": "optional"
+    }
+    
+    Döner:
+    {
+        "success": true,
+        "category": {
+            "name": "Gaming Chairs",
+            "emoji": "🪑",
+            "questions": [
+                {
+                    "question": "Ergonomik tasarım önemli mi?",
+                    "key": "Ergonomic",
+                    "emoji": "🧘"
+                }
+            ]
+        },
+        "created": true,
+        "message": "Kategori başarıyla oluşturuldu!"
+    }
+    """
+    data = request.json
+    category_name = data.get('category_name', '').strip()
+    language = data.get('language', 'tr')
+    force_create = data.get('force_create', False)
+    session_id = data.get('session_id') or session.get('session_id') or str(uuid.uuid4())
+    session['session_id'] = session_id
+    
+    if not category_name:
+        return jsonify({'error': 'Category name is required'}), 400
+    
+    try:
+        logger.info(f"Category Creator Agent - Processing: {category_name} (Language: {language})")
+        
+        # Check if category already exists
+        existing_category, _ = category_agent.get_or_create_category(category_name, language)
+        
+        if existing_category and not force_create:
+            # Category already exists
+            category_dict = existing_category.to_dict(language)
+            message = {
+                'tr': f"'{category_name}' kategorisi zaten mevcut. {len(category_dict.get('specs', []))} soru bulundu.",
+                'en': f"Category '{category_name}' already exists. Found {len(category_dict.get('specs', []))} questions."
+            }
+            
+            return jsonify({
+                'success': True,
+                'category': category_dict,
+                'created': False,
+                'already_exists': True,
+                'message': message[language],
+                'session_id': session_id
+            })
+        
+        # Create new category or force recreate
+        if force_create and existing_category:
+            # Delete existing category specs and recreate
+            from app.models import CategorySpec
+            CategorySpec.query.filter_by(category_id=existing_category.id).delete()
+            db.session.commit()
+            logger.info(f"Forcing recreation of category: {category_name}")
+        
+        # Generate new category with AI
+        category, created = category_agent.get_or_create_category(category_name, language)
+        
+        if category:
+            category_dict = category.to_dict(language)
+            
+            message = {
+                'tr': f"'{category_name}' kategorisi başarıyla oluşturuldu! {len(category_dict.get('specs', []))} soru üretildi.",
+                'en': f"Category '{category_name}' successfully created! Generated {len(category_dict.get('specs', []))} questions."
+            }
+            
+            # Log the created questions
+            specs = category_dict.get('specs', [])
+            logger.info(f"Generated {len(specs)} questions for '{category_name}':")
+            for i, spec in enumerate(specs, 1):
+                logger.info(f"  {i}. {spec.get('question', 'N/A')} ({spec.get('emoji', '❓')})")
+            
+            return jsonify({
+                'success': True,
+                'category': category_dict,
+                'created': True,
+                'message': message[language],
+                'session_id': session_id,
+                'questions_count': len(specs)
+            })
+        else:
+            error_message = {
+                'tr': f"'{category_name}' kategorisi oluşturulamadı. AI servisi kullanılamıyor olabilir.",
+                'en': f"Failed to create category '{category_name}'. AI service may be unavailable."
+            }
+            return jsonify({
+                'success': False,
+                'error': error_message[language]
+            }), 500
+            
+    except Exception as e:
+        logger.error(f"Category Creator Agent error: {e}")
+        error_message = {
+            'tr': f"Kategori oluşturulurken hata oluştu: {str(e)}",
+            'en': f"Error creating category: {str(e)}"
+        }
+        return jsonify({
+            'success': False,
+            'error': error_message[language]
+        }), 500
+
+
 @app.errorhandler(404)
 def not_found_error(error):
+    """404 hata sayfası"""
+    return jsonify({'error': 'Endpoint not found'}), 404
+
+
+@app.route('/api/status')
+def api_status():
+    """
+    API durumu ve kullanım istatistiklerini döndürür.
+    
+    Returns:
+        JSON: API durumu, günlük kullanım ve limitleri
+    """
+    try:
+        from datetime import date
+        
+        status_info = {
+            'api_available': category_agent.model is not None,
+            'daily_usage': getattr(category_agent, 'daily_api_calls', 0),
+            'daily_limit': getattr(category_agent, 'daily_limit', 50),
+            'current_date': str(date.today()),
+            'cache_size': len(getattr(category_agent, 'translation_cache', {})),
+            'system_status': 'operational'
+        }
+        
+        # Limit kontrolü
+        remaining = status_info['daily_limit'] - status_info['daily_usage']
+        status_info['remaining_calls'] = max(0, remaining)
+        status_info['limit_reached'] = remaining <= 0
+        
+        return jsonify(status_info)
+        
+    except Exception as e:
+        logger.error(f"Status endpoint error: {e}")
+        return jsonify({
+            'error': 'Could not retrieve status',
+            'system_status': 'error'
+        }), 500
+
+
+@app.errorhandler(404)
+def not_found(error):
     """404 hata sayfası"""
     return jsonify({'error': 'Endpoint not found'}), 404
 
