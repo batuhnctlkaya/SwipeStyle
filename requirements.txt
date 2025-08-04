@@ -7,11 +7,14 @@
 # - Flask: Web framework (backend API için)
 # - dotenv: Environment variables yönetimi (.env dosyası için)
 # - google-generativeai: Gemini AI entegrasyonu (ürün önerisi için)
+# - requests: HTTP istekleri (Amazon API için)
 # 
 # Kurulum:
 #     pip install -r requirements.txt
 # 
-# Not: GEMINI_API_KEY environment variable'ı .env dosyasında tanımlanmalıdır.
+# Not: 
+# - GEMINI_API_KEY environment variable'ı .env dosyasında tanımlanmalıdır.
+# - RAINFOREST_API_KEY environment variable'ı .env dosyasında tanımlanmalıdır (Amazon API için)
 # 
 # Kullanım:
 #     python run.py
@@ -20,8 +23,10 @@
 # Geliştirme Notları:
 # - Flask debug modu açık (production'da kapatılmalı)
 # - Gemini API anahtarı .env dosyasından okunur
+# - Amazon API anahtarı .env dosyasından okunur
 # - Tüm bağımlılıklar otomatik olarak kurulur
 
 Flask
-dotenv
+python-dotenv
 google-generativeai
+requests

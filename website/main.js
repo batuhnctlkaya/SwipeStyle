@@ -1,508 +1,607 @@
-<<<<<<< HEAD
 /**
- * SwipeStyle Frontend JavaScript Modülü
- * =====================================
- * 
- * Bu dosya, SwipeStyle uygulamasının frontend JavaScript kodlarını içerir.
- * Kullanıcı arayüzü etkileşimlerini yönetir, API çağrıları yapar ve
- * dinamik içerik güncellemeleri sağlar.
- * 
- * Ana Özellikler:
- * - Kategori kartları render etme
- * - Soru-cevap akışı yönetimi
- * - Loading ekranları
- * - Ürün önerileri gösterimi
- * - Hata yönetimi
- * 
- * API Endpoint'leri:
- * - /detect_category: Kategori tespiti
- * - /categories: Kategori listesi
- * - /ask: Soru-cevap akışı
- * 
- * Kullanım:
- * HTML dosyasında defer ile yüklenir
- * Sayfa yüklendiğinde otomatik olarak başlatılır
+ * SwipeStyle Frontend JavaScript
+ * Basit ve temiz JavaScript kodu
  */
 
-// Chatbox logic
-/**
- * Kullanıcının arama kutusuna yazdığı sorguyu işler.
- * 
- * Bu fonksiyon, kullanıcının arama kutusuna yazdığı metni alır
- * ve backend'e göndererek kategori tespiti yapar. Eğer kategori
- * bulunursa, soru-cevap akışını başlatır.
- * 
- * İşlem Adımları:
- * 1. Arama kutusundan metni alır
- * 2. Loading ekranını gösterir
- * 3. /detect_category endpoint'ine POST isteği gönderir
- * 4. Yanıtı işler ve akışı başlatır
- * 
- * Hata Durumları:
- * - Boş sorgu: İşlem yapılmaz
- * - API hatası: Kullanıcıya hata mesajı gösterilir
- * - Kategori bulunamadı: Uyarı mesajı gösterilir
- */
-=======
-// Main.js'e CSS stillerini ekleyin veya ayrı bir CSS dosyası oluşturun
+// Global dil değişkeni
+let currentLanguage = 'tr';
+let currentTheme = 'light';
 
-const tooltipStyles = `
-<style>
-.question-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
+// Otomatik tamamlama için global değişkenler
+let autocompleteData = [];
+let selectedAutocompleteIndex = -1;
 
-.question-container h2 {
-    display: inline-block;
-    margin-right: 10px;
-    flex: 1;
-}
-
-.tooltip-container {
-    position: relative;
-    display: inline-block;
-    margin-left: 5px;
-    z-index: 10;
-}
-
-.info-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    cursor: help;
-    opacity: 0.8;
-    transition: all 0.3s ease;
-    user-select: none;
-    padding: 4px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    width: 22px;
-    height: 22px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    border: 1px solid #e0e0e0;
-}
-
-.info-icon:hover {
-    opacity: 1;
-    transform: scale(1.1);
-    background-color: #e6e6e6;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-}
-
-.tooltip-text {
-    visibility: hidden;
-    opacity: 0;
-    position: absolute;
-    bottom: 130%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    text-align: left;
-    padding: 14px;
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.5;
-    width: 300px;
-    z-index: 1000;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    word-wrap: break-word;
-    border-left: 4px solid #a18cd1;
-}
-
-.tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -6px;
-    border-width: 6px;
-    border-style: solid;
-    border-color: #333 transparent transparent transparent;
-}
-
-/* Mobil cihazlar için özel düzenlemeler */
-@media (max-width: 768px) {
-    .question-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 0 10px;
-    }
+// Tema değiştirme fonksiyonu
+function changeTheme(theme) {
+    currentTheme = theme;
     
-    .tooltip-container {
-        margin-top: -5px;
-        align-self: flex-start;
-    }
+    // HTML'e tema attribute'u ekle
+    document.documentElement.setAttribute('data-theme', theme);
     
-    .tooltip-text {
-        width: 280px;
-        left: 0;
-        transform: none;
-        bottom: 140%;
-        font-size: 13px;
-        padding: 12px;
-    }
+    // Theme switch'i güncelle
+    document.querySelectorAll('.theme-switch').forEach(switch_el => {
+        switch_el.dataset.theme = theme;
+        if (theme === 'dark') {
+            switch_el.classList.add('active');
+        } else {
+            switch_el.classList.remove('active');
+        }
+    });
     
-    .tooltip-text::after {
-        left: 10px;
-        margin-left: 0;
-    }
+    // LocalStorage'a kaydet
+    localStorage.setItem('swipestyle-theme', theme);
+}
+
+// Dil değiştirme fonksiyonu
+function changeLanguage(lang) {
+    currentLanguage = lang;
     
-    .info-icon {
-        font-size: 16px;
-    }
+    // Dil butonlarını güncelle
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.lang === lang) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Tüm çevrilebilir elementleri güncelle
+    document.querySelectorAll('[data-tr], [data-en]').forEach(element => {
+        const trText = element.dataset.tr;
+        const enText = element.dataset.en;
+        
+        if (lang === 'tr' && trText) {
+            element.textContent = trText;
+        } else if (lang === 'en' && enText) {
+            element.textContent = enText;
+        }
+    });
+    
+    // Placeholder'ları güncelle
+    document.querySelectorAll('[data-tr-placeholder], [data-en-placeholder]').forEach(element => {
+        const trPlaceholder = element.dataset.trPlaceholder;
+        const enPlaceholder = element.dataset.enPlaceholder;
+        
+        if (lang === 'tr' && trPlaceholder) {
+            element.placeholder = trPlaceholder;
+        } else if (lang === 'en' && enPlaceholder) {
+            element.placeholder = enPlaceholder;
+        }
+    });
+    
+    // Kategorileri yeniden yükle
+    loadCategories();
 }
 
-/* Çok küçük ekranlar için */
-@media (max-width: 480px) {
-    .tooltip-text {
-        width: calc(100vw - 40px);
-        max-width: 280px;
-        left: -10px;
-        font-size: 12px;
-        padding: 10px;
-    }
-}
-
-/* Tooltip animasyonları */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.tooltip-text.show {
-    visibility: visible;
-    opacity: 1;
-    animation: fadeIn 0.3s ease;
-}
-
-/* Options container */
-.options-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 0 10px;
-}
-
-/* Option butonları için iyileştirmeler */
-.option-btn {
-    margin: 6px 0;
-    padding: 14px 18px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 15px;
-    line-height: 1.4;
-    text-align: left;
-    position: relative;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    font-weight: 500;
-    color: #333;
-}
-
-.option-btn:hover {
-    background: #f9f9f9;
-    border-color: #a18cd1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.option-btn:active {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.option-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-@media (max-width: 768px) {
-    .option-btn {
-        width: 100%;
-        margin: 5px 0;
-        padding: 16px 18px;
-        font-size: 16px;
-    }
-}
-
-/* İnteraksiyon konteynerinde iyileştirmeler */
-#interaction {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px 10px;
-}
-
-.loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: #666;
-    font-size: 16px;
-}
-
-.error {
-    background-color: #ffebee;
-    color: #d32f2f;
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 20px;
-    border-left: 4px solid #d32f2f;
-    font-size: 14px;
-}
-</style>`;
-
-// Sayfaya CSS ekle
-document.head.insertAdjacentHTML('beforeend', tooltipStyles);
-
-// Chatbox logic
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
 function handleChatboxEntry() {
     const input = document.getElementById('chatbox-input').value.trim();
-    if (!input) return;
-    showLoadingScreen();
-<<<<<<< HEAD
-    fetch('/detect_category', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: input })
-    })
-    .then(async res => {
-        let data = await res.json();
-        hideLoadingScreen();
-        if (res.ok && data.category) {
-            category = data.category;
-=======
+    if (!input) {
+        const alertMsg = currentLanguage === 'tr' ? 'Lütfen bir ürün yazın' : 'Please enter a product';
+        alert(alertMsg);
+        return;
+    }
     
-    // Yeni search API'sini kullan
-    fetch(`/search/${encodeURIComponent(input)}`)
-    .then(res => res.json())
-    .then(data => {
-        hideLoadingScreen();
-        
-        if (data.status === 'error') {
-            alert("Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.");
-            return;
-        }
-        
-        let categoryName = '';
-        
-        // API yanıt durumuna göre farklı işlemler
-        switch(data.status) {
-            case 'found':
-                categoryName = data.category;
-                break;
-                
-            case 'similar_found':
-            case 'partial_match':
-                categoryName = data.matched_category;
-                alert(`"${input}" aramanız "${categoryName}" kategorisiyle eşleştirildi.`);
-                break;
-                
-            case 'alias_match':
-                categoryName = data.matched_category;
-                alert(`"${input}" aramanız "${categoryName}" kategorisine yönlendirildi.`);
-                break;
-                
-            case 'created':
-                categoryName = data.category;
-                alert(`"${categoryName}" için yeni bir kategori oluşturuldu.`);
-                break;
-                
-            default:
-                // Fallback - eski metodu kullan
+    // Arama butonunu devre dışı bırak
+    const searchBtn = document.getElementById('chatbox-send');
+    const originalText = searchBtn.innerHTML;
+    const loadingText = currentLanguage === 'tr' ? '<i class="fas fa-spinner fa-spin"></i> Aranıyor...' : '<i class="fas fa-spinner fa-spin"></i> Searching...';
+    searchBtn.innerHTML = loadingText;
+    searchBtn.disabled = true;
+    
+    showLoadingScreen();
+    
+    // API çağrısı
                 fetch('/detect_category', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ query: input })
                 })
                 .then(res => res.json())
-                .then(categoryData => {
-                    if (categoryData.category) {
-                        category = categoryData.category;
+    .then(data => {
+        hideLoadingScreen();
+        
+        // Butonu eski haline getir
+        searchBtn.innerHTML = originalText;
+        searchBtn.disabled = false;
+        
+        if (data.category) {
+            category = data.category;
                         step = 1;
                         answers = [];
+            
+            // Basit geçiş
                         document.querySelector('.landing').style.display = 'none';
                         document.getElementById('interaction').style.display = '';
                         askAgent();
                     } else {
-                        alert('Aradığınız kategoriyi bulamadım. Lütfen başka bir şey deneyin.');
-                    }
-                });
-                return;
-        }
-        
-        if (categoryName) {
-            category = categoryName;
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
-            step = 1;
-            answers = [];
-            document.querySelector('.landing').style.display = 'none';
-            document.getElementById('interaction').style.display = '';
-            askAgent();
-<<<<<<< HEAD
-        } else if (data.error) {
-            showNotification(data.error, 'error');
-        } else {
-            showNotification('Kategori tespit edilemedi. Lütfen daha açık bir istek girin.', 'warning');
-        }
-    })
-    .catch(() => {
-        hideLoadingScreen();
-        showNotification('Sunucuya erişilemiyor. Lütfen daha sonra tekrar deneyin.', 'error');
-    });
-}
-
-/**
- * Sayfa yüklendiğinde çalışan ana fonksiyon.
- * 
- * Bu fonksiyon, sayfa tamamen yüklendiğinde çalışır ve:
- * 1. Kategorileri backend'den yükler
- * 2. Kategori kartlarını render eder
- * 3. Event listener'ları ayarlar
- * 
- * Yapılan İşlemler:
- * - /categories endpoint'inden kategori listesi alınır
- * - Her kategori için özellikler (specs) kaydedilir
- * - Kategori kartları oluşturulur
- * - Arama kutusu event listener'ları eklenir
- */
-window.onload = () => {
-    // Get categories and specs from backend
-    fetch('/categories')
-        .then(res => res.json())
-        .then(data => {
-            const categories = Object.keys(data);
-            window.currentSpecs = {};
-            for (const cat of categories) {
-                window.currentSpecs[cat] = data[cat].specs || [];
-            }
-            renderLanding(categories);
-        });
-    // Chatbox event
-    document.getElementById('chatbox-send').onclick = handleChatboxEntry;
-    document.getElementById('chatbox-input').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') handleChatboxEntry();
-    });
-};
-
-// Global değişkenler
-let step = 0;        // Mevcut adım (0: kategori seçimi, 1-N: sorular)
-let category = null; // Seçilen kategori
-let answers = [];    // Verilen cevaplar listesi
-
-/**
- * Kategori ikonları sözlüğü - Sade ve şık ikonlar.
- * 
- * Her kategori için modern emoji ikonu tanımlar.
- * Eğer kategori bu listede yoksa, varsayılan olarak 🔍 kullanılır.
- */
-=======
+            const errorMsg = currentLanguage === 'tr' ? 'Aradığınız kategoriyi bulamadım. Lütfen başka bir şey deneyin.' : 'Could not find the category you are looking for. Please try something else.';
+            alert(errorMsg);
         }
     })
     .catch(error => {
         console.error("Arama hatası:", error);
         hideLoadingScreen();
-        alert("Bir hata oluştu, lütfen tekrar deneyin.");
+        
+        // Butonu eski haline getir
+        searchBtn.innerHTML = originalText;
+        searchBtn.disabled = false;
+        
+        const errorMsg = currentLanguage === 'tr' ? "Bir hata oluştu, lütfen tekrar deneyin." : "An error occurred, please try again.";
+        alert(errorMsg);
     });
 }
-
-// Bu window.onload sonraki ile çakıştığı için kaldırılacak
 
 let step = 0;
 let category = null;
 let answers = [];
 
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
 const categoryIcons = {
-    'Mouse': '🖱️',
-    'Headphones': '🎧',
-    'Phone': '📱',
-    'Laptop': '💻'
+    'Mouse': 'fas fa-mouse',
+    'Headphones': 'fas fa-headphones',
+    'Phone': 'fas fa-mobile-alt',
+    'Laptop': 'fas fa-laptop',
+    'Keyboard': 'fas fa-keyboard',
+    'Monitor': 'fas fa-desktop',
+    'Speaker': 'fas fa-volume-up',
+    'Camera': 'fas fa-camera',
+    'Tablet': 'fas fa-tablet-alt',
+    'Smartwatch': 'fas fa-clock'
 };
 
-<<<<<<< HEAD
-/**
- * Kategori renkleri - Sade renk paleti.
- */
-const categoryColors = {
-    'Mouse': '#3182ce',
-    'Headphones': '#805ad5',
-    'Phone': '#38a169',
-    'Laptop': '#dd6b20'
+// --- Akıllı Arama & Filtreleme Özelliği ---
+// Not: HTML kısmını main.html dosyasına eklemelisin (bkz. açıklama)
+
+// Örnek teknolojik ürün verisi (backend'den de çekilebilir)
+const products = [
+  { name: "Mouse", color: "siyah", size: "M", price: 399, rating: 4.6 },
+  { name: "Laptop", color: "gri", size: "L", price: 15999, rating: 4.8 },
+  { name: "Telefon", color: "mavi", size: "M", price: 10999, rating: 4.7 },
+  { name: "Kulaklık", color: "siyah", size: "S", price: 799, rating: 4.3 },
+  { name: "Monitör", color: "beyaz", size: "L", price: 2999, rating: 4.5 },
+  { name: "Klavye", color: "siyah", size: "M", price: 599, rating: 4.2 },
+  { name: "Tablet", color: "gri", size: "M", price: 4999, rating: 4.4 },
+  { name: "Kamera", color: "siyah", size: "S", price: 3499, rating: 4.1 },
+  { name: "Hoparlör", color: "kırmızı", size: "S", price: 699, rating: 4.0 },
+  { name: "Akıllı Saat", color: "siyah", size: "S", price: 1999, rating: 4.6 }
+];
+
+// Ürünleri ekrana bas
+function displayProducts(filtered) {
+  const productList = document.getElementById("product-list");
+  if (!productList) return;
+  productList.innerHTML = "";
+  filtered.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.textContent = `${p.name} | Renk: ${p.color} | Beden: ${p.size} | ₺${p.price} | ⭐${p.rating}`;
+    productList.appendChild(div);
+  });
+}
+
+// Filtreleme fonksiyonu
+function filterProducts() {
+  const inputEl = document.getElementById("product-search-input");
+  const colorEl = document.getElementById("color-filter");
+  const sizeEl = document.getElementById("size-filter");
+  const ratingEl = document.getElementById("rating-filter");
+  if (!inputEl || !colorEl || !sizeEl || !ratingEl) return;
+  const input = inputEl.value.toLowerCase();
+  const color = colorEl.value;
+  const size = sizeEl.value;
+  const rating = parseFloat(ratingEl.value) || 0;
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(input) &&
+    (color === "" || p.color === color) &&
+    (size === "" || p.size === size) &&
+    p.rating >= rating
+  );
+  displayProducts(filtered);
+}
+
+// Otomatik tamamlama
+function setupSmartSearchEvents() {
+  const inputEl = document.getElementById("product-search-input");
+  const suggestionsDiv = document.getElementById("product-suggestions");
+  if (!inputEl || !suggestionsDiv) return;
+  inputEl.addEventListener("input", () => {
+    const input = inputEl.value.toLowerCase();
+    const matched = products
+      .map(p => p.name)
+      .filter(name => name.toLowerCase().startsWith(input));
+    suggestionsDiv.innerHTML = matched.length > 0 ? matched.join(", ") : "";
+    filterProducts();
+  });
+}
+
+function setupFilterEvents() {
+  const colorEl = document.getElementById("color-filter");
+  const sizeEl = document.getElementById("size-filter");
+  const ratingEl = document.getElementById("rating-filter");
+  if (colorEl) colorEl.addEventListener("change", filterProducts);
+  if (sizeEl) sizeEl.addEventListener("change", filterProducts);
+  if (ratingEl) ratingEl.addEventListener("change", filterProducts);
+}
+
+// Sayfa yüklendiğinde smart search alanı varsa başlat
+window.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById("product-search-input")) {
+    setupSmartSearchEvents();
+    setupFilterEvents();
+    displayProducts(products);
+  }
+});
+
+// Açıklama: HTML tarafına şunu eklemelisin (örnek):
+// <div class="smart-search">
+//   <input type="text" id="product-search-input" placeholder="Ürün Ara (örn: ka)">
+//   <select id="color-filter"> ... </select>
+//   <select id="size-filter"> ... </select>
+//   <select id="rating-filter"> ... </select>
+//   <div id="product-suggestions"></div>
+// </div>
+// <div id="product-list"></div>
+
+// Otomatik tamamlama verileri
+const autocompleteSuggestions = {
+    'k': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' },
+        { text: 'Klavye', icon: 'fas fa-keyboard', category: 'Keyboard' },
+        { text: 'Kamera', icon: 'fas fa-camera', category: 'Camera' },
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Kettle', icon: 'fas fa-mug-hot', category: 'Kitchen' },
+        { text: 'Konsol', icon: 'fas fa-gamepad', category: 'Gaming' }
+    ],
+    'kl': [
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
+        { text: 'Klavye', icon: 'fas fa-keyboard', category: 'Keyboard' }
+    ],
+    'kli': [
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+    ],
+    'klim': [
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+
+    ],
+    'l': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'la': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'lap': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'lapt': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'lapto': [
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'laptop': [
+        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop HP', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Lenovo', icon: 'fas fa-laptop', category: 'Laptop' },
+        { text: 'Laptop Asus', icon: 'fas fa-laptop', category: 'Laptop' }
+    ],
+    'm': [
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse SteelSeries', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Corsair', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    'mo': [
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    'mou': [
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    'mous': [
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    'mouse': [
+        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse SteelSeries', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse Corsair', icon: 'fas fa-mouse', category: 'Mouse' },
+        { text: 'Mouse HyperX', icon: 'fas fa-mouse', category: 'Mouse' }
+    ],
+    't': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Tablet', icon: 'fas fa-tablet-alt', category: 'Tablet' },
+        { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'te': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Tablet', icon: 'fas fa-tablet-alt', category: 'Tablet' },
+        { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
+    ],
+    'tel': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'tele': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'telef': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'telefo': [
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Nokia', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ],
+    'telefon': [
+        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Nokia', icon: 'fas fa-mobile-alt', category: 'Phone' },
+        { text: 'Telefon Sony', icon: 'fas fa-mobile-alt', category: 'Phone' }
+    ]
 };
 
-/**
- * Ana sayfa kategori kartlarını render eder.
- * 
- * Bu fonksiyon, backend'den gelen kategori listesini alır
- * ve her kategori için tıklanabilir kart oluşturur.
- * 
- * Args:
- *     categories (Array): Kategori adları listesi
- * 
- * Oluşturulan Kartlar:
- * - Her kart tıklanabilir
- * - Kategori ikonu ve adı gösterilir
- * - Hover efektleri vardır
- * - Tıklandığında startInteraction() çağrılır
- */
-=======
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
+// Kategori isimlerini çevir
+const categoryTranslations = {
+    'Mouse': { tr: 'Mouse', en: 'Mouse' },
+    'Headphones': { tr: 'Kulaklık', en: 'Headphones' },
+    'Phone': { tr: 'Telefon', en: 'Phone' },
+    'Laptop': { tr: 'Laptop', en: 'Laptop' },
+    'Keyboard': { tr: 'Klavye', en: 'Keyboard' },
+    'Monitor': { tr: 'Monitör', en: 'Monitor' },
+    'Speaker': { tr: 'Hoparlör', en: 'Speaker' },
+    'Camera': { tr: 'Kamera', en: 'Camera' },
+    'Tablet': { tr: 'Tablet', en: 'Tablet' },
+    'Smartwatch': { tr: 'Akıllı Saat', en: 'Smartwatch' }
+};
+
+// Otomatik tamamlama fonksiyonları
+function handleAutocomplete() {
+    const input = document.getElementById('chatbox-input');
+    const dropdown = document.getElementById('autocomplete-dropdown');
+    const query = input.value.toLowerCase().trim();
+    
+    if (query.length < 1) {
+        hideAutocomplete();
+        return;
+    }
+    
+    // Önerileri bul
+    const suggestions = getAutocompleteSuggestions(query);
+    
+    if (suggestions.length > 0) {
+        showAutocompleteSuggestions(suggestions);
+    } else {
+        hideAutocomplete();
+    }
+}
+
+function getAutocompleteSuggestions(query) {
+    const suggestions = [];
+    if (!query) return suggestions;
+
+    // Regex ile anahtar eşleşmesi (başlangıç veya tam eşleşme)
+    const keyRegex = new RegExp('^' + query, 'i');
+    Object.keys(autocompleteSuggestions).forEach(key => {
+        if (keyRegex.test(key)) {
+            autocompleteSuggestions[key].forEach(suggestion => {
+                if (!suggestions.some(s => s.text === suggestion.text)) {
+                    suggestions.push(suggestion);
+                }
+            });
+        }
+    });
+
+    // Regex ile ürün adında geçenler (herhangi bir yerde)
+    const textRegex = new RegExp(query, 'i');
+    Object.values(autocompleteSuggestions).forEach(categorySuggestions => {
+        categorySuggestions.forEach(suggestion => {
+            if (textRegex.test(suggestion.text) && !suggestions.some(s => s.text === suggestion.text)) {
+                suggestions.push(suggestion);
+            }
+        });
+    });
+
+    return suggestions.slice(0, 8); // Maksimum 8 öneri
+}
+
+function showAutocompleteSuggestions(suggestions) {
+    const dropdown = document.getElementById('autocomplete-dropdown');
+    
+    dropdown.innerHTML = '';
+    autocompleteData = suggestions; // Global değişkene ata
+    
+    suggestions.forEach((suggestion, index) => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        item.setAttribute('data-index', index);
+        item.setAttribute('data-category', suggestion.category);
+        
+        item.innerHTML = `
+            <span>${suggestion.text}</span>
+            <i class="${suggestion.icon} icon" title="${suggestion.category}"></i>
+        `;
+        
+        item.addEventListener('click', () => {
+            selectAutocompleteItem(suggestion);
+        });
+        
+        item.addEventListener('mouseenter', () => {
+            selectAutocompleteIndex(index);
+        });
+        
+        // Add subtle animation delay for each item
+        item.style.animationDelay = `${index * 0.05}s`;
+        item.style.animation = 'fadeInUp 0.3s ease forwards';
+        
+        dropdown.appendChild(item);
+    });
+    
+    dropdown.style.display = 'block';
+    selectedAutocompleteIndex = -1;
+}
+
+function hideAutocomplete() {
+    const dropdown = document.getElementById('autocomplete-dropdown');
+    dropdown.style.display = 'none';
+    selectedAutocompleteIndex = -1;
+}
+
+function selectAutocompleteIndex(index) {
+    const items = document.querySelectorAll('.autocomplete-item');
+    
+    // Önceki seçimi temizle
+    items.forEach(item => item.classList.remove('selected'));
+    
+    if (index >= 0 && index < items.length) {
+        items[index].classList.add('selected');
+        selectedAutocompleteIndex = index;
+    }
+}
+
+function selectAutocompleteItem(suggestion) {
+    const input = document.getElementById('chatbox-input');
+    input.value = suggestion.text;
+    hideAutocomplete();
+    
+    // Otomatik olarak arama yap
+    handleChatboxEntry();
+}
+
+function handleAutocompleteKeydown(e) {
+    const dropdown = document.getElementById('autocomplete-dropdown');
+    const items = document.querySelectorAll('.autocomplete-item');
+    
+    if (dropdown.style.display === 'none') return;
+    
+    switch (e.key) {
+        case 'ArrowDown':
+            e.preventDefault();
+            selectedAutocompleteIndex = Math.min(selectedAutocompleteIndex + 1, items.length - 1);
+            selectAutocompleteIndex(selectedAutocompleteIndex);
+            break;
+            
+        case 'ArrowUp':
+            e.preventDefault();
+            selectedAutocompleteIndex = Math.max(selectedAutocompleteIndex - 1, -1);
+            selectAutocompleteIndex(selectedAutocompleteIndex);
+            break;
+            
+        case 'Enter':
+            e.preventDefault();
+            if (selectedAutocompleteIndex >= 0 && selectedAutocompleteIndex < items.length) {
+                const selectedItem = items[selectedAutocompleteIndex];
+                const suggestion = autocompleteData[selectedAutocompleteIndex];
+                if (suggestion) {
+                    selectAutocompleteItem(suggestion);
+                }
+            } else {
+                handleChatboxEntry();
+            }
+            break;
+            
+        case 'Escape':
+            hideAutocomplete();
+            break;
+    }
+}
+
+function getCategoryName(categoryName) {
+    const translation = categoryTranslations[categoryName];
+    if (translation) {
+        return translation[currentLanguage] || categoryName;
+    }
+    return categoryName;
+}
+
+function loadCategories() {
+    fetch('/categories')
+        .then(res => res.json())
+        .then(data => {
+            const categories = Object.keys(data);
+            renderLanding(categories);
+        })
+        .catch(error => {
+            console.error("Kategoriler yüklenirken hata:", error);
+        });
+}
+
 function renderLanding(categories) {
     const grid = document.getElementById('category-cards');
     grid.innerHTML = '';
+    
     categories.forEach(cat => {
         const card = document.createElement('div');
         card.className = 'category-card';
         card.onclick = () => startInteraction(cat);
-<<<<<<< HEAD
         
         const icon = document.createElement('div');
         icon.className = 'category-icon';
-        icon.textContent = categoryIcons[cat] || '🔍';
         
-        // Kategori rengini uygula
-        if (categoryColors[cat]) {
-            icon.style.color = categoryColors[cat];
-        }
+        // Font Awesome ikonu için
+        const iconElement = document.createElement('i');
+        iconElement.className = categoryIcons[cat] || 'fas fa-search';
+        icon.appendChild(iconElement);
         
         const label = document.createElement('div');
         label.className = 'category-label';
-        label.textContent = cat;
+        label.textContent = getCategoryName(cat);
         
-=======
-        const icon = document.createElement('div');
-        icon.className = 'category-icon';
-        icon.textContent = categoryIcons[cat] || '🔍';
-        const label = document.createElement('div');
-        label.className = 'category-label';
-        label.textContent = cat;
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
         card.appendChild(icon);
         card.appendChild(label);
         grid.appendChild(card);
     });
-    // Attach chatbox event listeners after rendering
+    
+    // Event listeners
     const chatboxSend = document.getElementById('chatbox-send');
     const chatboxInput = document.getElementById('chatbox-input');
     if (chatboxSend && chatboxInput) {
@@ -513,211 +612,39 @@ function renderLanding(categories) {
     }
 }
 
-<<<<<<< HEAD
-/**
- * Kategori seçimi sonrası etkileşimi başlatır.
- * 
- * Bu fonksiyon, kullanıcı bir kategori seçtiğinde çağrılır.
- * Global değişkenleri günceller ve soru-cevap akışını başlatır.
- * 
- * Args:
- *     selectedCategory (string): Seçilen kategori adı
- * 
- * Yapılan İşlemler:
- * - Global category değişkeni güncellenir
- * - step 1'e ayarlanır
- * - answers listesi temizlenir
- * - Ana sayfa gizlenir, etkileşim alanı gösterilir
- * - askAgent() çağrılır
- */
-=======
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
 function startInteraction(selectedCategory) {
     category = selectedCategory;
     step = 1;
     answers = [];
+    
+    // Basit geçiş
     document.querySelector('.landing').style.display = 'none';
     document.getElementById('interaction').style.display = '';
     askAgent();
 }
 
-<<<<<<< HEAD
-/**
- * Soru kartını render eder - Sade ve şık tasarım.
- * 
- * Bu fonksiyon, backend'den gelen soru verilerini alır
- * ve kullanıcı dostu bir kart şeklinde gösterir.
- * 
- * Args:
- *     question (string): Soru metni
- *     options (Array): Seçenekler listesi (genellikle ["Yes", "No"])
- *     emoji (string): Soru ile ilgili emoji
- * 
- * Oluşturulan Kart:
- * - Temiz arka plan
- * - Emoji, soru metni ve seçenek butonları
- * - Responsive tasarım
- * - Hover efektleri
- */
-function renderQuestion(question, options, emoji) {
-    document.querySelector('.loading').style.display = 'none';
-    const qDiv = document.querySelector('.question');
-    qDiv.innerHTML = '';
-    const card = document.createElement('div');
-    card.style.background = '#ffffff';
-    card.style.borderRadius = '16px';
-    card.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
-    card.style.width = '500px';
-    card.style.margin = '40px auto';
-    card.style.padding = '40px 30px';
-    card.style.display = 'flex';
-    card.style.flexDirection = 'column';
-    card.style.alignItems = 'center';
-    card.style.justifyContent = 'center';
-    card.style.position = 'relative';
-    card.style.border = '1px solid #e2e8f0';
-    
-    // Emoji
-    const emojiDiv = document.createElement('div');
-    emojiDiv.style.fontSize = '3.5em';
-    emojiDiv.style.marginBottom = '20px';
-    emojiDiv.style.color = '#3182ce';
-    emojiDiv.textContent = emoji || '🔍';
-    card.appendChild(emojiDiv);
-    
-    // Question
-    const qText = document.createElement('div');
-    qText.style.fontSize = '1.6em';
-    qText.style.fontWeight = '500';
-    qText.style.textAlign = 'center';
-    qText.style.marginBottom = '30px';
-    qText.style.lineHeight = '1.4';
-    qText.style.color = '#2d3748';
-    qText.textContent = question;
-    card.appendChild(qText);
-    
-    // Options
-    const optionsDiv = document.createElement('div');
-    optionsDiv.style.display = 'flex';
-    optionsDiv.style.gap = '20px';
-    optionsDiv.style.flexWrap = 'wrap';
-    optionsDiv.style.justifyContent = 'center';
-    
-    options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.textContent = opt === 'Yes' ? 'Evet' : 'Hayır';
-        btn.style.padding = '12px 32px';
-        btn.style.fontSize = '1.1em';
-        btn.style.borderRadius = '8px';
-        btn.style.border = 'none';
-        btn.style.cursor = 'pointer';
-        btn.style.background = opt === 'Yes' ? '#3182ce' : '#718096';
-        btn.style.color = '#ffffff';
-        btn.style.fontWeight = '500';
-        btn.style.transition = 'all 0.2s ease';
-        btn.onclick = () => handleOption(opt);
-        btn.onmouseenter = () => {
-            btn.style.transform = 'translateY(-1px)';
-            btn.style.background = opt === 'Yes' ? '#2c5aa0' : '#4a5568';
-        };
-        btn.onmouseleave = () => {
-            btn.style.transform = 'translateY(0)';
-            btn.style.background = opt === 'Yes' ? '#3182ce' : '#718096';
-        };
-        optionsDiv.appendChild(btn);
-    });
-    card.appendChild(optionsDiv);
-    qDiv.appendChild(card);
-    document.querySelector('.recommendation').innerHTML = '';
-    document.querySelector('.error').textContent = '';
-}
-
-/**
- * Ürün önerilerini render eder - Sade ve şık tasarım.
- * 
- * Bu fonksiyon, backend'den gelen ürün önerilerini alır
- * ve kullanıcı dostu bir liste şeklinde gösterir.
- * 
- * Args:
- *     recs (Array): Ürün önerileri listesi
- *         Her öneri: {name: string, price: string, link: string}
- * 
- * Oluşturulan İçerik:
- * - Başlık: "Önerilen Ürünler"
- * - Her ürün için: ad, fiyat ve satın alma linki
- * - "Yeni arama yap" butonu
- * - Linkler yeni sekmede açılır
- */
-function renderRecommendations(recs) {
-    hideLoadingScreen();
-    const recDiv = document.querySelector('.recommendation');
-    
-    let html = `
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h2 style="font-size: 2.2em; color: #2d3748; margin-bottom: 16px; font-weight: 500;">
-                Önerilen Ürünler
-            </h2>
-            <p style="color: #718096; font-size: 1.1em;">
-                Size en uygun ürünleri bulduk
-            </p>
-        </div>
-    `;
-    
-    recs.forEach((r, index) => {
-=======
 function renderQuestion(question, options, emoji) {
     const interaction = document.getElementById('interaction');
     
-    console.log("Rendering question:", question);
-    console.log("With tooltip:", window.currentQuestionTooltip);
-    
-    // İlk önce soru ve seçenekleri temizle
     const questionDiv = interaction.querySelector('.question');
     const optionsDiv = interaction.querySelector('.options');
     
     if (!questionDiv || !optionsDiv) {
         console.error("Question or options div not found!");
-        document.querySelector('.error').textContent = 'Sayfa yapısında sorun var. Lütfen sayfayı yenileyin.';
+        const errorMsg = currentLanguage === 'tr' ? 'Sayfa yapısında sorun var. Lütfen sayfayı yenileyin.' : 'There is a problem with the page structure. Please refresh the page.';
+        document.querySelector('.error').textContent = errorMsg;
         return;
     }
     
     questionDiv.innerHTML = '';
     optionsDiv.innerHTML = '';
     
-    // Soru container'ını oluştur
-    const questionContainer = document.createElement('div');
-    questionContainer.className = 'question-container';
-    
     // Soru başlığı
     const questionTitle = document.createElement('h2');
     questionTitle.innerHTML = `${emoji} ${question}`;
-    questionContainer.appendChild(questionTitle);
-    
-    // Tooltip varsa ekle
-    if (window.currentQuestionTooltip) {
-        const tooltipContainer = document.createElement('div');
-        tooltipContainer.className = 'tooltip-container';
-        
-        const infoIcon = document.createElement('span');
-        infoIcon.className = 'info-icon';
-        infoIcon.textContent = 'ℹ️';
-        infoIcon.addEventListener('mouseover', showTooltip);
-        infoIcon.addEventListener('mouseout', hideTooltip);
-        
-        const tooltipText = document.createElement('div');
-        tooltipText.className = 'tooltip-text';
-        tooltipText.id = 'tooltip';
-        tooltipText.innerHTML = window.currentQuestionTooltip;
-        
-        tooltipContainer.appendChild(infoIcon);
-        tooltipContainer.appendChild(tooltipText);
-        questionContainer.appendChild(tooltipContainer);
-    }
+    questionDiv.appendChild(questionTitle);
     
     // Seçenekleri oluştur
-    const optionsContainer = document.createElement('div');
-    optionsContainer.className = 'options-container';
-    
     options.forEach(opt => {
         const button = document.createElement('button');
         button.className = 'option-btn';
@@ -725,420 +652,136 @@ function renderQuestion(question, options, emoji) {
         button.addEventListener('click', function() {
             handleOption(opt);
         });
-        optionsContainer.appendChild(button);
+        optionsDiv.appendChild(button);
     });
     
-    // Soru ve seçenekleri ekle
-    questionDiv.appendChild(questionContainer);
-    optionsDiv.appendChild(optionsContainer);
-    
-    // Loading'i gizle ve interaction'ı göster
+    // Loading'i gizle
     const loadingDiv = interaction.querySelector('.loading');
     if (loadingDiv) loadingDiv.style.display = 'none';
     
     interaction.style.display = 'block';
-    
-    console.log("Question rendered successfully");
 }
-
-function showTooltip(event) {
-    console.log("Tooltip gösteriliyor...");
-    
-    // Event hedefinin tooltip container'ını bul
-    const infoIcon = event.currentTarget;
-    const tooltipContainer = infoIcon.parentElement;
-    const tooltip = tooltipContainer.querySelector('.tooltip-text');
-    
-    if (tooltip) {
-        // Class kullanarak tooltip'i göster
-        tooltip.classList.add('show');
-        tooltip.style.visibility = 'visible';
-        tooltip.style.opacity = '1';
-        
-        // Tooltip konumunu hesapla
-        const iconRect = infoIcon.getBoundingClientRect();
-        const tooltipRect = tooltip.getBoundingClientRect();
-        
-        // Ekranın sağ kenarında olup olmadığını kontrol et
-        const rightEdgeDistance = window.innerWidth - (iconRect.right + tooltipRect.width/2);
-        if (rightEdgeDistance < 0) {
-            tooltip.style.left = 'auto';
-            tooltip.style.right = '0';
-            tooltip.style.transform = 'translateX(0)';
-        }
-        
-        // Ekranın üst kısmında olup olmadığını kontrol et
-        if (iconRect.top < tooltipRect.height + 20) {
-            tooltip.style.bottom = 'auto';
-            tooltip.style.top = '130%';
-            
-            // Ok yönünü değiştir
-            tooltip.style.setProperty('--arrow-direction', 'up');
-        }
-        
-        console.log("Tooltip gösterildi");
-        
-        // Tooltip dışında bir yere tıklanırsa tooltip'i gizle
-        document.addEventListener('click', closeTooltipOnClickOutside);
-        
-    } else {
-        console.log("Tooltip bulunamadı");
-    }
-    
-    // Event'in daha fazla yayılmasını engelle
-    event.stopPropagation();
-}
-
-// Tooltip dışında bir yere tıklandığında tooltip'i kapatır
-function closeTooltipOnClickOutside(event) {
-    const tooltips = document.querySelectorAll('.tooltip-text.show');
-    if (tooltips.length > 0) {
-        let clickedOnTooltip = false;
-        
-        tooltips.forEach(tooltip => {
-            if (tooltip.contains(event.target) || event.target.classList.contains('info-icon')) {
-                clickedOnTooltip = true;
-            }
-        });
-        
-        if (!clickedOnTooltip) {
-            hideTooltip();
-            document.removeEventListener('click', closeTooltipOnClickOutside);
-        }
-    } else {
-        document.removeEventListener('click', closeTooltipOnClickOutside);
-    }
-}
-
-function hideTooltip(event) {
-    console.log("Tooltip gizleniyor...");
-    
-    // Event hedefinin tooltip container'ını bul
-    if (event && event.currentTarget) {
-        const infoIcon = event.currentTarget;
-        const tooltipContainer = infoIcon.parentElement;
-        const tooltip = tooltipContainer.querySelector('.tooltip-text');
-        
-        if (tooltip) {
-            tooltip.classList.remove('show');
-            tooltip.style.visibility = 'hidden';
-            tooltip.style.opacity = '0';
-        }
-    } else {
-        // Eğer event yoksa (veya event.target yoksa) tüm tooltipleri gizle
-        const tooltips = document.querySelectorAll('.tooltip-text');
-        tooltips.forEach(tooltip => {
-            tooltip.classList.remove('show');
-            tooltip.style.visibility = 'hidden';
-            tooltip.style.opacity = '0';
-        });
-    }
-    
-    console.log("Tooltip gizlendi");
-}
-
-// Bu fonksiyon ikinci tanımlanışı ile çakışıyor, kaldırılacak
 
 function renderRecommendations(recs) {
     hideLoadingScreen();
-    const recDiv = document.querySelector('.recommendation');
-    let html = '<h2>Önerilen Ürünler</h2>' + recs.map(r => {
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
+    const recDiv = document.querySelector('.recommendations');
+    
+    const titleText = currentLanguage === 'tr' ? 'Önerilen Ürünler' : 'Recommended Products';
+    
+    let html = `
+        <h2><i class="fas fa-star"></i> ${titleText}</h2>
+        <div class="recommendations-grid">
+    `;
+    
+    recs.forEach((r, index) => {
         let linkHtml = '';
         let url = r.link || '';
         if (url && !url.startsWith('http') && url.length > 5) {
             url = 'https://' + url.replace(/^(www\.)?/, '');
         }
         if (url && url.startsWith('http')) {
-<<<<<<< HEAD
-            linkHtml = ` <a href="${url}" target="_blank" style="color:#ffffff; text-decoration:none; background:#3182ce; padding:8px 16px; border-radius:6px; font-weight:500; margin-left:12px;">Satın Al</a>`;
+            const linkText = currentLanguage === 'tr' ? 'Satın Al' : 'Buy Now';
+            linkHtml = `<a href="${url}" target="_blank" class="buy-link">
+                <i class="fas fa-external-link-alt"></i> ${linkText}
+            </a>`;
+        }
+        
+        // Badge'leri ekle
+        let badges = '';
+        
+        // Premium badge (her 3. ürün için)
+        if (index % 3 === 0) {
+            badges += '<div class="premium-badge">Premium</div>';
+        }
+        
+        // İndirim badge (her 4. ürün için)
+        if (index % 4 === 0) {
+            const discountText = currentLanguage === 'tr' ? '%25 İndirim' : '%25 Discount';
+            badges += `<div class="discount-badge">${discountText}</div>`;
+        }
+        
+        // Oyunlaştırma badge (her 5. ürün için)
+        if (index % 5 === 0) {
+            const popularText = currentLanguage === 'tr' ? '🔥 Popüler' : '🔥 Popular';
+            badges += `<div class="game-badge">${popularText}</div>`;
         }
         
         html += `
-            <div style="
-                background: #ffffff;
-                margin-bottom: 16px;
-                padding: 20px;
-                border-radius: 12px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-                border: 1px solid #e2e8f0;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                flex-wrap: wrap;
-                gap: 12px;
-            ">
-                <div style="flex: 1; min-width: 200px;">
-                    <div style="font-size: 1.2em; font-weight: 500; color: #2d3748; margin-bottom: 6px;">
-                        ${r.name}
-                    </div>
-                    <div style="font-size: 1em; color: #3182ce; font-weight: 500;">
-                        ${r.price}
-                    </div>
+            <div class="recommendation-item">
+                ${badges}
+                <div class="recommendation-content">
+                    <div class="recommendation-name">${r.name}</div>
+                    <div class="recommendation-price">${r.price}</div>
+                    ${linkHtml}
                 </div>
-                ${linkHtml}
             </div>
         `;
     });
     
+    const backButtonText = currentLanguage === 'tr' ? 'Yeni Arama Yap' : 'New Search';
+    
     html += `
-        <div style="text-align: center; margin-top: 32px;">
-            <button id="back-to-categories" style="
-                padding: 14px 32px;
-                font-size: 1.1em;
-                border-radius: 8px;
-                border: none;
-                background: #3182ce;
-                color: #ffffff;
-                cursor: pointer;
-                font-weight: 500;
-                transition: all 0.2s ease;
-            ">Yeni Arama Yap</button>
+        </div>
+        <div class="back-section">
+            <button id="back-to-categories" class="back-btn">
+                <i class="fas fa-arrow-left"></i> ${backButtonText}
+            </button>
         </div>
     `;
     
     recDiv.innerHTML = html;
     document.querySelector('.error').textContent = '';
     
-    // Back button hover effect
-    const backBtn = document.getElementById('back-to-categories');
-    if (backBtn) {
-        backBtn.onmouseenter = () => {
-            backBtn.style.transform = 'translateY(-1px)';
-            backBtn.style.background = '#2c5aa0';
-        };
-        backBtn.onmouseleave = () => {
-            backBtn.style.transform = 'translateY(0)';
-            backBtn.style.background = '#3182ce';
-        };
-        backBtn.onclick = () => {
-            document.getElementById('interaction').style.display = 'none';
-            document.querySelector('.landing').style.display = '';
-            document.querySelector('.recommendation').innerHTML = '';
-            document.querySelector('.question').innerHTML = '';
-            document.querySelector('.options').innerHTML = '';
-            document.querySelector('.error').textContent = '';
-            step = 0;
-            category = null;
-            answers = [];
-        };
-    }
-}
-
-/**
- * Bildirim gösterme fonksiyonu.
- */
-function showNotification(message, type = 'info') {
-    // Mevcut bildirimi kaldır
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-    
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 12px 20px;
-        border-radius: 8px;
-        color: #ffffff;
-        font-weight: 500;
-        z-index: 10000;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        animation: slideIn 0.3s ease;
-    `;
-    
-    const colors = {
-        'error': '#e53e3e',
-        'warning': '#dd6b20',
-        'success': '#38a169',
-        'info': '#3182ce'
-    };
-    
-    notification.style.background = colors[type] || colors.info;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    // 5 saniye sonra kaldır
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 5000);
-    
-    // CSS animasyonları
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-/**
- * Tam ekran loading ekranını gösterir - Sade tasarım.
- * 
- * Bu fonksiyon, uzun süren işlemler sırasında kullanıcıya
- * görsel geri bildirim sağlar. Özellikle ürün önerileri
- * alınırken kullanılır.
- * 
- * Özellikler:
- * - Yarı şeffaf arka plan
- * - Dönen loading animasyonu
- * - Bilgilendirici mesaj
- * - Sayfanın üzerinde gösterilir (z-index: 9999)
- */
-=======
-            linkHtml = ` <a href="${url}" target="_blank" style="color:#3b82f6; text-decoration:underline;">Satın Al</a>`;
-        }
-        return `<div style="margin-bottom:18px;">${r.name} - ${r.price}${linkHtml}</div>`;
-    }).join('');
-    html += `<div style="margin-top:32px;text-align:center;"><button id="back-to-categories" style="padding:12px 32px;font-size:1.1em;border-radius:12px;border:none;background:#a18cd1;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.08);">Yeni arama yap</button></div>`;
-    recDiv.innerHTML = html;
-    document.querySelector('.error').textContent = '';
     document.getElementById('back-to-categories').onclick = () => {
-        document.getElementById('interaction').style.display = 'none';
-        document.querySelector('.landing').style.display = '';
-        document.querySelector('.recommendation').innerHTML = '';
+        resetToLanding();
+    };
+}
+
+function resetToLanding() {
+    const interaction = document.getElementById('interaction');
+    const landing = document.querySelector('.landing');
+    
+    interaction.style.display = 'none';
+    landing.style.display = '';
+    
+    // Reset all content
+    document.querySelector('.recommendations').innerHTML = '';
         document.querySelector('.question').innerHTML = '';
         document.querySelector('.options').innerHTML = '';
         document.querySelector('.error').textContent = '';
+    
+    // Reset variables
         step = 0;
         category = null;
         answers = [];
-    };
+    
+    // Clear search input
+    const searchInput = document.getElementById('chatbox-input');
+    if (searchInput) searchInput.value = '';
 }
 
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
 function showLoadingScreen() {
     hideLoadingScreen();
-    const interaction = document.getElementById('interaction');
     let loadingDiv = document.getElementById('custom-loading');
     if (!loadingDiv) {
+        const loadingText = currentLanguage === 'tr' ? 'AI İşliyor...' : 'AI Processing...';
+        const loadingSubtext = currentLanguage === 'tr' 
+            ? 'Yapay zeka tercihlerinizi analiz ediyor ve size en uygun ürünleri buluyor.'
+            : 'AI is analyzing your preferences and finding the most suitable products for you.';
+        const resetText = currentLanguage === 'tr' ? 'Sıfırla' : 'Reset';
+        
         loadingDiv = document.createElement('div');
         loadingDiv.id = 'custom-loading';
-<<<<<<< HEAD
-        loadingDiv.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(248, 250, 252, 0.95);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        `;
-        loadingDiv.innerHTML = `
-            <div style="margin-bottom: 24px;">
-                <div style="
-                    width: 60px;
-                    height: 60px;
-                    border: 4px solid #e2e8f0;
-                    border-top: 4px solid #3182ce;
-                    border-radius: 50%;
-                    animation: spin 1s linear infinite;
-                "></div>
-            </div>
-            <div style="font-size: 1.3em; color: #2d3748; font-weight: 500; text-align: center;">
-                Ürünler aranıyor...
-            </div>
-            <div style="font-size: 1em; color: #718096; margin-top: 8px; text-align: center;">
-                Size en uygun ürünleri buluyoruz
-            </div>
-            <style>
-            @keyframes spin { 
-                0% { transform: rotate(0deg);} 
-                100% { transform: rotate(360deg);} 
-            }
-            </style>
-        `;
-        document.body.appendChild(loadingDiv);
-    }
-    loadingDiv.style.display = 'flex';
-}
-
-/**
- * Loading ekranını gizler.
- * 
- * Bu fonksiyon, loading ekranını kaldırır ve
- * normal sayfa içeriğini gösterir.
- */
-function hideLoadingScreen() {
-    let loadingDiv = document.getElementById('custom-loading');
-    if (loadingDiv) loadingDiv.style.display = 'none';
-}
-
-/**
- * Kullanıcı seçenek seçtiğinde çağrılır.
- * 
- * Bu fonksiyon, kullanıcının bir seçenek seçmesi durumunda
- * cevabı kaydeder ve bir sonraki soruya geçer.
- * 
- * Args:
- *     opt (string): Seçilen seçenek (genellikle "Yes" veya "No")
- * 
- * Yapılan İşlemler:
- * - Cevap answers listesine eklenir
- * - step bir artırılır
- * - askAgent() çağrılarak bir sonraki soru alınır
- */
-function handleOption(opt) {
-    answers.push(opt);
-    step++;
-    askAgent();
-}
-
-/**
- * Backend'den soru veya öneri alır.
- * 
- * Bu fonksiyon, mevcut adıma göre backend'e istek gönderir
- * ve gelen yanıtı işler. Soru varsa render eder, öneriler
- * varsa gösterir, hata varsa kullanıcıya bildirir.
- * 
- * İşlem Akışı:
- * 1. Loading göstergesi gösterilir
- * 2. /ask endpoint'ine POST isteği gönderilir
- * 3. Yanıt türüne göre işlenir:
- *    - question: renderQuestion() çağrılır
- *    - recommendations: renderRecommendations() çağrılır
- *    - error: Hata mesajı gösterilir
- * 
- * Global Değişkenler:
- * - step: Mevcut adım
- * - category: Seçilen kategori
- * - answers: Verilen cevaplar listesi
- */
-function askAgent() {
-    document.querySelector('.loading').style.display = '';
-    document.querySelector('.error').textContent = '';
-    // Show custom loading widget only when fetching recommendations
-=======
         loadingDiv.className = 'loading-container';
         loadingDiv.innerHTML = `
-            <div class="ai-brain">
-                <div class="neural-ring"></div>
-                <div class="neural-ring"></div>
-                <div class="neural-ring"></div>
-                <div class="ai-core"></div>
-            </div>
-            <div class="loading-text">AI İşliyor...</div>
-            <div class="loading-subtext">Yapay zeka tercihlerinizi analiz ediyor ve size en uygun ürünleri buluyor. Bu işlem 10-45 saniye sürebilir.</div>
+            <div class="loading-spinner"></div>
+            <div class="loading-text">${loadingText}</div>
+            <div class="loading-subtext">${loadingSubtext}</div>
             <div class="progress-container">
                 <div class="progress-bar" id="ai-progress" style="width: 0%"></div>
             </div>
             <button class="emergency-reset" id="emergency-reset">
-                Çok Uzun Sürüyor mu? Sıfırla
+                <i class="fas fa-redo"></i> ${resetText}
             </button>
         `;
         
@@ -1147,20 +790,12 @@ function askAgent() {
         resetButton.onclick = () => {
             isRequestInProgress = false;
             hideLoadingScreen();
-            document.getElementById('interaction').style.display = 'none';
-            document.querySelector('.landing').style.display = '';
-            document.querySelector('.recommendation').innerHTML = '';
-            document.querySelector('.error').textContent = '';
-            step = 0;
-            category = null;
-            answers = [];
-            window.currentQuestionTooltip = null;
+            resetToLanding();
         };
         
         document.body.appendChild(loadingDiv);
     }
     
-    // Start progress animation
     loadingDiv.style.display = 'flex';
     animateProgress();
 }
@@ -1171,8 +806,8 @@ function animateProgress() {
     
     let progress = 0;
     const interval = setInterval(() => {
-        progress += Math.random() * 3 + 1; // Random increment between 1-4
-        if (progress > 90) progress = 90; // Don't go to 100% until actually done
+        progress += Math.random() * 3 + 1;
+        if (progress > 90) progress = 90;
         
         progressBar.style.width = progress + '%';
         
@@ -1186,7 +821,6 @@ function animateProgress() {
 function hideLoadingScreen() {
     let loadingDiv = document.getElementById('custom-loading');
     if (loadingDiv) {
-        // Complete the progress bar before hiding
         const progressBar = document.getElementById('ai-progress');
         if (progressBar) {
             progressBar.style.width = '100%';
@@ -1199,11 +833,9 @@ function hideLoadingScreen() {
     }
 }
 
-// Flag to track if a request is in progress
 let isRequestInProgress = false;
 
 function handleOption(opt) {
-    // Prevent multiple clicks while a request is in progress
     if (isRequestInProgress) {
         console.log("Request already in progress, ignoring click");
         return;
@@ -1212,10 +844,9 @@ function handleOption(opt) {
     console.log("Option selected:", opt);
     
     try {
-        // Set the flag to indicate a request is in progress
         isRequestInProgress = true;
         
-        // Disable all option buttons to prevent further clicks
+        // Disable all option buttons
         const optionButtons = document.querySelectorAll('.option-btn');
         optionButtons.forEach(btn => {
             btn.disabled = true;
@@ -1226,45 +857,41 @@ function handleOption(opt) {
         // Seçimi görsel olarak göster
         const selectedButton = Array.from(optionButtons).find(btn => btn.textContent === opt);
         if (selectedButton) {
-            selectedButton.style.backgroundColor = '#f0f0ff';
-            selectedButton.style.borderColor = '#a18cd1';
+            selectedButton.style.backgroundColor = 'var(--cta-orange)';
+            selectedButton.style.borderColor = 'var(--cta-orange)';
+            selectedButton.style.color = 'white';
         }
         
-        // Cevabı kaydet ve bir sonraki adıma geç
         answers.push(opt);
         step++;
         
-        // Error göstergesini temizle
         document.querySelector('.error').textContent = '';
         
         console.log("İlerliyor: Adım", step, "Cevaplar:", answers);
         
-        // Kısa bir gecikme ile askAgent'i çağır (animasyon için)
         setTimeout(function() {
             askAgent();
         }, 300);
     } catch(e) {
         console.error("handleOption'da hata:", e);
         isRequestInProgress = false;
-        document.querySelector('.error').textContent = 'İşlem sırasında bir hata oluştu. Lütfen sayfayı yenileyin.';
+        const errorMsg = currentLanguage === 'tr' ? 'İşlem sırasında bir hata oluştu. Lütfen sayfayı yenileyin.' : 'An error occurred during processing. Please refresh the page.';
+        document.querySelector('.error').textContent = errorMsg;
     }
 }
 
 function askAgent() {
     console.log(`Soru soruluyor: Step ${step}, Category ${category}, Answers:`, answers);
     
-    // İstek devam ediyor kontrolünü kaldırdım çünkü handleOption zaten kontrol ediyor
-    
     document.querySelector('.error').textContent = '';
     
-    // Loading ekranını göster
     const loadingElement = document.querySelector('.loading');
     if (loadingElement) {
         loadingElement.style.display = 'block';
-        loadingElement.textContent = 'Yükleniyor...';
+        const loadingText = currentLanguage === 'tr' ? '<i class="fas fa-spinner fa-spin"></i> Yükleniyor...' : '<i class="fas fa-spinner fa-spin"></i> Loading...';
+        loadingElement.innerHTML = loadingText;
     }
     
-    // Debug için mevcut durumu konsola yazdır
     console.log("İstek başlatılıyor:", {
         step: step,
         category: category,
@@ -1272,70 +899,19 @@ function askAgent() {
         isRequestInProgress: isRequestInProgress
     });
     
-    // Tavsiyeler alınırken özel yükleme ekranını göster
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
     let specs = window.currentSpecs && window.currentSpecs[category] ? window.currentSpecs[category] : [];
     if (step > specs.length) {
         showLoadingScreen();
     }
-<<<<<<< HEAD
-    fetch('/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ step, category, answers })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.question && data.options) {
-            hideLoadingScreen();
-            renderQuestion(data.question, data.options, data.emoji);
-        } else if (data.recommendations) {
-            renderRecommendations(data.recommendations);
-        } else if (data.error) {
-            hideLoadingScreen();
-            document.querySelector('.loading').style.display = 'none';
-            showNotification(data.error, 'error');
-        }
-    })
-    .catch(err => {
-        hideLoadingScreen();
-        document.querySelector('.loading').style.display = 'none';
-        showNotification('Sunucuya erişilemiyor: ' + err, 'error');
-    });
-}
-
-/**
- * Sayfa yüklendiğinde çalışan ana fonksiyon (tekrar).
- * 
- * Bu fonksiyon, sayfa tamamen yüklendiğinde çalışır ve:
- * 1. Kategorileri backend'den yükler
- * 2. Kategori kartlarını render eder
- * 3. Event listener'ları ayarlar
- * 
- * Not: Bu fonksiyon dosyanın sonunda tekrar tanımlanmıştır.
- * İlk tanım yukarıda, bu ikinci tanım dosyanın sonunda.
- */
-window.onload = () => {
-    // Get categories and specs from backend
-    fetch('/categories')
-        .then(res => res.json())
-        .then(data => {
-            const categories = Object.keys(data);
-            window.currentSpecs = {};
-            for (const cat of categories) {
-                window.currentSpecs[cat] = data[cat].specs || [];
-            }
-            renderLanding(categories);
-=======
     
-    // 45 saniye zaman aşımı ekle (AI işlemleri için uzatıldı)
     const timeoutId = setTimeout(() => {
         if (isRequestInProgress) {
             console.log("Zaman aşımı oluştu!");
             isRequestInProgress = false;
             hideLoadingScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            document.querySelector('.error').textContent = 'İstek zaman aşımına uğradı. AI analizi uzun sürdü, lütfen tekrar deneyin.';
+            const timeoutMsg = currentLanguage === 'tr' ? 'İstek zaman aşımına uğradı. AI analizi uzun sürdü, lütfen tekrar deneyin.' : 'Request timed out. AI analysis took too long, please try again.';
+            document.querySelector('.error').textContent = timeoutMsg;
         }
     }, 45000);
     
@@ -1346,7 +922,7 @@ window.onload = () => {
             step: step, 
             category: category, 
             answers: answers,
-            language: 'tr' // Türkçe dilini varsayılan olarak kullan
+            language: currentLanguage
         })
     })
     .then(res => {
@@ -1361,7 +937,6 @@ window.onload = () => {
         isRequestInProgress = false;
         console.log("Sunucudan gelen yanıt:", data);
         
-        // Debugging: Log the exact structure of the data object
         console.log("Response has question:", !!data.question);
         console.log("Response has options:", !!data.options);
         console.log("Response has recommendations:", !!data.recommendations);
@@ -1370,7 +945,6 @@ window.onload = () => {
         
         if (data.question && data.options) {
             hideLoadingScreen();
-            // Tooltip bilgisini global değişkene kaydet
             window.currentQuestionTooltip = data.tooltip || null;
             renderQuestion(data.question, data.options, data.emoji || '🔍');
         } else if (data.recommendations) {
@@ -1382,21 +956,21 @@ window.onload = () => {
             if (loadingElement) loadingElement.style.display = 'none';
             document.querySelector('.error').textContent = data.error;
         } else {
-            // Handle unexpected response format without infinite loop
             console.error('Beklenmeyen yanıt formatı:', data);
             hideLoadingScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            document.querySelector('.error').textContent = 'Beklenmeyen bir yanıt alındı. Lütfen sayfayı yenileyin.';
+            const unexpectedMsg = currentLanguage === 'tr' ? 'Beklenmeyen bir yanıt alındı. Lütfen sayfayı yenileyin.' : 'An unexpected response was received. Please refresh the page.';
+            document.querySelector('.error').textContent = unexpectedMsg;
         }
     })
     .catch(err => {
-        clearTimeout(timeoutId);  // Zaman aşımını iptal et
-        // Reset the request in progress flag even if there's an error
+        clearTimeout(timeoutId);
         isRequestInProgress = false;
         
         hideLoadingScreen();
         if (loadingElement) loadingElement.style.display = 'none';
-        document.querySelector('.error').textContent = 'Sunucuya erişilemiyor: ' + err.message;
+        const errorMsg = currentLanguage === 'tr' ? 'Sunucuya erişilemiyor: ' : 'Cannot access server: ';
+        document.querySelector('.error').textContent = errorMsg + err.message;
         console.error('Hata:', err);
     });
 }
@@ -1404,20 +978,100 @@ window.onload = () => {
 window.onload = () => {
     console.log("SwipeStyle uygulaması başlatılıyor...");
     
-    // Sayfaya CSS ekle
-    document.head.insertAdjacentHTML('beforeend', tooltipStyles);
+    // Tema tercihini localStorage'dan yükle
+    const savedTheme = localStorage.getItem('swipestyle-theme') || 'light';
+    changeTheme(savedTheme);
     
-    // CSS keyframes için animasyon tanımı ekle
+    // Dil değiştirme event listener'ları
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const lang = this.dataset.lang;
+            changeLanguage(lang);
+        });
+    });
+    
+    // Tema değiştirme event listener'ları
+    document.querySelectorAll('.theme-switch').forEach(switch_el => {
+        switch_el.addEventListener('click', function() {
+            const currentTheme = this.dataset.theme;
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            // Switch'i güncelle
+            this.dataset.theme = newTheme;
+            this.classList.toggle('active');
+            
+            // Temayı değiştir
+            changeTheme(newTheme);
+        });
+    });
+    
+    // Otomatik tamamlama için input event listener
+    const searchInput = document.getElementById('chatbox-input');
+    searchInput.addEventListener('input', handleAutocomplete);
+    searchInput.addEventListener('keydown', handleAutocompleteKeydown);
+    searchInput.addEventListener('blur', hideAutocomplete);
+    
+    // CSS ekle
     document.head.insertAdjacentHTML('beforeend', `
         <style>
             @keyframes spin {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
             }
+            
+            .recommendations-grid {
+                display: grid;
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+            
+            .recommendation-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .recommendation-name {
+                font-weight: 600;
+                color: var(--text-dark);
+                flex: 1;
+            }
+            
+            .recommendation-price {
+                color: var(--primary-blue);
+                font-weight: 500;
+            }
+            
+            .buy-link {
+                background: var(--cta-orange);
+                color: white;
+                padding: 8px 15px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-size: 0.9rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+            }
+            
+            .buy-link:hover {
+                background: var(--cta-orange-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            }
+            
+            .back-section {
+                text-align: center;
+                margin-top: 20px;
+            }
         </style>
     `);
     
-    // Get categories and specs from backend
+    // Get categories from backend
     fetch('/categories')
         .then(res => {
             if (!res.ok) {
@@ -1431,14 +1085,12 @@ window.onload = () => {
             const categories = Object.keys(data);
             window.currentSpecs = {};
             
-            // Kategori ve spec bilgilerini kaydet
             for (const cat of categories) {
                 window.currentSpecs[cat] = data[cat].specs || [];
             }
             
             renderLanding(categories);
             
-            // Chatbox event listeners
             const chatboxSend = document.getElementById('chatbox-send');
             const chatboxInput = document.getElementById('chatbox-input');
             
@@ -1449,31 +1101,40 @@ window.onload = () => {
                 });
             }
             
-            // Sayfa başına sıfırlama düğmesi ekle
-            const loadingElement = document.querySelector('.loading');
-            if (loadingElement) {
-                loadingElement.innerHTML += '<button id="reset-app" style="margin-top:20px;padding:8px 16px;background:#f44336;color:white;border:none;border-radius:6px;cursor:pointer;">İşlemi Sıfırla</button>';
-                document.getElementById('reset-app').onclick = () => {
-                    isRequestInProgress = false;
-                    hideLoadingScreen();
-                    loadingElement.style.display = 'none';
-                    document.getElementById('interaction').style.display = 'none';
-                    document.querySelector('.landing').style.display = '';
-                    document.querySelector('.question').innerHTML = '';
-                    document.querySelector('.options').innerHTML = '';
-                    step = 0;
-                    category = null;
-                    answers = [];
-                    window.currentQuestionTooltip = null;
-                    console.log("Uygulama sıfırlandı");
-                };
-            }
-            
             console.log("SwipeStyle başarıyla başlatıldı");
         })
         .catch(error => {
             console.error("Kategoriler yüklenirken hata oluştu:", error);
-            document.querySelector('.error').textContent = "Kategoriler yüklenemedi. Lütfen sayfayı yenileyin.";
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886
+            const errorMsg = currentLanguage === 'tr' ? "Kategoriler yüklenemedi. Lütfen sayfayı yenileyin." : "Categories could not be loaded. Please refresh the page.";
+            document.querySelector('.error').textContent = errorMsg;
         });
+    
+    // Akıllı arama bileşenini oluştur
+    const smartSearchHtml = `
+        <div class="smart-search">
+          <input type="text" id="product-search-input" placeholder="Ürün Ara (örn: ka)">
+          <select id="color-filter">
+            <option value="">Renk</option>
+            <option value="kırmızı">Kırmızı</option>
+            <option value="siyah">Siyah</option>
+            <option value="mavi">Mavi</option>
+          </select>
+          <select id="size-filter">
+            <option value="">Beden</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+          </select>
+          <select id="rating-filter">
+            <option value="">Puan</option>
+            <option value="4">4+ Yıldız</option>
+            <option value="3">3+ Yıldız</option>
+          </select>
+          <div id="product-suggestions"></div>
+        </div>
+        <div id="product-list"></div>
+    `;
+    
+    document.getElementById('smart-search-container').innerHTML = smartSearchHtml;
+
 };
