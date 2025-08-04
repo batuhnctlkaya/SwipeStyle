@@ -153,13 +153,14 @@ def ask():
     
     Döner:
     - Soru varsa: {"question": "...", "options": ["Yes", "No"], "emoji": "🎧"}
-    - Öneriler varsa: {"recommendations": [...]}
+    - Öneriler varsa: {"recommendations": [...], "amazon_products": [...]}
     - Hata varsa: {"error": "..."}
     
     Özellikler:
     - Dinamik soru akışı
     - Tercih analizi
     - Güven skoru hesaplama
+    - Amazon ürün entegrasyonu
     - Çok dilli destek
     """
     data = request.json
@@ -171,6 +172,89 @@ def ask():
         f.write(f"📩 /ask veri: {data}\n")
     response = agent.handle(data)
     return jsonify(response)
+
+@app.route('/amazon/product/<asin>', methods=['GET'])
+def get_amazon_product(asin):
+    """
+    Amazon ürün detaylarını döndürür.
+    
+    Bu endpoint, belirli bir Amazon ürününün detaylı bilgilerini çeker.
+    
+    Args:
+        asin: Amazon ASIN kodu
+        
+    Returns:
+        JSON: Ürün detayları
+    """
+    try:
+        from app.amazon_api import AmazonAPI
+        
+        api = AmazonAPI()
+        product_details = api.get_product_details(asin)
+        
+        if product_details:
+            return jsonify({
+                'success': True,
+                'product': product_details
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'Ürün bulunamadı'
+            }), 404
+            
+    except Exception as e:
+        print(f"❌ Amazon ürün detay hatası: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Ürün detayları alınamadı'
+        }), 500
+
+@app.route('/amazon/search', methods=['POST'])
+def search_amazon_products():
+    """
+    Amazon'da ürün arama yapar.
+    
+    POST isteği bekler:
+    {
+        "query": "laptop",
+        "max_results": 10,
+        "min_price": 1000,
+        "max_price": 5000
+    }
+    
+    Returns:
+        JSON: Bulunan ürünler
+    """
+    try:
+        from app.amazon_api import AmazonAPI
+        
+        data = request.json
+        query = data.get('query', '')
+        max_results = data.get('max_results', 10)
+        min_price = data.get('min_price')
+        max_price = data.get('max_price')
+        
+        api = AmazonAPI()
+        products = api.search_products(
+            query=query,
+            max_results=max_results,
+            min_price=min_price,
+            max_price=max_price
+        )
+        
+        return jsonify({
+            'success': True,
+            'products': products,
+            'count': len(products)
+        })
+        
+    except Exception as e:
+        print(f"❌ Amazon arama hatası: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Arama yapılamadı'
+        }), 500
 
 if __name__ == '__main__':
     """
