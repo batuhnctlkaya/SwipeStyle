@@ -647,7 +647,7 @@ class Agent:
         return question_data
 
     def _generate_recommendations(self, category, preferences, specs, language):
-        """Gemini kullanarak öneri oluştur - Enhanced with retry mechanism"""
+        """Gemini kullanarak öneri oluştur ve Amazon ürünleri ekle"""
         try:
             print(f"🤖 AI öneri oluşturuluyor: {category}")
             
@@ -666,11 +666,15 @@ class Agent:
             
             # Response'u parse et
             recommendations = self._parse_gemini_response(response.text)
-            print(f"✅ {len(recommendations)} öneri oluşturuldu")
+            print(f"✅ {len(recommendations)} AI öneri oluşturuldu")
+            
+            # Amazon ürünlerini ekle
+            amazon_products = self._get_amazon_products(category, preferences, language)
             
             return {
                 'type': 'recommendation',
                 'recommendations': recommendations,
+                'amazon_products': amazon_products,
                 'category': category,
                 'preferences': preferences,
                 'confidence_score': self._calculate_confidence_score(preferences, specs)
@@ -683,6 +687,36 @@ class Agent:
                 'message': 'Sorry, I could not generate recommendations at this time. Please try again.' if language == 'en' 
                           else 'Üzgünüm, şu anda öneri oluşturamıyorum. Lütfen tekrar deneyin.'
             }
+    
+    def _get_amazon_products(self, category, preferences, language):
+        """Amazon'dan ürün arama yapar"""
+        try:
+            from .product_search import ProductSearch
+            
+            # Tercihleri liste haline çevir
+            preference_list = []
+            for pref_id, value in preferences.items():
+                if value and value not in ['Bilmiyorum', 'Not sure', 'Farketmez', 'No preference']:
+                    # Boolean değerleri string'e çevir
+                    if isinstance(value, bool):
+                        value = 'Evet' if value else 'Hayır'
+                    preference_list.append(str(value))
+            
+            # Amazon'da ara
+            search = ProductSearch()
+            products = search.search_by_preferences(
+                category=category,
+                preferences=preference_list,
+                language=language,
+                max_results=6
+            )
+            
+            print(f"🛒 {len(products)} Amazon ürünü bulundu")
+            return products
+            
+        except Exception as e:
+            print(f"❌ Amazon ürün arama hatası: {e}")
+            return []
 
     def _build_gemini_prompt(self, category, preferences, language):
         """Gemini için gelişmiş prompt oluştur"""
@@ -761,6 +795,8 @@ class Agent:
     def _parse_gemini_response(self, text):
         """Gemini response'unu parse et"""
         import re
+        from app.amazon_api import AmazonAPI
+        api = AmazonAPI()
         lines = text.strip().split('\n')
         recommendations = []
         
@@ -776,14 +812,26 @@ class Agent:
                 price = parts[1].strip()
                 description = parts[2].strip()
                 
-                # Link varsa al, yoksa oluştur
+                # Link varsa al, yoksa Amazon ürün detay linki bulmaya çalış
                 if len(parts) >= 4 and 'http' in parts[3]:
                     link = parts[3].strip()
                 else:
-                    # Akakce search linki oluştur
-                    search_query = re.sub(r'[^\w\s]', '', name)
-                    search_query = re.sub(r'\s+', '+', search_query)
-                    link = f'https://www.akakce.com/arama/?q={search_query}'
+                    # Amazon'da ürün ara, ilk çıkanın ASIN'i ile detay linki oluştur
+                    import urllib.parse
+                    search_query = name
+                    asin = None
+                    try:
+                        products = api.search_products(search_query, max_results=1)
+                        if products and products[0].get('asin'):
+                            asin = products[0]['asin']
+                    except Exception as e:
+                        asin = None
+                    if asin:
+                        link = f'https://www.amazon.com.tr/dp/{asin}'
+                    else:
+                        # ASIN bulunamazsa arama linki kullan
+                        search_query_encoded = urllib.parse.quote_plus(name)
+                        link = f'https://www.amazon.com.tr/s?k={search_query_encoded}'
                 
                 recommendations.append({
                     'name': name,

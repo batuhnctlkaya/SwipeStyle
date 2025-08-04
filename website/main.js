@@ -147,6 +147,100 @@ const categoryIcons = {
     'Smartwatch': 'fas fa-clock'
 };
 
+// --- Akıllı Arama & Filtreleme Özelliği ---
+// Not: HTML kısmını main.html dosyasına eklemelisin (bkz. açıklama)
+
+// Örnek teknolojik ürün verisi (backend'den de çekilebilir)
+const products = [
+  { name: "Mouse", color: "siyah", size: "M", price: 399, rating: 4.6 },
+  { name: "Laptop", color: "gri", size: "L", price: 15999, rating: 4.8 },
+  { name: "Telefon", color: "mavi", size: "M", price: 10999, rating: 4.7 },
+  { name: "Kulaklık", color: "siyah", size: "S", price: 799, rating: 4.3 },
+  { name: "Monitör", color: "beyaz", size: "L", price: 2999, rating: 4.5 },
+  { name: "Klavye", color: "siyah", size: "M", price: 599, rating: 4.2 },
+  { name: "Tablet", color: "gri", size: "M", price: 4999, rating: 4.4 },
+  { name: "Kamera", color: "siyah", size: "S", price: 3499, rating: 4.1 },
+  { name: "Hoparlör", color: "kırmızı", size: "S", price: 699, rating: 4.0 },
+  { name: "Akıllı Saat", color: "siyah", size: "S", price: 1999, rating: 4.6 }
+];
+
+// Ürünleri ekrana bas
+function displayProducts(filtered) {
+  const productList = document.getElementById("product-list");
+  if (!productList) return;
+  productList.innerHTML = "";
+  filtered.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.textContent = `${p.name} | Renk: ${p.color} | Beden: ${p.size} | ₺${p.price} | ⭐${p.rating}`;
+    productList.appendChild(div);
+  });
+}
+
+// Filtreleme fonksiyonu
+function filterProducts() {
+  const inputEl = document.getElementById("product-search-input");
+  const colorEl = document.getElementById("color-filter");
+  const sizeEl = document.getElementById("size-filter");
+  const ratingEl = document.getElementById("rating-filter");
+  if (!inputEl || !colorEl || !sizeEl || !ratingEl) return;
+  const input = inputEl.value.toLowerCase();
+  const color = colorEl.value;
+  const size = sizeEl.value;
+  const rating = parseFloat(ratingEl.value) || 0;
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(input) &&
+    (color === "" || p.color === color) &&
+    (size === "" || p.size === size) &&
+    p.rating >= rating
+  );
+  displayProducts(filtered);
+}
+
+// Otomatik tamamlama
+function setupSmartSearchEvents() {
+  const inputEl = document.getElementById("product-search-input");
+  const suggestionsDiv = document.getElementById("product-suggestions");
+  if (!inputEl || !suggestionsDiv) return;
+  inputEl.addEventListener("input", () => {
+    const input = inputEl.value.toLowerCase();
+    const matched = products
+      .map(p => p.name)
+      .filter(name => name.toLowerCase().startsWith(input));
+    suggestionsDiv.innerHTML = matched.length > 0 ? matched.join(", ") : "";
+    filterProducts();
+  });
+}
+
+function setupFilterEvents() {
+  const colorEl = document.getElementById("color-filter");
+  const sizeEl = document.getElementById("size-filter");
+  const ratingEl = document.getElementById("rating-filter");
+  if (colorEl) colorEl.addEventListener("change", filterProducts);
+  if (sizeEl) sizeEl.addEventListener("change", filterProducts);
+  if (ratingEl) ratingEl.addEventListener("change", filterProducts);
+}
+
+// Sayfa yüklendiğinde smart search alanı varsa başlat
+window.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById("product-search-input")) {
+    setupSmartSearchEvents();
+    setupFilterEvents();
+    displayProducts(products);
+  }
+});
+
+// Açıklama: HTML tarafına şunu eklemelisin (örnek):
+// <div class="smart-search">
+//   <input type="text" id="product-search-input" placeholder="Ürün Ara (örn: ka)">
+//   <select id="color-filter"> ... </select>
+//   <select id="size-filter"> ... </select>
+//   <select id="rating-filter"> ... </select>
+//   <div id="product-suggestions"></div>
+// </div>
+// <div id="product-list"></div>
+
 // Otomatik tamamlama verileri
 const autocompleteSuggestions = {
     'k': [
@@ -154,74 +248,34 @@ const autocompleteSuggestions = {
         { text: 'Klavye', icon: 'fas fa-keyboard', category: 'Keyboard' },
         { text: 'Kamera', icon: 'fas fa-camera', category: 'Camera' },
         { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Koltuk', icon: 'fas fa-couch', category: 'Furniture' },
         { text: 'Kettle', icon: 'fas fa-mug-hot', category: 'Kitchen' },
-        { text: 'Konsol', icon: 'fas fa-gamepad', category: 'Gaming' },
-        { text: 'Kulak İçi', icon: 'fas fa-headphones', category: 'Headphones' }
+        { text: 'Konsol', icon: 'fas fa-gamepad', category: 'Gaming' }
     ],
     'kl': [
         { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klavye', icon: 'fas fa-keyboard', category: 'Keyboard' },
-        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' },
-        { text: 'Koltuk', icon: 'fas fa-couch', category: 'Furniture' }
+        { text: 'Klavye', icon: 'fas fa-keyboard', category: 'Keyboard' }
     ],
     'kli': [
-        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klima Split', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klima Mobil', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
     ],
     'klim': [
-        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klima Split', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klima Mobil', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klima Duvar', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
-    ],
-    'klima': [
-        { text: 'Klima Split', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klima Mobil', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klima Duvar', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klima Tavan', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Klima Inverter', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+
     ],
     'l': [
-        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop HP', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Lenovo', icon: 'fas fa-laptop', category: 'Laptop' }
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
     ],
     'la': [
-        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' }
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
     ],
     'lap': [
-        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' }
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
     ],
     'lapt': [
-        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' }
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
     ],
     'lapto': [
-        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop HP', icon: 'fas fa-laptop', category: 'Laptop' }
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
     ],
     'laptop': [
         { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
@@ -373,31 +427,30 @@ function handleAutocomplete() {
 
 function getAutocompleteSuggestions(query) {
     const suggestions = [];
-    
-    // Tam eşleşme kontrolü
-    if (autocompleteSuggestions[query]) {
-        suggestions.push(...autocompleteSuggestions[query]);
-    }
-    
-    // Kısmi eşleşme kontrolü - sadece query ile başlayan anahtarlar
+    if (!query) return suggestions;
+
+    // Regex ile anahtar eşleşmesi (başlangıç veya tam eşleşme)
+    const keyRegex = new RegExp('^' + query, 'i');
     Object.keys(autocompleteSuggestions).forEach(key => {
-        if (key.startsWith(query) && key !== query) {
-            suggestions.push(...autocompleteSuggestions[key]);
-        }
-    });
-    
-    // Eğer hiç öneri bulunamadıysa, sadece query ile başlayan ürünleri ara
-    if (suggestions.length === 0) {
-        Object.values(autocompleteSuggestions).forEach(categorySuggestions => {
-            categorySuggestions.forEach(suggestion => {
-                if (suggestion.text.toLowerCase().startsWith(query.toLowerCase()) && 
-                    !suggestions.some(s => s.text === suggestion.text)) {
+        if (keyRegex.test(key)) {
+            autocompleteSuggestions[key].forEach(suggestion => {
+                if (!suggestions.some(s => s.text === suggestion.text)) {
                     suggestions.push(suggestion);
                 }
             });
+        }
+    });
+
+    // Regex ile ürün adında geçenler (herhangi bir yerde)
+    const textRegex = new RegExp(query, 'i');
+    Object.values(autocompleteSuggestions).forEach(categorySuggestions => {
+        categorySuggestions.forEach(suggestion => {
+            if (textRegex.test(suggestion.text) && !suggestions.some(s => s.text === suggestion.text)) {
+                suggestions.push(suggestion);
+            }
         });
-    }
-    
+    });
+
     return suggestions.slice(0, 8); // Maksimum 8 öneri
 }
 
@@ -1055,4 +1108,120 @@ window.onload = () => {
             const errorMsg = currentLanguage === 'tr' ? "Kategoriler yüklenemedi. Lütfen sayfayı yenileyin." : "Categories could not be loaded. Please refresh the page.";
             document.querySelector('.error').textContent = errorMsg;
         });
+    
+    // Akıllı arama bileşenini oluştur
+    const smartSearchHtml = `
+        <div class="smart-search">
+          <input type="text" id="product-search-input" placeholder="Ürün Ara (örn: ka)">
+          <select id="color-filter">
+            <option value="">Renk</option>
+            <option value="kırmızı">Kırmızı</option>
+            <option value="siyah">Siyah</option>
+            <option value="mavi">Mavi</option>
+          </select>
+          <select id="size-filter">
+            <option value="">Beden</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+          </select>
+          <select id="rating-filter">
+            <option value="">Puan</option>
+            <option value="4">4+ Yıldız</option>
+            <option value="3">3+ Yıldız</option>
+          </select>
+          <div id="product-suggestions"></div>
+        </div>
+        <div id="product-list"></div>
+    `;
+    
+    document.getElementById('smart-search-container').innerHTML = smartSearchHtml;
+    
+    // Ürün arama ve filtreleme
+    const productSearchInput = document.getElementById('product-search-input');
+    const colorFilter = document.getElementById('color-filter');
+    const sizeFilter = document.getElementById('size-filter');
+    const ratingFilter = document.getElementById('rating-filter');
+    const productSuggestions = document.getElementById('product-suggestions');
+    const productList = document.getElementById('product-list');
+    
+    // Ürünleri yükle
+    function loadProducts() {
+        fetch('/products')
+            .then(res => res.json())
+            .then(data => {
+                window.allProducts = data;
+                renderProductList(data);
+            })
+            .catch(error => {
+                console.error("Ürünler yüklenirken hata:", error);
+            });
+    }
+    
+    // Ürün listesini renderla
+    function renderProductList(products) {
+        productList.innerHTML = '';
+        
+        products.forEach(product => {
+            const productItem = document.createElement('div');
+            productItem.className = 'product-item';
+            productItem.innerHTML = `
+                <div class="product-image">
+                    <img src="${product.image}" alt="${product.name}">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">${product.price} ₺</div>
+                </div>
+            `;
+            
+            productItem.addEventListener('click', () => {
+                // Ürün tıklandığında yapılacaklar
+                console.log("Ürün tıklandı:", product);
+            });
+            
+            productList.appendChild(productItem);
+        });
+    }
+    
+    // Arama ve filtreleme işlemini gerçekleştir
+    function performSearchAndFilter() {
+        const query = productSearchInput.value.toLowerCase().trim();
+        const selectedColor = colorFilter.value;
+        const selectedSize = sizeFilter.value;
+        const selectedRating = ratingFilter.value;
+        
+        let filteredProducts = window.allProducts || [];
+        
+        // Ürün adında arama
+        if (query) {
+            filteredProducts = filteredProducts.filter(product => product.name.toLowerCase().includes(query));
+        }
+        
+        // Renk filtresi
+        if (selectedColor) {
+            filteredProducts = filteredProducts.filter(product => product.color === selectedColor);
+        }
+        
+        // Beden filtresi
+        if (selectedSize) {
+            filteredProducts = filteredProducts.filter(product => product.size === selectedSize);
+        }
+        
+        // Puan filtresi
+        if (selectedRating) {
+            filteredProducts = filteredProducts.filter(product => product.rating >= parseInt(selectedRating));
+        }
+        
+        renderProductList(filteredProducts);
+    }
+    
+    // Olay dinleyicileri ekle
+    productSearchInput.addEventListener('input', performSearchAndFilter);
+    colorFilter.addEventListener('change', performSearchAndFilter);
+    sizeFilter.addEventListener('change', performSearchAndFilter);
+    ratingFilter.addEventListener('change', performSearchAndFilter);
+    
+    // Ürünleri yükle
+    loadProducts();
 };

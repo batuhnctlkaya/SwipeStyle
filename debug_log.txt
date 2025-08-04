@@ -88,3 +88,82 @@
 📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
 📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
 📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Mouse', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Mouse', 'answers': ['Ofis/Günlük kullanım'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '1.5-3k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Mouse', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Mouse', 'answers': ['Oyun (Gaming)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Mouse', 'answers': ['Oyun (Gaming)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Mouse', 'answers': ['Oyun (Gaming)', 'Evet', '300-600₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Oyun (Gaming)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet', '25-40k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '1.5-3k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '1.5-3k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '1.5-3k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '1.5-3k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '1.5-3k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '1.5-3k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', '500-1.5k₺'], 'language': 'tr'}
