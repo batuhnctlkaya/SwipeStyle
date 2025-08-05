@@ -147,100 +147,6 @@ const categoryIcons = {
     'Smartwatch': 'fas fa-clock'
 };
 
-// --- Akıllı Arama & Filtreleme Özelliği ---
-// Not: HTML kısmını main.html dosyasına eklemelisin (bkz. açıklama)
-
-// Örnek teknolojik ürün verisi (backend'den de çekilebilir)
-const products = [
-  { name: "Mouse", color: "siyah", size: "M", price: 399, rating: 4.6 },
-  { name: "Laptop", color: "gri", size: "L", price: 15999, rating: 4.8 },
-  { name: "Telefon", color: "mavi", size: "M", price: 10999, rating: 4.7 },
-  { name: "Kulaklık", color: "siyah", size: "S", price: 799, rating: 4.3 },
-  { name: "Monitör", color: "beyaz", size: "L", price: 2999, rating: 4.5 },
-  { name: "Klavye", color: "siyah", size: "M", price: 599, rating: 4.2 },
-  { name: "Tablet", color: "gri", size: "M", price: 4999, rating: 4.4 },
-  { name: "Kamera", color: "siyah", size: "S", price: 3499, rating: 4.1 },
-  { name: "Hoparlör", color: "kırmızı", size: "S", price: 699, rating: 4.0 },
-  { name: "Akıllı Saat", color: "siyah", size: "S", price: 1999, rating: 4.6 }
-];
-
-// Ürünleri ekrana bas
-function displayProducts(filtered) {
-  const productList = document.getElementById("product-list");
-  if (!productList) return;
-  productList.innerHTML = "";
-  filtered.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "product";
-    div.textContent = `${p.name} | Renk: ${p.color} | Beden: ${p.size} | ₺${p.price} | ⭐${p.rating}`;
-    productList.appendChild(div);
-  });
-}
-
-// Filtreleme fonksiyonu
-function filterProducts() {
-  const inputEl = document.getElementById("product-search-input");
-  const colorEl = document.getElementById("color-filter");
-  const sizeEl = document.getElementById("size-filter");
-  const ratingEl = document.getElementById("rating-filter");
-  if (!inputEl || !colorEl || !sizeEl || !ratingEl) return;
-  const input = inputEl.value.toLowerCase();
-  const color = colorEl.value;
-  const size = sizeEl.value;
-  const rating = parseFloat(ratingEl.value) || 0;
-
-  const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(input) &&
-    (color === "" || p.color === color) &&
-    (size === "" || p.size === size) &&
-    p.rating >= rating
-  );
-  displayProducts(filtered);
-}
-
-// Otomatik tamamlama
-function setupSmartSearchEvents() {
-  const inputEl = document.getElementById("product-search-input");
-  const suggestionsDiv = document.getElementById("product-suggestions");
-  if (!inputEl || !suggestionsDiv) return;
-  inputEl.addEventListener("input", () => {
-    const input = inputEl.value.toLowerCase();
-    const matched = products
-      .map(p => p.name)
-      .filter(name => name.toLowerCase().startsWith(input));
-    suggestionsDiv.innerHTML = matched.length > 0 ? matched.join(", ") : "";
-    filterProducts();
-  });
-}
-
-function setupFilterEvents() {
-  const colorEl = document.getElementById("color-filter");
-  const sizeEl = document.getElementById("size-filter");
-  const ratingEl = document.getElementById("rating-filter");
-  if (colorEl) colorEl.addEventListener("change", filterProducts);
-  if (sizeEl) sizeEl.addEventListener("change", filterProducts);
-  if (ratingEl) ratingEl.addEventListener("change", filterProducts);
-}
-
-// Sayfa yüklendiğinde smart search alanı varsa başlat
-window.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById("product-search-input")) {
-    setupSmartSearchEvents();
-    setupFilterEvents();
-    displayProducts(products);
-  }
-});
-
-// Açıklama: HTML tarafına şunu eklemelisin (örnek):
-// <div class="smart-search">
-//   <input type="text" id="product-search-input" placeholder="Ürün Ara (örn: ka)">
-//   <select id="color-filter"> ... </select>
-//   <select id="size-filter"> ... </select>
-//   <select id="rating-filter"> ... </select>
-//   <div id="product-suggestions"></div>
-// </div>
-// <div id="product-list"></div>
-
 // Otomatik tamamlama verileri
 const autocompleteSuggestions = {
     'k': [
@@ -260,7 +166,6 @@ const autocompleteSuggestions = {
     ],
     'klim': [
         { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
-
     ],
     'l': [
         { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
