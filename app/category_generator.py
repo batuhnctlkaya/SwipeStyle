@@ -105,26 +105,40 @@ class CategoryGenerator:
         query = query.strip().lower()
         print(f"🔍 Starting intelligent category detection for: '{query}'")
         
+        # 🛡️ Check cache first to prevent duplicate API calls
+        if query in self.category_cache:
+            print(f"⚡ Cache hit for query: '{query}' → '{self.category_cache[query]}'")
+            return self.category_cache[query]
+        
         # Load existing categories
         categories = self._load_categories()
         
         # Step 1: Direct exact match
         exact_match = self._check_exact_match(query, categories)
         if exact_match:
+            # 🛡️ Cache the result
+            self.category_cache[query] = exact_match
             return exact_match
             
-        # Step 2: Partial/substring match
-        partial_match = self._check_partial_match(query, categories)
-        if partial_match:
-            return partial_match
+        # Step 2: DISABLED - Partial matching causes too many false positives
+        # Skip partial matching to avoid "headphones" -> "Phone" issues
+        # partial_match = self._check_partial_match(query, categories)
+        # if partial_match:
+        #     # 🛡️ Cache the result
+        #     self.category_cache[query] = partial_match
+        #     return partial_match
             
         # Step 3: AI-powered category recognition (existing categories)
         ai_recognition = self._ai_category_recognition(query, categories)
         if ai_recognition['match_type'] != 'no_match':
+            # 🛡️ Cache the result
+            self.category_cache[query] = ai_recognition
             return ai_recognition
             
         # Step 4: AI-powered category creation (new categories)
         ai_creation = self._ai_category_creation(query)
+        # 🛡️ Cache the result
+        self.category_cache[query] = ai_creation
         return ai_creation
     
     def _check_exact_match(self, query, categories):
@@ -160,15 +174,39 @@ class CategoryGenerator:
             dict or None: Eşleşme bulunursa sonuç, yoksa None
         """
         for cat_name in categories:
-            if query in cat_name.lower() or cat_name.lower() in query:
-                print(f"🔍 Partial match found: '{query}' → '{cat_name}'")
-                return {
-                    "match_type": "partial",
-                    "category": cat_name,
-                    "original_query": query,
-                    "confidence": 0.8,
-                    "data": categories[cat_name]
-                }
+            query_lower = query.lower()
+            cat_lower = cat_name.lower()
+            
+            # Smart partial matching with semantic validation
+            # Avoid false positives like "headphones" -> "Phone"
+            
+            # Case 1: Query is a clear subset of category (like "tv" in "television")
+            if len(query_lower) >= 3 and query_lower in cat_lower:
+                # Additional check: query should start at word boundary or be substantial part
+                if cat_lower.startswith(query_lower) or len(query_lower) >= len(cat_lower) * 0.7:
+                    print(f"🔍 Partial match found: '{query}' maps to '{cat_name}'")
+                    return {
+                        "match_type": "partial",
+                        "category": cat_name,
+                        "original_query": query,
+                        "confidence": 0.8,
+                        "data": categories[cat_name]
+                    }
+            
+            # Case 2: Category is a clear subset of query (like "phone" in "smartphone")
+            if len(cat_lower) >= 4 and cat_lower in query_lower:
+                # Additional check: category should start at word boundary or be substantial part
+                if query_lower.startswith(cat_lower) or query_lower.endswith(cat_lower):
+                    print(f"🔍 Partial match found: '{cat_name}' found in '{query}'")
+                    return {
+                        "match_type": "partial",
+                        "category": cat_name,
+                        "original_query": query,
+                        "confidence": 0.8,
+                        "data": categories[cat_name]
+                    }
+        
+        print(f"🚫 No partial matches found for '{query}'")
         return None
     
     def _ai_category_recognition(self, query, categories):
@@ -407,9 +445,24 @@ class CategoryGenerator:
             6. Make questions specific and relevant to {category_name} buying decisions
             7. Use appropriate Turkish and English translations
             8. Include important technical specifications that matter for purchase decisions
-            9. Add helpful tooltips that guide user decisions (min 15 words each)
-            10. Weight specs by importance: 1.0 (most important) → 0.9 → 0.8 → 0.7 → 0.6 → 0.5 (least important)
-            11. Follow up order must match weight order (highest weight first)
+            9. Add helpful tooltips that guide user decisions (min 30 words each)
+            10. Tooltips should include: why this feature matters, usage scenarios, cost implications, technical details that help decision making
+            11. Weight specs by importance: 1.0 (most important) → 0.9 → 0.8 → 0.7 → 0.6 → 0.5 (least important)
+            12. Follow up order must match weight order (highest weight first)
+            
+            TOOLTIP REQUIREMENTS (CRITICAL):
+            - Each tooltip must be at least 30 words long and educational
+            - Include WHY this feature/specification matters
+            - Mention real-world usage scenarios and examples
+            - Explain cost/benefit trade-offs when relevant
+            - Use technical details that help users make informed decisions
+            - Provide context about industry standards or typical ranges
+            - Help users understand consequences of their choices
+            
+            TOOLTIP EXAMPLES:
+            - Camera: "Kamera kalitesi sosyal medya paylaşımları, aile fotoğrafları ve video görüşmeleri için kritiktir. Profesyonel fotoğrafçılık yapacaksanız yüksek megapiksel ve gece modu önemlidir. Günlük kullanım için orta seviye yeterli olabilir ve daha uygun fiyatlıdır."
+            - Battery: "Pil ömrü günlük kullanım alışkanlıklarınızı doğrudan etkiler. Yoğun kullanıcılar için tüm gün dayanan pil şarttır. Hafif kullanıcılar için daha küçük pil yeterli olup cihazı daha hafif ve ucuz yapar."
+            - Storage: "Depolama alanı fotoğraf, video, uygulama ve müzik koleksiyonunuzu belirler. 128GB ortalama kullanıcı için yeterli, 256GB+ profesyonel kullanım için önerilir. Daha fazla depolama fiyatı artırır ancak gelecekte genişletme ihtiyacını azaltır."
             
             DETAILED SPEC REQUIREMENTS:
             - Create comprehensive questions that help users make informed decisions
@@ -450,8 +503,8 @@ class CategoryGenerator:
                 }},
                 "emoji": "📸",
                 "tooltip": {{
-                    "tr": "Sosyal medya, profesyonel fotoğraf veya günlük kullanım için kamera önceliğinizi belirtin.",
-                    "en": "Specify your camera priority for social media, professional photography, or daily use."
+                    "tr": "Kamera kalitesi sosyal medya paylaşımları, aile fotoğrafları ve video görüşmeleri için kritiktir. Profesyonel fotoğrafçılık yapacaksanız yüksek megapiksel, gece modu ve optik zoom önemlidir. Günlük kullanım için orta seviye yeterli olabilir ve daha uygun fiyatlıdır. Instagram, TikTok kullanıyorsanız iyi kamera önemlidir.",
+                    "en": "Camera quality is critical for social media sharing, family photos, and video calls. If you do professional photography, high megapixels, night mode, and optical zoom are important. For daily use, mid-level may be sufficient and more affordable. If you use Instagram, TikTok, good camera is important."
                 }},
                 "options": [
                     {{"id": "professional", "label": {{"tr": "Çok önemli (Profesyonel kalite)", "en": "Very important (Professional quality)"}}}},

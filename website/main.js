@@ -6,6 +6,7 @@
 // Global dil değişkeni
 let currentLanguage = 'tr';
 let currentTheme = 'light';
+let currentCategory = ''; // Global kategori değişkeni
 
 // Otomatik tamamlama için global değişkenler
 let autocompleteData = [];
@@ -95,6 +96,7 @@ function handleChatboxEntry() {
         
         if (data.category) {
             category = data.category;
+            currentCategory = data.category; // Global kategoriyi güncelle
             step = 1;
             answers = [];
             
@@ -116,6 +118,52 @@ function handleChatboxEntry() {
 let step = 0;
 let category = null;
 let answers = [];
+
+// Mevcut kategoriyi döndüren yardımcı fonksiyon
+function getCurrentCategory() {
+    return currentCategory || category || '';
+}
+
+// Ürün başlığından marka çıkarma fonksiyonu
+function extractBrand(productTitle) {
+    const title = productTitle.toLowerCase();
+    const brandKeywords = [
+        'sony', 'bose', 'apple', 'samsung', 'lg', 'sennheiser', 'beats', 
+        'xiaomi', 'huawei', 'oppo', 'oneplus', 'realme', 'vivo', 'iphone',
+        'airpods', 'galaxy', 'pixel', 'redmi', 'poco', 'honor',
+        'jbl', 'marshall', 'audio-technica', 'beyerdynamic', 'akg',
+        'skullcandy', 'plantronics', 'jabra', 'razer', 'steelseries',
+        'hyperx', 'corsair', 'logitech', 'asus', 'msi', 'acer', 'hp',
+        'dell', 'lenovo', 'macbook', 'thinkpad', 'pavilion', 'inspiron'
+    ];
+    
+    for (const brand of brandKeywords) {
+        if (title.includes(brand)) {
+            return brand;
+        }
+    }
+    return null;
+}
+
+// Ürün başlığından model çıkarma fonksiyonu  
+function extractModel(productTitle) {
+    const title = productTitle.toLowerCase();
+    
+    // Model pattern'leri (sayı kombinasyonları)
+    const modelPatterns = [
+        /\b\d{1,2}[a-z]*\b/g,  // 12, 12a, 13pro gibi
+        /\b[a-z]+\s*\d+[a-z]*\b/g,  // pro max 12, air 3 gibi
+        /\b\d+\s*[a-z]+\b/g  // 12 pro, 3 max gibi
+    ];
+    
+    for (const pattern of modelPatterns) {
+        const matches = title.match(pattern);
+        if (matches && matches.length > 0) {
+            return matches[0];
+        }
+    }
+    return null;
+}
 
 const categoryIcons = {
     'Headphones': 'fas fa-headphones',
@@ -592,6 +640,7 @@ function renderLanding(categories) {
 
 function startInteraction(selectedCategory) {
     category = selectedCategory;
+    currentCategory = selectedCategory; // Global kategoriyi güncelle
     step = 1;
     answers = [];
     
@@ -725,26 +774,91 @@ function renderRecommendations(recs) {
             } catch (e) {
                 console.warn(`⚠️ Invalid URL detected: ${url}`);
                 
-                // Site-specific fallback URLs
+                // Site-specific fallback URLs with enhanced product targeting
                 let siteFound = false;
                 const searchQuery = encodeURIComponent(productTitle);
                 
+                // Extract brand and model from product title for better targeting
+                const foundBrand = extractBrand(productTitle);
+                const foundModel = extractModel(productTitle);
+                
+                // Build enhanced search query
+                let enhancedQuery = searchQuery;
+                if (foundBrand) {
+                    enhancedQuery = foundBrand + ' ' + searchQuery;
+                }
+                if (foundModel && !searchQuery.toLowerCase().includes(foundModel)) {
+                    enhancedQuery += ' ' + foundModel;
+                }
+                
+                console.log(`🎯 Enhanced search: "${productTitle}" → brand: "${foundBrand}", model: "${foundModel}", query: "${enhancedQuery}"`);
+                
+                // Category mapping for better site navigation
+                const categoryMapping = {
+                    'Headphones': 'kulaklik',
+                    'Phone': 'cep-telefonu', 
+                    'Laptop': 'laptop',
+                    'Television': 'televizyon',
+                    'Drone': 'drone',
+                    'Klima': 'klima',
+                    'Tire': 'lastik'
+                };
+                
                 if (sourceSite) {
+                    console.log(`🎯 Creating enhanced search URL for: ${sourceSite}`);
+                    
+                    const currentCat = getCurrentCategory();
+                    const categoryPath = categoryMapping[currentCat] || '';
+                    
+                    // Fiyat bilgisini de URL'ye ekle
+                    const price = r.price && typeof r.price === 'object' ? r.price.value : null;
+                    const priceParam = price ? `&minPrice=${Math.max(0, price-1000)}&maxPrice=${price+1000}` : '';
+                    
                     if (sourceSite.includes('teknosa')) {
-                        url = `https://www.teknosa.com/arama?q=${searchQuery}`;
-                        console.log(`🔍 Teknosa fallback URL: ${url}`);
+                        // Teknosa enhanced URL with category and brand
+                        url = `https://www.teknosa.com/arama?q=${enhancedQuery}${categoryPath ? '&kategori=' + categoryPath : ''}`;
+                        console.log(`🔍 Teknosa enhanced URL: ${url}`);
                         siteFound = true;
                     } else if (sourceSite.includes('hepsiburada')) {
-                        url = `https://www.hepsiburada.com/ara?q=${searchQuery}`;
-                        console.log(`🔍 Hepsiburada fallback URL: ${url}`);
+                        // Hepsiburada enhanced URL with specific product targeting
+                        url = `https://www.hepsiburada.com/ara?q=${enhancedQuery}${priceParam}`;
+                        console.log(`🔍 Hepsiburada enhanced URL: ${url}`);
                         siteFound = true;
                     } else if (sourceSite.includes('trendyol')) {
-                        url = `https://www.trendyol.com/sr?q=${searchQuery}`;
-                        console.log(`🔍 Trendyol fallback URL: ${url}`);
+                        // Trendyol enhanced URL with brand and model focus
+                        url = `https://www.trendyol.com/sr?q=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
+                        console.log(`🔍 Trendyol enhanced URL: ${url}`);
                         siteFound = true;
                     } else if (sourceSite.includes('n11')) {
-                        url = `https://www.n11.com/arama?q=${searchQuery}`;
-                        console.log(`🔍 N11 fallback URL: ${url}`);
+                        // N11 enhanced URL with precise product search
+                        url = `https://www.n11.com/arama?q=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
+                        console.log(`🔍 N11 enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('amazon')) {
+                        // Amazon enhanced URL with department targeting
+                        const dept = categoryPath ? `&i=${categoryPath}` : '';
+                        url = `https://www.amazon.com.tr/s?k=${enhancedQuery}${dept}`;
+                        console.log(`🔍 Amazon enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('gittigidiyor')) {
+                        // GittiGidiyor enhanced URL
+                        url = `https://www.gittigidiyor.com/arama/?k=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
+                        console.log(`🔍 GittiGidiyor enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('ciceksepeti')) {
+                        // ÇiçekSepeti enhanced URL for tech products
+                        url = `https://www.ciceksepeti.com/arama?q=${enhancedQuery}`;
+                        console.log(`🔍 ÇiçekSepeti enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('mediamarkt')) {
+                        // MediaMarkt enhanced URL
+                        url = `https://www.mediamarkt.com.tr/tr/search.html?query=${enhancedQuery}`;
+                        console.log(`🔍 MediaMarkt enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('vatan')) {
+                        // Vatan Bilgisayar enhanced URL
+                        url = `https://www.vatanbilgisayar.com/arama/?text=${enhancedQuery}`;
+                        console.log(`🔍 Vatan enhanced URL: ${url}`);
                         siteFound = true;
                     }
                 }

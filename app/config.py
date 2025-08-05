@@ -86,7 +86,7 @@ def get_gemini_model():
     ]
     
     return genai.GenerativeModel(
-        'gemini-2.0-flash-exp',  # Updated to more stable model
+        'gemini-1.5-flash',  # Daha yüksek limit: 1000 req/min vs 10 req/min
         generation_config=genai.types.GenerationConfig(
             temperature=0.8,  # Increased for more creative responses
             top_p=0.95,      # Increased for more diverse responses
@@ -96,7 +96,7 @@ def get_gemini_model():
         safety_settings=safety_settings
     )
 
-def generate_with_retry(model, prompt, max_retries=3, delay=2):
+def generate_with_retry(model, prompt, max_retries=2, delay=10):
     """
     Gemini API'ye retry mekanizması ile istek gönderir.
     

@@ -268,9 +268,9 @@ Lütfen kaynaklı bir rapor hazırla.
                 
                 print(f"📊 Raw results count: {len(shopping_results)}")
                 
-                # Sonuçları formatla ve filtrele - ✅ 10'a kadar al
+                # Sonuçları formatla ve filtrele - ✅ 20'a kadar al
                 formatted_results = []
-                for result in shopping_results[:10]:  # İlk 10 sonuç
+                for result in shopping_results[:20]:  # İlk 20 sonuç
                     formatted_result = self._format_shopping_result(result, preferences)
                     if formatted_result:
                         formatted_results.append(formatted_result)
@@ -442,6 +442,10 @@ Lütfen kaynaklı bir rapor hazırla.
             
             # Fiyat bilgisini çıkar - önce extracted_price'ı dene
             price_value = 0.0
+            print(f"🔍 Debug fiyat verileri:")
+            print(f"   price_str: '{price_str}'")
+            print(f"   extracted_price: '{extracted_price}'")
+            
             if extracted_price:
                 try:
                     # extracted_price genelde sayısal değer olarak gelir
@@ -450,9 +454,13 @@ Lütfen kaynaklı bir rapor hazırla.
                 except (ValueError, TypeError):
                     print(f"⚠️ Invalid extracted_price: {extracted_price}, fallback to price parsing")
                     price_value = self._extract_price_value(price_str)
+                    print(f"💰 Parsed price_str result: {price_value}")
             else:
                 # Fallback: Normal price string parsing
                 price_value = self._extract_price_value(price_str)
+                print(f"💰 Parsed price_str only: {price_value}")
+            
+            print(f"🎯 Final price_value: {price_value}")
             
             # Fiyat yoksa skip
             if price_value <= 0:
@@ -488,8 +496,10 @@ Lütfen kaynaklı bir rapor hazırla.
             # Fiyat formatı
             if price_value > 0:
                 price_display = f"{price_value:,.0f} ₺".replace(',', '.')
+                print(f"💰 Price formatting: {price_value} → '{price_display}'")
             else:
                 price_display = price_str
+                print(f"💰 Using original price_str: '{price_display}'")
             
             # Link kontrolü - ✅ SerpAPI linklerini direkt kullan (doğrulama yok)
             validated_link = link
@@ -509,13 +519,16 @@ Lütfen kaynaklı bir rapor hazırla.
             
             print(f"✅ Geçerli ürün: {title} - {price_display} - {source}")
             
+            price_obj = {
+                'value': price_value,
+                'currency': 'TRY',
+                'display': price_display
+            }
+            print(f"💰 Final price object: {price_obj}")
+            
             return {
                 'title': title,
-                'price': {
-                    'value': price_value,
-                    'currency': 'TRY',
-                    'display': price_display
-                },
+                'price': price_obj,
                 'source': source,
                 'link': validated_link,
                 'link_status': link_status,
@@ -529,12 +542,14 @@ Lütfen kaynaklı bir rapor hazırla.
             return None
     
     def _extract_price_value(self, price_str: str) -> float:
-        """Fiyat string'inden sayısal değer çıkar"""
+        """Fiyat string'inden sayısal değer çıkar - güçlendirilmiş versiyon"""
         import re
         
         # Türkçe fiyat formatları: "1.250,99 ₺", "1250 TL", "₺1,250.99", "1k₺", "2.5k₺"
         if not price_str:
             return 0.0
+        
+        print(f"🔍 Price parsing input: '{price_str}'")
         
         # Temizle
         cleaned = price_str.replace('₺', '').replace('TL', '').replace('TRY', '').strip()
@@ -545,7 +560,9 @@ Lütfen kaynaklı bir rapor hazırla.
             if k_match:
                 base_value = k_match.group(1).replace(',', '.')
                 try:
-                    return float(base_value) * 1000
+                    result = float(base_value) * 1000
+                    print(f"💰 K format detected: {base_value}k → {result}")
+                    return result
                 except:
                     return 0.0
         
@@ -557,21 +574,37 @@ Lütfen kaynaklı bir rapor hazırla.
                 integer_part = parts[0].replace('.', '')  # Binlik ayırıcıları kaldır
                 decimal_part = parts[1]
                 cleaned = f"{integer_part}.{decimal_part}"
+                print(f"💰 Turkish format: {price_str} → {cleaned}")
         elif ',' in cleaned:
             # Sadece virgül var (1250,99)
             cleaned = cleaned.replace(',', '.')
+            print(f"💰 Comma to dot: {price_str} → {cleaned}")
         
-        # Sayıları bul
+        # Sayıları bul ve en büyüğünü al (çünkü fiyat genelde en büyük sayıdır)
         numbers = re.findall(r'[\d.]+', cleaned)
         if numbers:
             try:
-                return float(numbers[0])
+                # En büyük sayıyı bul (fiyat muhtemelen budur)
+                prices = [float(num) for num in numbers if float(num) > 0]
+                if prices:
+                    result = max(prices)
+                    print(f"💰 Found numbers: {numbers}, selected: {result}")
+                    
+                    # Çok küçük fiyatları kontrol et (muhtemelen hatalı parse)
+                    if result < 50 and any(float(num) > 1000 for num in numbers):
+                        # Büyük sayı varsa onu kullan
+                        result = max(float(num) for num in numbers)
+                        print(f"💰 Corrected small price: {result}")
+                    
+                    return result
+                return 0.0
             except:
+                print(f"❌ Price parsing failed for: {cleaned}")
                 return 0.0
         return 0.0
     
     def _generate_structured_recommendations(self, grounding: Dict, shopping: List[Dict], preferences: Dict) -> List[Dict]:
-        """SerpAPI shopping sonuçlarını direkt öneriler olarak kullan - EN FAZLA 10 ÜRÜN"""
+        """SerpAPI shopping sonuçlarını direkt öneriler olarak kullan - EN FAZLA 20 ÜRÜN"""
         try:
             print(f"🛒 Processing {len(shopping)} shopping results for recommendations")
             
@@ -579,8 +612,8 @@ Lütfen kaynaklı bir rapor hazırla.
             if shopping and len(shopping) > 0:
                 print(f"✅ Using {len(shopping)} real SerpAPI results")
                 
-                # En fazla 10 ürün al
-                max_results = min(10, len(shopping))
+                # En fazla 20 ürün al
+                max_results = min(20, len(shopping))
                 recommendations = shopping[:max_results]
                 
                 # Her öneriye match_score ekle (basit algoritma)

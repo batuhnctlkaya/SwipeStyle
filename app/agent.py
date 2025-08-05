@@ -189,32 +189,60 @@ class Agent:
                 'categories': list(self.categories.keys())
             }
         
-        elif category and category in self.categories:
-            specs = self.categories[category]['specs']
+        elif category:
+            # Check if category exists, if not try to create it with CategoryGenerator
+            if category not in self.categories:
+                print(f"🔍 Category '{category}' not found, attempting to create with AI...")
+                from .category_generator import CategoryGenerator
+                
+                category_generator = CategoryGenerator()
+                result = category_generator.intelligent_category_detection(category)
+                
+                if result['match_type'] == 'ai_created':
+                    print(f"🆕 New category '{result['category']}' created successfully!")
+                    # Reload categories to include the new one
+                    self.categories = self.load_categories()
+                    category = result['category']  # Use the AI-determined category name
+                elif result['match_type'] in ['exact', 'partial', 'ai_recognition']:
+                    print(f"✅ Category mapped to existing: '{result['category']}'")
+                    category = result['category']
+                else:
+                    print(f"❌ Failed to create category: {result.get('message', 'Unknown error')}")
+                    return {'error': f"Category '{category}' could not be created or found"}
             
-            # Kullanıcının mevcut tercihlerini analiz et
-            preferences = self._analyze_current_preferences(answers, specs)
-            
-            # Frontend'den gelen özel alanları ekle (budget_band gibi)
-            if 'budget_band' in data:
-                preferences['budget_band'] = data['budget_band']
-            
-            confidence_score = self._calculate_confidence_score(preferences, specs)
-            
-            print(f"🎯 Preferences: {json.dumps(preferences, indent=2, ensure_ascii=False)}")
-            print(f"📈 Confidence Score: {confidence_score}")
-            
-            # Akıllı follow-up soru belirleme
-            next_question = self._determine_next_followup(specs, preferences, confidence_score, language, category)
-            
-            if next_question:
-                # Progress bilgisi ekle
-                progress = self._calculate_progress(preferences, specs)
-                next_question['progress'] = progress
-                return next_question
+            # Now we should have a valid category
+            if category in self.categories:
+                specs = self.categories[category]['specs']
+                
+                # Kullanıcının mevcut tercihlerini analiz et
+                preferences = self._analyze_current_preferences(answers, specs)
+                
+                # Frontend'den gelen özel alanları ekle (budget_band gibi)
+                if 'budget_band' in data:
+                    preferences['budget_band'] = data['budget_band']
+                
+                # Hangi sorular soruldu hesapla (step sayısı kadar spec sorulmuş)
+                asked_specs = [specs[i]['id'] for i in range(min(step-1, len(specs)))]
+                
+                confidence_score = self._calculate_confidence_score(preferences, specs)
+                
+                print(f"🎯 Preferences: {json.dumps(preferences, indent=2, ensure_ascii=False)}")
+                print(f"📈 Confidence Score: {confidence_score}")
+                print(f"📋 Asked specs so far: {asked_specs}")
+                
+                # Akıllı follow-up soru belirleme
+                next_question = self._determine_next_followup(specs, preferences, confidence_score, language, category, asked_specs)
+                
+                if next_question:
+                    # Progress bilgisi ekle
+                    progress = self._calculate_progress(preferences, specs)
+                    next_question['progress'] = progress
+                    return next_question
+                else:
+                    # Tüm gerekli bilgiler toplandı, öneri ver
+                    return self._generate_recommendations(category, preferences, specs, language)
             else:
-                # Tüm gerekli bilgiler toplandı, öneri ver
-                return self._generate_recommendations(category, preferences, specs, language)
+                return {'error': f"Category '{category}' could not be processed"}
         
         else:
             print(f"❌ Invalid category or step!")
@@ -244,17 +272,19 @@ class Agent:
                 print(f"  📋 Processing spec {i}: {spec_id} = '{answer}' (type: {spec['type']})")
                 
                 if spec['type'] == 'boolean':
-                    if answer.lower() in ['yes', 'evet', 'true']:
+                    normalized_answer = answer.lower().strip()
+                    if normalized_answer in ['yes', 'evet', 'true', 'evet önemli', 'önemli']:
                         preferences[spec_id] = True
                         print(f"    ✅ Boolean value: True")
-                    elif answer.lower() in ['no', 'hayır', 'false']:
+                    elif normalized_answer in ['no', 'hayır', 'false', 'önemli değil', 'değil']:
                         preferences[spec_id] = False
                         print(f"    ✅ Boolean value: False")
-                    elif answer.lower() in ['no preference', 'fark etmez', 'bilmiyorum', 'farketmez']:
+                    elif normalized_answer in ['no preference', 'fark etmez', 'bilmiyorum', 'farketmez', 'i don\'t know', 'unknown']:
                         preferences[spec_id] = None  # No preference
                         print(f"    ✅ Boolean value: No preference (None)")
                     else:
-                        print(f"    ❌ Invalid boolean answer: '{answer}'")
+                        print(f"    ❌ Invalid boolean answer: '{normalized_answer}' - treating as no preference")
+                        preferences[spec_id] = None
                 elif spec['type'] == 'single_choice':
                     # Seçilen option'ın ID'sini bul
                     option_found = False
@@ -264,6 +294,37 @@ class Agent:
                             option_found = True
                             print(f"    ✅ Mapped to option_id: {opt['id']}")
                             break
+                    
+                    # Eğer eşleşme bulunamadıysa, "Bilmiyorum" veya "Fark etmez" benzeri cevapları kontrol et
+                    if not option_found:
+                        normalized_answer = answer.lower().strip()
+                        if normalized_answer in ['bilmiyorum', 'i don\'t know', 'unknown', 'dont know']:
+                            # "unknown" veya "no_preference" option_id'si varsa kullan
+                            for opt in spec['options']:
+                                if opt['id'] in ['unknown', 'no_preference']:
+                                    preferences[spec_id] = opt['id']
+                                    option_found = True
+                                    print(f"    ✅ Mapped 'Bilmiyorum' to option_id: {opt['id']}")
+                                    break
+                            # Eğer hiçbir option bulunmadıysa, null olarak set et (cevaplandı ama bilmiyor)
+                            if not option_found:
+                                preferences[spec_id] = None
+                                option_found = True
+                                print(f"    ✅ Mapped 'Bilmiyorum' to null (answered but unknown)")
+                        elif normalized_answer in ['fark etmez', 'farketmez', 'no preference', 'doesnt matter']:
+                            # "no_preference" option_id'si varsa kullan
+                            for opt in spec['options']:
+                                if opt['id'] == 'no_preference':
+                                    preferences[spec_id] = opt['id']
+                                    option_found = True
+                                    print(f"    ✅ Mapped 'Fark etmez' to option_id: {opt['id']}")
+                                    break
+                            # Eğer no_preference option'ı yoksa, null olarak set et
+                            if not option_found:
+                                preferences[spec_id] = None
+                                option_found = True
+                                print(f"    ✅ Mapped 'Fark etmez' to null (answered but no preference)")
+                    
                     if not option_found:
                         print(f"    ❌ No option found for answer: '{answer}'")
                 elif spec['type'] == 'number':
@@ -346,8 +407,13 @@ class Agent:
         total_count = len(specs)
         return int((answered_count / total_count) * 100) if total_count > 0 else 0
 
-    def _determine_next_followup(self, specs, preferences, confidence_score, language, category=None):
+    def _determine_next_followup(self, specs, preferences, confidence_score, language, category=None, asked_specs=None):
         """Akıllı follow-up soru belirleme algoritması"""
+        
+        if asked_specs is None:
+            asked_specs = []
+        
+        print(f"🔍 Next question logic: confidence={confidence_score:.2f}, asked_specs={asked_specs}")
         
         # 1) Çelişki var mı kontrol et
         conflict_question = self._check_conflicts(specs, preferences, language)
@@ -355,24 +421,24 @@ class Agent:
             return conflict_question
         
         # 2) Zorunlu/önemli eksikler (mandatory veya weight ≥ 0.9)
-        mandatory_question = self._check_mandatory_missing(specs, preferences, language)
+        mandatory_question = self._check_mandatory_missing(specs, preferences, language, asked_specs)
         if mandatory_question:
             return mandatory_question
         
         # 3) depends_on tetiklenen alt sorular
-        dependency_question = self._check_dependency_triggers(specs, preferences, language)
+        dependency_question = self._check_dependency_triggers(specs, preferences, language, asked_specs)
         if dependency_question:
             return dependency_question
         
         # 4) Skor düşükse (bilgi yetersiz), yüksek weight'li eksikler
         # ANCAK budget sorulduysa bu adımı atla (yeteri kadar bilgi var demektir)
         if confidence_score < 0.7 and 'budget_band' not in preferences:
-            high_weight_question = self._check_high_weight_missing(specs, preferences, language)
+            high_weight_question = self._check_high_weight_missing(specs, preferences, language, asked_specs)
             if high_weight_question:
                 return high_weight_question
         
         # 5) Sayısal detay gereken sorular
-        numeric_question = self._check_numeric_needed(specs, preferences, language)
+        numeric_question = self._check_numeric_needed(specs, preferences, language, asked_specs)
         if numeric_question:
             return numeric_question
         
@@ -391,12 +457,16 @@ class Agent:
         # Bu basit örnek, daha karmaşık çelişki mantığı eklenebilir
         return None
 
-    def _check_mandatory_missing(self, specs, preferences, language):
+    def _check_mandatory_missing(self, specs, preferences, language, asked_specs=None):
         """Zorunlu veya çok önemli (weight≥0.9) eksik sorular"""
+        if asked_specs is None:
+            asked_specs = []
+            
         missing = [
             spec for spec in specs 
             if (spec.get('weight', 1.0) >= 0.9 or spec.get('mandatory', False)) 
             and spec['id'] not in preferences
+            and spec['id'] not in asked_specs  # Bu satır eklendi - zaten sorulmuş soruları atla
             and not self._has_unsatisfied_dependencies(spec, preferences)  # Dependency'si olmayan veya sağlanan sorular
         ]
         
@@ -406,10 +476,13 @@ class Agent:
             return self._format_question(missing[0], language, reason="mandatory")
         return None
 
-    def _check_dependency_triggers(self, specs, preferences, language):
+    def _check_dependency_triggers(self, specs, preferences, language, asked_specs=None):
         """Bağımlılık tetikleyen sorular"""
+        if asked_specs is None:
+            asked_specs = []
+            
         for spec in specs:
-            if spec['id'] not in preferences and 'depends_on' in spec:
+            if spec['id'] not in preferences and spec['id'] not in asked_specs and 'depends_on' in spec:
                 # Dependency koşulları sağlanıyor mu?
                 should_ask = True
                 for dep in spec['depends_on']:
@@ -437,8 +510,10 @@ class Agent:
         
         return None
 
-    def _check_high_weight_missing(self, specs, preferences, language):
+    def _check_high_weight_missing(self, specs, preferences, language, asked_specs=None):
         """Yüksek önemde ama henüz cevaplanmamış sorular"""
+        if asked_specs is None:
+            asked_specs = []
         
         # Budget sorulduysa weight threshold'u daha yüksek yap (sadece çok kritik olanlar)
         threshold = 0.9 if 'budget_band' in preferences else 0.6
@@ -447,6 +522,7 @@ class Agent:
             spec for spec in specs 
             if spec.get('weight', 1.0) >= threshold 
             and spec['id'] not in preferences
+            and spec['id'] not in asked_specs  # Bu satır eklendi - zaten sorulmuş soruları atla
             and not self._has_unsatisfied_dependencies(spec, preferences)  # Dependency'si sağlanan sorular
         ]
         
@@ -459,8 +535,10 @@ class Agent:
             return self._format_question(missing[0], language, reason="importance")
         return None
 
-    def _check_numeric_needed(self, specs, preferences, language):
+    def _check_numeric_needed(self, specs, preferences, language, asked_specs=None):
         """Sayısal detay gereken sorular"""
+        if asked_specs is None:
+            asked_specs = []
         
         # Budget sorulduysa sayısal soruları atla (çok kritik olanlar hariç)
         if 'budget_band' in preferences:
@@ -471,6 +549,7 @@ class Agent:
             spec for spec in specs 
             if spec['type'] == 'number' 
             and spec['id'] not in preferences
+            and spec['id'] not in asked_specs  # Bu satır eklendi - zaten sorulmuş soruları atla
             and not self._has_unsatisfied_dependencies(spec, preferences)  # BU SATIR EKLENDİ
         ]
         
@@ -818,20 +897,27 @@ class Agent:
                     print(f"✅ K max format parsed: None - {base_value}")
                     return None, base_value
         
-        # Normal format "500-1000₺"
-        normal_pattern = r'(\d+)\s*-\s*(\d+)'
+        # Normal format "500-1000₺" veya "15.000-40.000₺"
+        # Türkçe binlik ayırıcı noktaları da destekle
+        normal_pattern = r'([\d.]+)\s*-\s*([\d.]+)'
         normal_match = re.search(normal_pattern, budget_band)
         
         if normal_match:
-            min_val = int(normal_match.group(1))
-            max_val = int(normal_match.group(2))
+            # Binlik ayırıcı noktaları kaldır (15.000 -> 15000)
+            min_str = normal_match.group(1).replace('.', '') if normal_match.group(1).count('.') > 0 and not normal_match.group(1).endswith('.') else normal_match.group(1)
+            max_str = normal_match.group(2).replace('.', '') if normal_match.group(2).count('.') > 0 and not normal_match.group(2).endswith('.') else normal_match.group(2)
+            
+            min_val = int(float(min_str))
+            max_val = int(float(max_str))
             print(f"✅ Normal format parsed: {min_val} - {max_val}")
             return min_val, max_val
         
-        # Tek değer
-        single_match = re.search(r'(\d+)', budget_band)
+        # Tek değer - binlik ayırıcı noktaları da destekle
+        single_match = re.search(r'([\d.]+)', budget_band)
         if single_match:
-            value = int(single_match.group(1))
+            # Binlik ayırıcı noktaları kaldır
+            value_str = single_match.group(1).replace('.', '') if single_match.group(1).count('.') > 0 and not single_match.group(1).endswith('.') else single_match.group(1)
+            value = int(float(value_str))
             if '+' in budget_band:
                 print(f"✅ Single+ format parsed: {value} - {value * 2}")
                 return value, value * 2
