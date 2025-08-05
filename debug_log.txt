@@ -27,3 +27,12 @@
 📩 /ask veri: {'step': 4, 'category': 'Telefon', 'answers': ['Temel yeterli', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)'], 'language': 'tr'}
 📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
 📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Mouse', 'answers': [], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'çamaşır makinesi'}
+🔍 /detect_category veri: {'query': 'çamaşır makinesi'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', '15-25k₺'], 'language': 'tr'}

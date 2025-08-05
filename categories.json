@@ -84,226 +84,6 @@
       }
     ]
   },
-  "Phone": {
-    "budget_bands": {
-      "tr": [
-        "3-8k₺",
-        "8-15k₺",
-        "15-25k₺",
-        "25-40k₺",
-        "40k₺+"
-      ],
-      "en": [
-        "$100-250",
-        "$250-500",
-        "$500-800",
-        "$800-1200",
-        "$1200+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "camera_quality",
-        "type": "single_choice",
-        "label": {
-          "tr": "Kamera kalitesi ne kadar önemli?",
-          "en": "How important is camera quality?"
-        },
-        "emoji": "📸",
-        "tooltip": {
-          "tr": "Sosyal medya, profesyonel fotoğraf veya günlük kullanım için kamera önceliğinizi belirtin.",
-          "en": "Specify your camera priority for social media, professional photography, or daily use."
-        },
-        "options": [
-          {
-            "id": "professional",
-            "label": {
-              "tr": "Çok önemli (Profesyonel kalite)",
-              "en": "Very important (Professional quality)"
-            }
-          },
-          {
-            "id": "good",
-            "label": {
-              "tr": "Önemli (İyi kalite)",
-              "en": "Important (Good quality)"
-            }
-          },
-          {
-            "id": "basic",
-            "label": {
-              "tr": "Temel yeterli",
-              "en": "Basic is sufficient"
-            }
-          }
-        ],
-        "weight": 1.0
-      },
-      {
-        "id": "battery_life",
-        "type": "boolean",
-        "label": {
-          "tr": "Uzun pil ömrü öncelikli mi?",
-          "en": "Is long battery life a priority?"
-        },
-        "emoji": "🔋",
-        "tooltip": {
-          "tr": "Günlük yoğun kullanım için uzun pil ömrü gerekli.",
-          "en": "Long battery life is necessary for heavy daily usage."
-        },
-        "weight": 0.8
-      }
-    ]
-  },
-  "Laptop": {
-    "budget_bands": {
-      "tr": [
-        "8-15k₺",
-        "15-25k₺",
-        "25-40k₺",
-        "40-60k₺",
-        "60k₺+"
-      ],
-      "en": [
-        "$300-600",
-        "$600-1000",
-        "$1000-1500",
-        "$1500-2500",
-        "$2500+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "primary_use",
-        "type": "single_choice",
-        "label": {
-          "tr": "Temel kullanım amacınız nedir?",
-          "en": "What is your primary use case?"
-        },
-        "emoji": "💻",
-        "tooltip": {
-          "tr": "Kullanım amacınız laptop özelliklerini belirler.",
-          "en": "Your use case determines laptop specifications."
-        },
-        "options": [
-          {
-            "id": "office",
-            "label": {
-              "tr": "Ofis işleri (Word, Excel, web)",
-              "en": "Office work (Word, Excel, web)"
-            }
-          },
-          {
-            "id": "gaming",
-            "label": {
-              "tr": "Oyun (Gaming)",
-              "en": "Gaming"
-            }
-          },
-          {
-            "id": "creative",
-            "label": {
-              "tr": "Yaratıcı işler (Video, tasarım)",
-              "en": "Creative work (Video, design)"
-            }
-          },
-          {
-            "id": "programming",
-            "label": {
-              "tr": "Programlama",
-              "en": "Programming"
-            }
-          }
-        ],
-        "weight": 1.0
-      },
-      {
-        "id": "portability",
-        "type": "boolean",
-        "label": {
-          "tr": "Taşınabilirlik önemli mi?",
-          "en": "Is portability important?"
-        },
-        "emoji": "🎒",
-        "tooltip": {
-          "tr": "Sık seyahat ediyorsanız hafif ve ince laptop tercih edin.",
-          "en": "If you travel frequently, prefer a light and thin laptop."
-        },
-        "weight": 0.7
-      }
-    ]
-  },
-  "Mouse": {
-    "budget_bands": {
-      "tr": [
-        "100-300₺",
-        "300-600₺",
-        "600-1.2k₺",
-        "1.2-2.5k₺",
-        "2.5k₺+"
-      ],
-      "en": [
-        "$5-15",
-        "$15-30",
-        "$30-60",
-        "$60-120",
-        "$120+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "usage_type",
-        "type": "single_choice",
-        "label": {
-          "tr": "Kullanım türünüz nedir?",
-          "en": "What is your usage type?"
-        },
-        "emoji": "🖱️",
-        "tooltip": {
-          "tr": "Kullanım türünüz mouse özelliklerini belirler.",
-          "en": "Your usage type determines mouse features."
-        },
-        "options": [
-          {
-            "id": "office",
-            "label": {
-              "tr": "Ofis/Günlük kullanım",
-              "en": "Office/Daily use"
-            }
-          },
-          {
-            "id": "gaming",
-            "label": {
-              "tr": "Oyun (Gaming)",
-              "en": "Gaming"
-            }
-          },
-          {
-            "id": "design",
-            "label": {
-              "tr": "Tasarım/Grafik",
-              "en": "Design/Graphics"
-            }
-          }
-        ],
-        "weight": 1.0
-      },
-      {
-        "id": "wireless",
-        "type": "boolean",
-        "label": {
-          "tr": "Kablosuz mouse ister misiniz?",
-          "en": "Do you want a wireless mouse?"
-        },
-        "emoji": "📶",
-        "tooltip": {
-          "tr": "Kablosuz mouse daha temiz görünüm ve hareket özgürlüğü sağlar.",
-          "en": "Wireless mouse provides cleaner look and freedom of movement."
-        },
-        "weight": 0.6
-      }
-    ]
-  },
   "Klima": {
     "budget_bands": {
       "tr": [
@@ -694,162 +474,6 @@
       }
     ]
   },
-  "Microphone": {
-    "budget_bands": {
-      "tr": [
-        "1-3k₺",
-        "3-6k₺",
-        "6-12k₺",
-        "12-20k₺",
-        "20k₺+"
-      ],
-      "en": [
-        "$30-100",
-        "$100-200",
-        "$200-400",
-        "$400-600",
-        "$600+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "quality",
-        "type": "single_choice",
-        "label": {
-          "tr": "Microphone kalitesi?",
-          "en": "Microphone quality?"
-        },
-        "emoji": "⭐",
-        "tooltip": {
-          "tr": "Microphone için kalite seviyenizi seçin.",
-          "en": "Choose quality level for your Microphone."
-        },
-        "options": [
-          {
-            "id": "basic",
-            "label": {
-              "tr": "Temel",
-              "en": "Basic"
-            }
-          },
-          {
-            "id": "standard",
-            "label": {
-              "tr": "Standart",
-              "en": "Standard"
-            }
-          },
-          {
-            "id": "premium",
-            "label": {
-              "tr": "Premium",
-              "en": "Premium"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 1.0
-      },
-      {
-        "id": "brand_importance",
-        "type": "boolean",
-        "label": {
-          "tr": "Marka önemli mi?",
-          "en": "Is brand important?"
-        },
-        "emoji": "🏷️",
-        "tooltip": {
-          "tr": "Ürün seçiminde marka önemli bir faktör mü?",
-          "en": "Is brand an important factor in product selection?"
-        },
-        "weight": 0.7
-      }
-    ]
-  },
-  "Tablo": {
-    "budget_bands": {
-      "tr": [
-        "1-3k₺",
-        "3-6k₺",
-        "6-12k₺",
-        "12-20k₺",
-        "20k₺+"
-      ],
-      "en": [
-        "$30-100",
-        "$100-200",
-        "$200-400",
-        "$400-600",
-        "$600+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "quality",
-        "type": "single_choice",
-        "label": {
-          "tr": "Tablo kalitesi?",
-          "en": "Tablo quality?"
-        },
-        "emoji": "⭐",
-        "tooltip": {
-          "tr": "Tablo için kalite seviyenizi seçin.",
-          "en": "Choose quality level for your Tablo."
-        },
-        "options": [
-          {
-            "id": "basic",
-            "label": {
-              "tr": "Temel",
-              "en": "Basic"
-            }
-          },
-          {
-            "id": "standard",
-            "label": {
-              "tr": "Standart",
-              "en": "Standard"
-            }
-          },
-          {
-            "id": "premium",
-            "label": {
-              "tr": "Premium",
-              "en": "Premium"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 1.0
-      },
-      {
-        "id": "brand_importance",
-        "type": "boolean",
-        "label": {
-          "tr": "Marka önemli mi?",
-          "en": "Is brand important?"
-        },
-        "emoji": "🏷️",
-        "tooltip": {
-          "tr": "Ürün seçiminde marka önemli bir faktör mü?",
-          "en": "Is brand an important factor in product selection?"
-        },
-        "weight": 0.7
-      }
-    ]
-  },
   "Television": {
     "budget_bands": {
       "tr": [
@@ -1050,6 +674,399 @@
           }
         ],
         "weight": 0.6
+      }
+    ]
+  },
+  "Telefon": {
+    "budget_bands": {
+      "tr": [
+        "3-8k₺",
+        "8-15k₺",
+        "15-25k₺",
+        "25-40k₺",
+        "40k₺+"
+      ],
+      "en": [
+        "$100-250",
+        "$250-500",
+        "$500-800",
+        "$800-1200",
+        "$1200+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "camera_quality",
+        "type": "single_choice",
+        "label": {
+          "tr": "Kamera kalitesi ne kadar önemli?",
+          "en": "How important is camera quality?"
+        },
+        "emoji": "📸",
+        "tooltip": {
+          "tr": "Sosyal medya, profesyonel fotoğraf veya günlük kullanım için kamera önceliğinizi belirtin.",
+          "en": "Specify your camera priority for social media, professional photography, or daily use."
+        },
+        "options": [
+          {
+            "id": "professional",
+            "label": {
+              "tr": "Çok önemli (Profesyonel kalite)",
+              "en": "Very important (Professional quality)"
+            }
+          },
+          {
+            "id": "good",
+            "label": {
+              "tr": "Önemli (İyi kalite)",
+              "en": "Important (Good quality)"
+            }
+          },
+          {
+            "id": "basic",
+            "label": {
+              "tr": "Temel yeterli",
+              "en": "Basic is sufficient"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "battery_life",
+        "type": "single_choice",
+        "label": {
+          "tr": "Pil ömrü beklentiniz nedir?",
+          "en": "What is your battery life expectation?"
+        },
+        "emoji": "🔋",
+        "tooltip": {
+          "tr": "Günlük kullanım şeklinize göre pil ömrü tercihini belirtin.",
+          "en": "Determine battery life preference based on your daily usage."
+        },
+        "options": [
+          {
+            "id": "all_day",
+            "label": {
+              "tr": "Tüm gün (20+ saat)",
+              "en": "All day (20+ hours)"
+            }
+          },
+          {
+            "id": "heavy_use",
+            "label": {
+              "tr": "Yoğun kullanım (12-20 saat)",
+              "en": "Heavy use (12-20 hours)"
+            }
+          },
+          {
+            "id": "normal_use",
+            "label": {
+              "tr": "Normal kullanım (8-12 saat)",
+              "en": "Normal use (8-12 hours)"
+            }
+          },
+          {
+            "id": "basic_use",
+            "label": {
+              "tr": "Temel kullanım yeterli",
+              "en": "Basic use sufficient"
+            }
+          }
+        ],
+        "weight": 0.9
+      },
+      {
+        "id": "performance_level",
+        "type": "single_choice",
+        "label": {
+          "tr": "Hangi performans seviyesine ihtiyacınız var?",
+          "en": "What performance level do you need?"
+        },
+        "emoji": "⚡",
+        "tooltip": {
+          "tr": "Oyun, video editing, multitasking gibi kullanım şeklinizi düşünün.",
+          "en": "Consider your usage like gaming, video editing, multitasking."
+        },
+        "options": [
+          {
+            "id": "flagship",
+            "label": {
+              "tr": "Yüksek performans (Oyun, video)",
+              "en": "High performance (Gaming, video)"
+            }
+          },
+          {
+            "id": "mid_range",
+            "label": {
+              "tr": "Orta performans (Çoklu uygulama)",
+              "en": "Mid performance (Multi-app)"
+            }
+          },
+          {
+            "id": "basic",
+            "label": {
+              "tr": "Temel performans (Arama, mesaj)",
+              "en": "Basic performance (Call, message)"
+            }
+          }
+        ],
+        "weight": 0.8
+      },
+      {
+        "id": "storage_capacity",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ne kadar depolama alanına ihtiyacınız var?",
+          "en": "How much storage space do you need?"
+        },
+        "emoji": "💾",
+        "tooltip": {
+          "tr": "Fotoğraf, video, uygulama ve müzik koleksiyonunuzu düşünün.",
+          "en": "Consider your photo, video, app and music collection."
+        },
+        "options": [
+          {
+            "id": "high_512gb",
+            "label": {
+              "tr": "Çok fazla (512GB+)",
+              "en": "Very high (512GB+)"
+            }
+          },
+          {
+            "id": "medium_256gb",
+            "label": {
+              "tr": "Orta (128-256GB)",
+              "en": "Medium (128-256GB)"
+            }
+          },
+          {
+            "id": "basic_64gb",
+            "label": {
+              "tr": "Temel (64-128GB)",
+              "en": "Basic (64-128GB)"
+            }
+          },
+          {
+            "id": "expandable",
+            "label": {
+              "tr": "Genişletilebilir (microSD)",
+              "en": "Expandable (microSD)"
+            }
+          }
+        ],
+        "weight": 0.7
+      },
+      {
+        "id": "screen_size",
+        "type": "single_choice",
+        "label": {
+          "tr": "Hangi ekran boyutunu tercih ediyorsunuz?",
+          "en": "Which screen size do you prefer?"
+        },
+        "emoji": "📱",
+        "tooltip": {
+          "tr": "Tek elle kullanım mı yoksa büyük ekran deneyimi mi tercih ediyorsunuz?",
+          "en": "Do you prefer one-handed use or large screen experience?"
+        },
+        "options": [
+          {
+            "id": "large",
+            "label": {
+              "tr": "Büyük (6.5+ inç)",
+              "en": "Large (6.5+ inch)"
+            }
+          },
+          {
+            "id": "medium",
+            "label": {
+              "tr": "Orta (6.0-6.5 inç)",
+              "en": "Medium (6.0-6.5 inch)"
+            }
+          },
+          {
+            "id": "compact",
+            "label": {
+              "tr": "Kompakt (5.5-6.0 inç)",
+              "en": "Compact (5.5-6.0 inch)"
+            }
+          },
+          {
+            "id": "small",
+            "label": {
+              "tr": "Küçük (5.5 inç altı)",
+              "en": "Small (under 5.5 inch)"
+            }
+          }
+        ],
+        "weight": 0.6
+      },
+      {
+        "id": "operating_system",
+        "type": "single_choice",
+        "label": {
+          "tr": "İşletim sistemi tercihiniz nedir?",
+          "en": "What is your operating system preference?"
+        },
+        "emoji": "🖥️",
+        "tooltip": {
+          "tr": "Daha önce kullandığınız sistem veya yeni denemek istediğiniz sistem.",
+          "en": "Previously used system or new system you want to try."
+        },
+        "options": [
+          {
+            "id": "android",
+            "label": {
+              "tr": "Android (Google)",
+              "en": "Android (Google)"
+            }
+          },
+          {
+            "id": "ios",
+            "label": {
+              "tr": "iOS (Apple)",
+              "en": "iOS (Apple)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.5
+      },
+      {
+        "id": "brand_preference",
+        "type": "single_choice",
+        "label": {
+          "tr": "Marka tercihiniz var mı?",
+          "en": "Do you have a brand preference?"
+        },
+        "emoji": "🏢",
+        "tooltip": {
+          "tr": "Güvendiğiniz veya daha önce deneyimlediğiniz bir marka var mı?",
+          "en": "Is there a brand you trust or have experienced before?"
+        },
+        "options": [
+          {
+            "id": "apple",
+            "label": {
+              "tr": "Apple",
+              "en": "Apple"
+            }
+          },
+          {
+            "id": "samsung",
+            "label": {
+              "tr": "Samsung",
+              "en": "Samsung"
+            }
+          },
+          {
+            "id": "xiaomi",
+            "label": {
+              "tr": "Xiaomi",
+              "en": "Xiaomi"
+            }
+          },
+          {
+            "id": "huawei",
+            "label": {
+              "tr": "Huawei",
+              "en": "Huawei"
+            }
+          },
+          {
+            "id": "oppo",
+            "label": {
+              "tr": "Oppo",
+              "en": "Oppo"
+            }
+          },
+          {
+            "id": "turkish_brands",
+            "label": {
+              "tr": "Türk Markaları (Vestel, Casper)",
+              "en": "Turkish Brands (Vestel, Casper)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.4
+      },
+      {
+        "id": "special_features",
+        "type": "single_choice",
+        "label": {
+          "tr": "Hangi özel özellik size en önemli?",
+          "en": "Which special feature is most important to you?"
+        },
+        "emoji": "✨",
+        "tooltip": {
+          "tr": "Günlük kullanımınızda en çok değer vereceğiniz özelliği seçin.",
+          "en": "Choose the feature you would value most in daily use."
+        },
+        "options": [
+          {
+            "id": "fast_charging",
+            "label": {
+              "tr": "Hızlı şarj",
+              "en": "Fast charging"
+            }
+          },
+          {
+            "id": "wireless_charging",
+            "label": {
+              "tr": "Kablosuz şarj",
+              "en": "Wireless charging"
+            }
+          },
+          {
+            "id": "water_resistance",
+            "label": {
+              "tr": "Su geçirmezlik",
+              "en": "Water resistance"
+            }
+          },
+          {
+            "id": "dual_sim",
+            "label": {
+              "tr": "Çift SIM",
+              "en": "Dual SIM"
+            }
+          },
+          {
+            "id": "5g_support",
+            "label": {
+              "tr": "5G desteği",
+              "en": "5G support"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Hiçbiri önemli değil",
+              "en": "None important"
+            }
+          }
+        ],
+        "weight": 0.3
       }
     ]
   }

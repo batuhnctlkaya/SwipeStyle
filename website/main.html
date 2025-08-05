@@ -720,6 +720,168 @@
             z-index: 10000;
         }
         
+        /* AI Category Creation Screen */
+        .ai-creation-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 15000;
+            padding: 20px;
+            color: white;
+        }
+        
+        [data-theme="dark"] .ai-creation-screen {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+        
+        .ai-creation-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .ai-creation-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffffff, #f0f9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .ai-creation-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .ai-creation-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+        
+        .ai-creation-status {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+        
+        .ai-creation-details {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+        
+        .ai-creation-progress {
+            width: 300px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+        }
+        
+        .ai-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffffff, #f0f9ff);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            animation: shimmer 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
+        }
+        
+        /* Error Screen */
+        .error-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 15000;
+            padding: 20px;
+            color: white;
+        }
+        
+        .error-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .error-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .home-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+        
         [data-theme="dark"] .loading-container {
             background: rgba(15, 23, 42, 0.95);
         }
@@ -1022,171 +1184,6 @@
 </head>
 
   <body>
-    <!-- Akıllı Arama & Filtreleme Alanı (Modern Tasarım) -->
-    <style>
-      .filter-panel {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        gap: 18px;
-        background: #232336;
-        border-radius: 18px;
-        box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
-        padding: 22px 24px 16px 24px;
-        margin: 32px auto 32px auto;
-        max-width: 950px;
-      }
-      .filter-panel input[type="text"] {
-        font-size: 1.1rem;
-        padding: 10px 18px;
-        border-radius: 10px;
-        border: 1px solid #444;
-        background: #181828;
-        color: #fff;
-        outline: none;
-        min-width: 220px;
-        transition: border 0.2s;
-      }
-      .filter-panel input[type="text"]:focus {
-        border: 1.5px solid #ff9800;
-      }
-      .color-filter {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .color-dot {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        border: 2px solid #444;
-        cursor: pointer;
-        display: inline-block;
-        transition: border 0.2s;
-      }
-      .color-dot.selected {
-        border: 2.5px solid #ff9800;
-        box-shadow: 0 0 0 2px #ff9800aa;
-      }
-      .color-dot.siyah { background: #222; }
-      .color-dot.gri { background: #aaa; }
-      .color-dot.mavi { background: #2196f3; }
-      .color-dot.beyaz { background: #fff; }
-      .color-dot.kırmızı { background: #e53935; }
-      .filter-label { color: #fff; font-size: 1rem; margin-right: 4px; }
-      .slider-group { display: flex; align-items: center; gap: 8px; }
-      .slider-group input[type="range"] {
-        width: 110px;
-        accent-color: #ff9800;
-      }
-      .slider-value { color: #ff9800; font-weight: 600; min-width: 36px; text-align: center; }
-      #product-suggestions {
-        width: 100%;
-        background: #181828;
-        color: #ff9800;
-        border-radius: 0 0 10px 10px;
-        margin-top: 6px;
-        padding: 6px 12px;
-        font-size: 1rem;
-        min-height: 24px;
-        box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
-      }
-      #product-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 24px;
-        margin-top: 18px;
-      }
-      .product-card {
-        background: #232336;
-        color: #fff;
-        border-radius: 16px;
-        box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
-        padding: 20px 22px 18px 22px;
-        min-width: 260px;
-        max-width: 320px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        position: relative;
-        transition: transform 0.15s;
-      }
-      .product-card:hover {
-        transform: translateY(-4px) scale(1.03);
-        box-shadow: 0 8px 32px 0 #ff980055;
-      }
-      .product-title {
-        font-size: 1.18rem;
-        font-weight: 600;
-        margin-bottom: 8px;
-      }
-      .product-meta {
-        font-size: 0.98rem;
-        margin-bottom: 8px;
-        color: #bbb;
-      }
-      .product-price {
-        font-size: 1.12rem;
-        color: #ff9800;
-        font-weight: 700;
-        margin-bottom: 8px;
-      }
-      .product-rating {
-        color: #ffd600;
-        font-size: 1.05rem;
-        margin-bottom: 10px;
-      }
-      .buy-btn {
-        background: #ff9800;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 8px 18px;
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        margin-top: 6px;
-        transition: background 0.2s;
-      }
-      .buy-btn:hover {
-        background: #ffb74d;
-        color: #232336;
-      }
-      @media (max-width: 900px) {
-        .filter-panel { flex-direction: column; gap: 10px; padding: 14px 6px 10px 6px; }
-        #product-list { gap: 12px; }
-        .product-card { min-width: 90vw; max-width: 98vw; }
-      }
-    </style>
-    <div class="filter-panel">
-      <input type="text" id="product-search-input" placeholder="Ürün Ara (örn: mouse, laptop)">
-      <div class="color-filter">
-        <span class="filter-label">Renk:</span>
-        <span class="color-dot siyah" data-color="siyah" title="Siyah"></span>
-        <span class="color-dot gri" data-color="gri" title="Gri"></span>
-        <span class="color-dot mavi" data-color="mavi" title="Mavi"></span>
-        <span class="color-dot beyaz" data-color="beyaz" title="Beyaz"></span>
-        <span class="color-dot kırmızı" data-color="kırmızı" title="Kırmızı"></span>
-      </div>
-      <div class="slider-group">
-        <span class="filter-label">Fiyat:</span>
-        <input type="range" id="price-min" min="0" max="20000" step="100" value="0">
-        <span class="slider-value" id="price-min-value">0</span>
-        <span style="color:#fff;">-</span>
-        <input type="range" id="price-max" min="0" max="20000" step="100" value="20000">
-        <span class="slider-value" id="price-max-value">20000</span>
-      </div>
-      <div class="slider-group">
-        <span class="filter-label">Puan:</span>
-        <input type="range" id="rating-filter" min="0" max="5" step="0.1" value="0">
-        <span class="slider-value" id="rating-value">0</span>
-        <span style="color:#ffd600; font-size:1.1em;">★</span>
-      </div>
-      <div id="product-suggestions"></div>
-    </div>
-    <div id="product-list"></div>
     <!-- Header -->
     <header class="header">
         <!-- Theme Toggle - Sol üstte -->
@@ -1238,8 +1235,48 @@
         <div class="card-grid" id="category-cards"></div>
     </div>
     
+    <!-- AI Category Creation Screen -->
+    <div id="ai-creation-screen" class="ai-creation-screen">
+        <div class="ai-creation-content">
+            <h1 class="ai-creation-title">
+                <i class="fas fa-robot"></i> AI Çalışıyor
+            </h1>
+            <p class="ai-creation-subtitle" data-tr="Yapay zeka sizin için özel kategori oluşturuyor..." data-en="AI is creating a custom category for you...">
+                Yapay zeka sizin için özel kategori oluşturuyor...
+            </p>
+            <div class="ai-creation-spinner"></div>
+            <div class="ai-creation-status" data-tr="Kategori analiz ediliyor..." data-en="Analyzing category...">
+                Kategori analiz ediliyor...
+            </div>
+            <div class="ai-creation-details" data-tr="Bu işlem birkaç saniye sürebilir. AI en iyi spesifikasyonları hazırlıyor." data-en="This may take a few seconds. AI is preparing the best specifications.">
+                Bu işlem birkaç saniye sürebilir. AI en iyi spesifikasyonları hazırlıyor.
+            </div>
+            <div class="ai-creation-progress">
+                <div class="ai-progress-bar" style="width: 45%"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Error Screen -->
+    <div id="error-screen" class="error-screen">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h1 class="error-title" data-tr="Kategori Oluşturulamadı" data-en="Category Could Not Be Created">
+                Kategori Oluşturulamadı
+            </h1>
+            <p class="error-message" data-tr="AI servisimizde geçici bir sorun var. Lütfen mevcut kategorilerden birini seçin veya daha sonra tekrar deneyin." data-en="There's a temporary issue with our AI service. Please choose from existing categories or try again later.">
+                AI servisimizde geçici bir sorun var. Lütfen mevcut kategorilerden birini seçin veya daha sonra tekrar deneyin.
+            </p>
+            <button class="home-btn" onclick="goToHomePage()" data-tr="Ana Sayfaya Dön" data-en="Go to Home Page">
+                <i class="fas fa-home"></i> Ana Sayfaya Dön
+            </button>
+        </div>
+    </div>
+    
     <div id="interaction" class="interaction" style="display:none;">
-        <div class="loading" style="color: var(--text-gray); margin-bottom: 20px; text-align: center;">
+        <div class="loading" style="color: var(--text-gray); margin-bottom: 20px; text-align: center; display: none;">
             <i class="fas fa-spinner fa-spin"></i> <span data-tr="Yükleniyor..." data-en="Loading...">Yükleniyor...</span>
         </div>
         <div class="question"></div>

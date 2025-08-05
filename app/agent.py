@@ -83,16 +83,14 @@ def detect_category_from_query(query):
             'kulaklık': 'Headphones',
             'kulaklik': 'Headphones',
             'headphones': 'Headphones',
-            'telefon': 'Phone',
-            'phone': 'Phone',
-            'laptop': 'Laptop',
-            'dizüstü': 'Laptop',
-            'bilgisayar': 'Laptop',
-            'computer': 'Laptop',
-            'pc': 'Laptop',
-            'mouse': 'Mouse',
-            'fare': 'Mouse',
-            # Removed non-existing categories: Charger, Klima, Drill, Hair Dryer
+            'klima': 'Klima',
+            'airconditioner': 'Klima',
+            'lastik': 'Tire',
+            'tire': 'Tire',
+            'televizyon': 'Television',
+            'tv': 'Television',
+            'television': 'Television',
+            # Removed non-existing categories: Phone, Laptop, Mouse, Charger, Drill, Hair Dryer
             # These will be handled by CategoryGenerator AI creation
         }
         
@@ -194,11 +192,8 @@ class Agent:
         elif category and category in self.categories:
             specs = self.categories[category]['specs']
             
-            # Frontend'den gelen asked_spec_ids bilgisini al
-            asked_spec_ids = data.get('asked_spec_ids', [])
-            
             # Kullanıcının mevcut tercihlerini analiz et
-            preferences = self._analyze_current_preferences(answers, specs, asked_spec_ids)
+            preferences = self._analyze_current_preferences(answers, specs)
             
             # Frontend'den gelen özel alanları ekle (budget_band gibi)
             if 'budget_band' in data:
@@ -229,102 +224,55 @@ class Agent:
             print(f"   Available categories: {list(self.categories.keys())}")
             return {'error': 'Invalid category or step'}
 
-    def _analyze_current_preferences(self, answers, specs, asked_spec_ids=None):
-        """Mevcut cevapları tercih objesi haline getir - doğru spec'e eşleştirme ile"""
+    def _analyze_current_preferences(self, answers, specs):
+        """Mevcut cevapları tercih objesi haline getir"""
         preferences = {}
         
         print(f"🔍 _analyze_current_preferences:")
         print(f"  📊 answers_count={len(answers)}")
         print(f"  📋 specs_count={len(specs)}")
         print(f"  📝 answers={answers}")
-        print(f"  🎯 asked_spec_ids={asked_spec_ids}")
-        # Fix the budget_band issue by ensuring proper formatting of spec IDs
+        # Fix the budge t_band issue by ensuring proper formatting of spec IDs
         print(f"  🏷️ spec_ids=[{', '.join([spec['id'].strip() for spec in specs])}]")
         
-        # ✅ YENİ YÖNTEM: asked_spec_ids varsa bunları kullan
-        if asked_spec_ids and len(asked_spec_ids) == len(answers):
-            print(f"  ✅ Using asked_spec_ids for precise matching")
-            
-            # Create spec lookup dictionary
-            spec_lookup = {spec['id']: spec for spec in specs}
-            
-            for i, (answer, spec_id) in enumerate(zip(answers, asked_spec_ids)):
-                if answer is not None and spec_id in spec_lookup:
-                    spec = spec_lookup[spec_id]
-                    print(f"  📋 Processing answer {i}: {spec_id} = '{answer}' (type: {spec['type']})")
-                    
-                    if spec['type'] == 'boolean':
-                        if answer.lower() in ['yes', 'evet', 'true']:
-                            preferences[spec_id] = True
-                            print(f"    ✅ Boolean value: True")
-                        elif answer.lower() in ['no', 'hayır', 'false']:
-                            preferences[spec_id] = False
-                            print(f"    ✅ Boolean value: False")
-                        elif answer.lower() in ['no preference', 'fark etmez', 'bilmiyorum', 'farketmez']:
-                            preferences[spec_id] = None  # No preference
-                            print(f"    ✅ Boolean value: No preference (None)")
-                        else:
-                            print(f"    ❌ Invalid boolean answer: '{answer}'")
-                    elif spec['type'] == 'single_choice':
-                        # Seçilen option'ın ID'sini bul
-                        option_found = False
-                        for opt in spec['options']:
-                            if opt['label']['en'] == answer or opt['label']['tr'] == answer:
-                                preferences[spec_id] = opt['id']
-                                option_found = True
-                                print(f"    ✅ Mapped to option_id: {opt['id']}")
-                                break
-                        if not option_found:
-                            print(f"    ❌ No option found for answer: '{answer}'")
-                    elif spec['type'] == 'number':
-                        try:
-                            preferences[spec_id] = int(answer)
-                            print(f"    ✅ Converted to number: {int(answer)}")
-                        except ValueError:
-                            preferences[spec_id] = None
-                            print(f"    ❌ Could not convert to number: '{answer}'")
-        else:
-            # ❌ ESKİ YÖNTEM: Fallback olarak indeks bazlı eşleştirme (eski kategoriler için)
-            print(f"  ⚠️ Falling back to index-based matching (old method)")
-            
-            # answered_specs - sadece cevaplanan spec'leri işle
-            for i, answer in enumerate(answers):
-                if i < len(specs) and answer is not None:
-                    spec = specs[i]
-                    spec_id = spec['id']
-                    
-                    print(f"  📋 Processing spec {i}: {spec_id} = '{answer}' (type: {spec['type']})")
-                    
-                    if spec['type'] == 'boolean':
-                        if answer.lower() in ['yes', 'evet', 'true']:
-                            preferences[spec_id] = True
-                            print(f"    ✅ Boolean value: True")
-                        elif answer.lower() in ['no', 'hayır', 'false']:
-                            preferences[spec_id] = False
-                            print(f"    ✅ Boolean value: False")
-                        elif answer.lower() in ['no preference', 'fark etmez', 'bilmiyorum', 'farketmez']:
-                            preferences[spec_id] = None  # No preference
-                            print(f"    ✅ Boolean value: No preference (None)")
-                        else:
-                            print(f"    ❌ Invalid boolean answer: '{answer}'")
-                    elif spec['type'] == 'single_choice':
-                        # Seçilen option'ın ID'sini bul
-                        option_found = False
-                        for opt in spec['options']:
-                            if opt['label']['en'] == answer or opt['label']['tr'] == answer:
-                                preferences[spec_id] = opt['id']
-                                option_found = True
-                                print(f"    ✅ Mapped to option_id: {opt['id']}")
-                                break
-                        if not option_found:
-                            print(f"    ❌ No option found for answer: '{answer}'")
-                    elif spec['type'] == 'number':
-                        try:
-                            preferences[spec_id] = int(answer)
-                            print(f"    ✅ Converted to number: {int(answer)}")
-                        except ValueError:
-                            preferences[spec_id] = None
-                            print(f"    ❌ Could not convert to number: '{answer}'")
+        # answered_specs - sadece cevaplanan spec'leri işle
+        for i, answer in enumerate(answers):
+            if i < len(specs) and answer is not None:
+                spec = specs[i]
+                spec_id = spec['id']
+                
+                print(f"  📋 Processing spec {i}: {spec_id} = '{answer}' (type: {spec['type']})")
+                
+                if spec['type'] == 'boolean':
+                    if answer.lower() in ['yes', 'evet', 'true']:
+                        preferences[spec_id] = True
+                        print(f"    ✅ Boolean value: True")
+                    elif answer.lower() in ['no', 'hayır', 'false']:
+                        preferences[spec_id] = False
+                        print(f"    ✅ Boolean value: False")
+                    elif answer.lower() in ['no preference', 'fark etmez', 'bilmiyorum', 'farketmez']:
+                        preferences[spec_id] = None  # No preference
+                        print(f"    ✅ Boolean value: No preference (None)")
+                    else:
+                        print(f"    ❌ Invalid boolean answer: '{answer}'")
+                elif spec['type'] == 'single_choice':
+                    # Seçilen option'ın ID'sini bul
+                    option_found = False
+                    for opt in spec['options']:
+                        if opt['label']['en'] == answer or opt['label']['tr'] == answer:
+                            preferences[spec_id] = opt['id']
+                            option_found = True
+                            print(f"    ✅ Mapped to option_id: {opt['id']}")
+                            break
+                    if not option_found:
+                        print(f"    ❌ No option found for answer: '{answer}'")
+                elif spec['type'] == 'number':
+                    try:
+                        preferences[spec_id] = int(answer)
+                        print(f"    ✅ Converted to number: {int(answer)}")
+                    except ValueError:
+                        preferences[spec_id] = None
+                        print(f"    ❌ Could not convert to number: '{answer}'")
         
         # Özel bütçe kontrolü - Para birimi sembolü içeren yanıtları bütçe olarak tanı
         for i, answer in enumerate(answers):
@@ -332,9 +280,9 @@ class Agent:
                 preferences['budget_band'] = answer
                 print(f"  💰 Special budget detection: '{answer}' added as budget_band")
                 
-                # Eğer bu cevap bir spec'e eşleştirildiyse temizle
-                if asked_spec_ids and i < len(asked_spec_ids):
-                    spec_id = asked_spec_ids[i]
+                # Bu bir spec cevabı olarak işlendiyse, bu spec'i null olarak işaretle
+                if i < len(specs):
+                    spec_id = specs[i]['id']
                     if spec_id in preferences and spec_id != 'budget_band':
                         preferences[spec_id] = None
                         print(f"  ⚠️ Clearing {spec_id} since this was actually a budget answer")
@@ -416,11 +364,12 @@ class Agent:
         if dependency_question:
             return dependency_question
         
-        # 4) Yüksek weight'li eksikler - confidence'tan bağımsız kontrol et
-        # Makul weight'e sahip (>=0.6) eksik spec'ler varsa onları sor
-        high_weight_question = self._check_high_weight_missing_improved(specs, preferences, language)
-        if high_weight_question:
-            return high_weight_question
+        # 4) Skor düşükse (bilgi yetersiz), yüksek weight'li eksikler
+        # ANCAK budget sorulduysa bu adımı atla (yeteri kadar bilgi var demektir)
+        if confidence_score < 0.7 and 'budget_band' not in preferences:
+            high_weight_question = self._check_high_weight_missing(specs, preferences, language)
+            if high_weight_question:
+                return high_weight_question
         
         # 5) Sayısal detay gereken sorular
         numeric_question = self._check_numeric_needed(specs, preferences, language)
@@ -486,44 +435,6 @@ class Agent:
                     print(f"  🔗 Dependency triggered for {spec['id']}: {spec['depends_on']}")
                     return self._format_question(spec, language, reason="dependency")
         
-        return None
-
-    def _check_high_weight_missing_improved(self, specs, preferences, language):
-        """Geliştirilmiş yüksek önemde eksik soru kontrolü - confidence'tan bağımsız"""
-        
-        # Önce ağırlıklı (>=0.6) eksik spec'leri ara
-        missing_high = [
-            spec for spec in specs 
-            if spec.get('weight', 1.0) >= 0.6 
-            and spec['id'] not in preferences
-            and not self._has_unsatisfied_dependencies(spec, preferences)
-        ]
-        
-        # Eğer yüksek ağırlıklı bulunamazsa, herhangi bir eksik spec'i ara (>=0.5)
-        if not missing_high:
-            missing_high = [
-                spec for spec in specs 
-                if spec.get('weight', 1.0) >= 0.5 
-                and spec['id'] not in preferences
-                and not self._has_unsatisfied_dependencies(spec, preferences)
-            ]
-        
-        # Hala bulunamazsa, herhangi bir eksik spec'i ara (threshold yok)
-        if not missing_high:
-            missing_high = [
-                spec for spec in specs 
-                if spec['id'] not in preferences
-                and not self._has_unsatisfied_dependencies(spec, preferences)
-            ]
-        
-        print(f"  📈 Improved high weight check: found {len(missing_high)} missing specs")
-        
-        # En yüksek weight'li olanı seç
-        if missing_high:
-            missing_high.sort(key=lambda x: x.get('weight', 1.0), reverse=True)
-            selected_spec = missing_high[0]
-            print(f"    🎯 Will ask: {selected_spec['id']} (weight: {selected_spec.get('weight', 1.0)})")
-            return self._format_question(selected_spec, language, reason="importance")
         return None
 
     def _check_high_weight_missing(self, specs, preferences, language):
@@ -658,8 +569,7 @@ class Agent:
             'question': spec['label'][language],
             'emoji': spec.get('emoji', ''),
             'type': spec['type'],
-            'id': spec['id'],
-            'asked_spec_id': spec['id']  # ✅ Sorduğumuz spec'in ID'sini ekle
+            'id': spec['id']
         }
         
         # Spec'e özgü tooltip ekle

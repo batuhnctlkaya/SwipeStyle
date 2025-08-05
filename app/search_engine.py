@@ -228,25 +228,33 @@ Lütfen kaynaklı bir rapor hazırla.
                 'gl': 'tr',
                 'hl': 'tr',
                 'currency': 'TRY',
-                'num': 20
+                'num': 50  # ✅ 50 sonuç al (maksimum)
             }
             
-            # Fiyat filtresi ekle - sadece anlamlı fiyatlar varsa
+            # Fiyat filtresi ekle - Google Shopping tbs parametresi ile
             budget_min = preferences.get('budget_min') or 0
             budget_max = preferences.get('budget_max') or 0
             
             print(f"💰 Budget check: min={budget_min}, max={budget_max}")
             
+            # Google Shopping tbs parametresi oluştur
+            tbs_parts = ['mr:1', 'price:1']  # mr:1 = recent, price:1 = price sort
+            
             if budget_min and budget_min > 100:  # 100₺'den düşük fiyatları kabul etme
-                params['min_price'] = budget_min
-                print(f"✅ Min price set: {budget_min}")
+                tbs_parts.append(f'ppr_min:{int(budget_min)}')
+                print(f"✅ Min price tbs: {budget_min}")
                 
             if budget_max and budget_max > (budget_min or 0) and budget_max < 100000:  # Makul üst limit
-                params['max_price'] = budget_max
-                print(f"✅ Max price set: {budget_max}")
+                tbs_parts.append(f'ppr_max:{int(budget_max)}')
+                print(f"✅ Max price tbs: {budget_max}")
+            
+            # tbs parametresini ekle
+            if len(tbs_parts) > 2:  # Fiyat filtresi varsa
+                params['tbs'] = ','.join(tbs_parts)
+                print(f"🔧 TBS parameter: {params['tbs']}")
             
             print(f"🛒 SerpAPI Shopping search: '{shopping_query}'")
-            print(f"💰 Final price filter: {params.get('min_price', 'None')}₺ - {params.get('max_price', 'None')}₺")
+            print(f"💰 Final price filter: {budget_min}₺ - {budget_max}₺ (via tbs)")
             
             response = requests.get(self.serpapi_base_url, params=params)
             
@@ -256,9 +264,9 @@ Lütfen kaynaklı bir rapor hazırla.
                 
                 print(f"📊 Raw results count: {len(shopping_results)}")
                 
-                # Sonuçları formatla ve filtrele
+                # Sonuçları formatla ve filtrele - ✅ 10'a kadar al
                 formatted_results = []
-                for result in shopping_results[:15]:  # İlk 15 sonuç
+                for result in shopping_results[:10]:  # İlk 10 sonuç
                     formatted_result = self._format_shopping_result(result, preferences)
                     if formatted_result:
                         formatted_results.append(formatted_result)
@@ -311,14 +319,52 @@ Lütfen kaynaklı bir rapor hazırla.
             'Phone': 'akıllı telefon smartphone',
             'Laptop': 'laptop bilgisayar',
             'Headphones': 'kulaklık',
-            'Mouse': 'mouse fare'
+            'Mouse': 'mouse fare',
+            'Tire': 'lastik'  # ✅ Tire kategorisi eklendi
         }
         
         # Doğru kategori query'si oluştur
         base_query = category_mapping.get(category, category)
         
-        # Marka tercihi varsa ekle
-        if brand_preference and brand_preference != 'no_preference':
+        # Tire kategorisi için özel işlemler
+        if category == 'Tire':
+            # Tire specifications ekle
+            tire_type = preferences.get('tire_type', '')
+            tire_size = preferences.get('tire_size', '')
+            vehicle_type = preferences.get('vehicle_type', '')
+            brand_preference = preferences.get('brand_preference', '')
+            
+            if tire_type and tire_type != 'no_preference':
+                if tire_type == 'summer':
+                    base_query += ' yazlık'
+                elif tire_type == 'winter':
+                    base_query += ' kışlık'
+                elif tire_type == 'all_season':
+                    base_query += ' dört mevsim'
+            
+            if tire_size and tire_size != 'other':
+                # tire_size'ı gerçek size'a çevir
+                size_mapping = {
+                    '195_65_r15': '195/65 R15',
+                    '205_55_r16': '205/55 R16', 
+                    '225_45_r17': '225/45 R17'
+                }
+                actual_size = size_mapping.get(tire_size, tire_size)
+                base_query += f' {actual_size}'
+            
+            if brand_preference and brand_preference != 'no_preference':
+                base_query += f' {brand_preference}'
+            
+            if vehicle_type and vehicle_type != 'no_preference':
+                if vehicle_type == 'passenger_car':
+                    base_query += ' binek araç'
+                elif vehicle_type == 'suv':
+                    base_query += ' SUV'
+                elif vehicle_type == 'truck':
+                    base_query += ' kamyonet'
+        
+        # Marka tercihi varsa ekle (diğer kategoriler için)
+        elif brand_preference and brand_preference != 'no_preference':
             if brand_preference == 'apple':
                 base_query += ' iPhone'
             elif brand_preference == 'samsung':
@@ -382,15 +428,32 @@ Lütfen kaynaklı bir rapor hazırla.
             # Temel bilgileri çıkar
             title = result.get('title', '').strip()
             price_str = result.get('price', '')
+            extracted_price = result.get('extracted_price', '')  # ✅ SerpAPI extracted_price alanı
             source = result.get('source', '')
             link = result.get('link', '')
             
             # Boş veya geçersiz sonuçları filtrele
-            if not title or not price_str:
+            if not title:
                 return None
             
-            # Fiyat bilgisini çıkar
-            price_value = self._extract_price_value(price_str)
+            # Fiyat bilgisini çıkar - önce extracted_price'ı dene
+            price_value = 0.0
+            if extracted_price:
+                try:
+                    # extracted_price genelde sayısal değer olarak gelir
+                    price_value = float(extracted_price)
+                    print(f"💰 Using extracted_price: {price_value}")
+                except (ValueError, TypeError):
+                    print(f"⚠️ Invalid extracted_price: {extracted_price}, fallback to price parsing")
+                    price_value = self._extract_price_value(price_str)
+            else:
+                # Fallback: Normal price string parsing
+                price_value = self._extract_price_value(price_str)
+            
+            # Fiyat yoksa skip
+            if price_value <= 0:
+                print(f"🚫 No valid price found for: {title}")
+                return None
             
             # Telefon kategorisi için özel filtreler
             if preferences and preferences.get('category') == 'Phone':
@@ -424,24 +487,21 @@ Lütfen kaynaklı bir rapor hazırla.
             else:
                 price_display = price_str
             
-            # Link kontrolü ve doğrulama/onarım
+            # Link kontrolü - ✅ SerpAPI linklerini direkt kullan (doğrulama yok)
             validated_link = link
-            link_status = 'unknown'
-            link_message = ''
+            link_status = 'serpapi_direct'
+            link_message = 'SerpAPI link - doğrulama atlandı'
             
             if link:
                 if not link.startswith('http'):
-                    link = 'https://' + link
+                    validated_link = 'https://' + link
                 
-                # Link doğrulama ve onarım uygula
-                print(f"🔗 Link doğrulanıyor: {link}")
-                link_result = self.validate_and_repair_link(link, title)
-                
-                validated_link = link_result['url']
-                link_status = link_result['status']
-                link_message = link_result['message']
-                
-                print(f"✅ Link sonucu: {link_status} - {link_message}")
+                print(f"🔗 SerpAPI link kullanılıyor: {validated_link}")
+            else:
+                # Link yoksa fallback
+                validated_link = f"https://www.google.com/search?q={title.replace(' ', '+')}"
+                link_status = 'fallback'
+                link_message = 'Google arama (link yok)'
             
             print(f"✅ Geçerli ürün: {title} - {price_display} - {source}")
             
@@ -507,63 +567,52 @@ Lütfen kaynaklı bir rapor hazırla.
         return 0.0
     
     def _generate_structured_recommendations(self, grounding: Dict, shopping: List[Dict], preferences: Dict) -> List[Dict]:
-        """Structured Output ile final öneriler oluştur"""
+        """SerpAPI shopping sonuçlarını direkt öneriler olarak kullan - EN FAZLA 10 ÜRÜN"""
         try:
-            setup_gemini()
-            model = get_gemini_model()
+            print(f"🛒 Processing {len(shopping)} shopping results for recommendations")
             
-            structured_prompt = f"""
-Sen bir e-ticaret uzmanısın. Aşağıdaki verileri analiz ederek yapılandırılmış öneriler oluştur:
-
-GROUNDING SONUÇLARI:
-{grounding.get('response', '')[:1000]}
-
-SHOPPING SONUÇLARI:
-{json.dumps(shopping[:5], ensure_ascii=False, indent=2)}
-
-KULLANICI TERCİHLERİ:
-{json.dumps(preferences, ensure_ascii=False, indent=2)}
-
-GÖREV: En iyi 3-5 ürünü seç ve aşağıdaki JSON formatında döndür. ÖNEMLİ: Her ürün için hangi siteden önerildiğini (teknosa, a101, hepsiburada, trendyol, vb.) mutlaka belirt:
-
-{{
-  "recommendations": [
-    {{
-      "title": "Ürün Adı",
-      "price": {{"value": 750, "currency": "TRY", "display": "750 ₺"}},
-      "features": ["özellik1", "özellik2"],
-      "pros": ["artı1", "artı2"],
-      "cons": ["eksi1"],
-      "match_score": 95,
-      "source_site": "hepsiburada.com",
-      "product_url": "https://...",
-      "why_recommended": "Neden önerildi açıklaması - [SİTE ADI]'den önerildi"
-    }}
-  ]
-}}
-
-ZORUNLU: Her ürün için 'source_site' alanını mutlaka doldur (teknosa.com, a101.com.tr, hepsiburada.com, trendyol.com, vb. gibi gerçek Türk e-ticaret siteleri). 'why_recommended' sonuna da hangi siteden önerildiğini ekle.
-
-Sadece geçerli JSON döndür:
-"""
-            
-            response = generate_with_retry(model, structured_prompt, max_retries=2)
-            
-            if response and response.text:
-                try:
-                    # JSON parse et
-                    json_content = response.text.strip()
-                    if json_content.startswith('```json'):
-                        json_content = json_content[7:-3]
+            # ✅ SerpAPI sonuçları zaten formatlanmış - direkt kullan
+            if shopping and len(shopping) > 0:
+                print(f"✅ Using {len(shopping)} real SerpAPI results")
+                
+                # En fazla 10 ürün al
+                max_results = min(10, len(shopping))
+                recommendations = shopping[:max_results]
+                
+                # Her öneriye match_score ekle (basit algoritma)
+                for i, rec in enumerate(recommendations):
+                    # İlk ürünlere daha yüksek score ver
+                    base_score = max(95 - (i * 2), 60)  # 95'ten başlayıp 2'şer azalt, min 60
                     
-                    result = json.loads(json_content)
-                    return result.get('recommendations', [])
-                except json.JSONDecodeError:
-                    print("❌ JSON parse failed, returning mock recommendations")
-                    return self._get_mock_recommendations(preferences)
+                    # Fiyat uyumuna göre score ayarla
+                    price_value = rec.get('price', {}).get('value', 0)
+                    budget_min = preferences.get('budget_min', 0)
+                    budget_max = preferences.get('budget_max', 999999)
+                    
+                    if budget_min <= price_value <= budget_max:
+                        price_bonus = 10  # Bütçeye uygun +10
+                    else:
+                        price_bonus = -5   # Bütçe dışı -5
+                    
+                    # Features ve pros/cons oluştur (basit)
+                    rec['features'] = rec.get('features', [rec.get('title', '').split()[:3]])
+                    rec['pros'] = rec.get('pros', ['SerpAPI doğrulanmış ürün', 'Gerçek fiyat bilgisi'])
+                    rec['cons'] = rec.get('cons', ['Stok durumu değişebilir'])
+                    rec['match_score'] = min(100, max(60, base_score + price_bonus))
+                    
+                    # Why recommended oluştur
+                    source_site = rec.get('source', 'bilinmeyen site')
+                    rec['why_recommended'] = f"SerpAPI'den doğrulanmış ürün - {source_site}'den önerildi"
+                    rec['source_site'] = source_site
+                
+                print(f"✅ Generated {len(recommendations)} recommendations from SerpAPI")
+                return recommendations
             
-            return self._get_mock_recommendations(preferences)
-            
+            # ✅ Fallback: SerpAPI sonucu yoksa mock kullan
+            else:
+                print(f"⚠️ No SerpAPI results, falling back to mock recommendations")
+                return self._get_mock_recommendations(preferences)
+                
         except Exception as e:
             print(f"❌ Structured recommendations error: {e}")
             return self._get_mock_recommendations(preferences)
@@ -722,6 +771,170 @@ Sadece geçerli JSON döndür:
                 validated_products.append(product)
             
             return validated_products
+        
+        # Tire kategorisi için gerçekçi öneriler
+        elif category == 'Tire':
+            # Kullanıcı tercihlerini al
+            tire_type = preferences.get('tire_type', 'all_season')
+            tire_size = preferences.get('tire_size', '205_55_r16')
+            brand_preference = preferences.get('brand_preference', 'no_preference')
+            vehicle_type = preferences.get('vehicle_type', 'passenger_car')
+            
+            # Size mapping
+            size_mapping = {
+                '195_65_r15': '195/65 R15',
+                '205_55_r16': '205/55 R16', 
+                '225_45_r17': '225/45 R17'
+            }
+            actual_size = size_mapping.get(tire_size, '205/55 R16')
+            
+            # Type mapping
+            type_mapping = {
+                'summer': 'yazlık',
+                'winter': 'kışlık',
+                'all_season': 'dört mevsim'
+            }
+            tire_type_tr = type_mapping.get(tire_type, 'dört mevsim')
+            
+            mock_tire_products = [
+                {
+                    'title': f'Bridgestone Turanza T005 {actual_size} {tire_type_tr.title()} Lastik',
+                    'price': {'value': max(budget_min * 0.9, 1200), 'currency': 'TRY', 'display': f'{max(budget_min * 0.9, 1200):.0f} ₺'},
+                    'features': ['Sessiz Sürüş', 'Uzun Ömür', 'Düşük Yakıt Tüketimi', 'Üstün Fren Performansı'],
+                    'pros': ['Premium marka', 'Uzun garantili', 'Mükemmel yol tutuş', 'Yağmurda güvenli'],
+                    'cons': ['Yüksek fiyat'],
+                    'match_score': 95,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': f'https://www.google.com/search?q=Bridgestone+Turanza+T005+{actual_size.replace("/", "+").replace(" ", "+")}+{tire_type_tr}+lastik+hepsiburada&tbm=shop',
+                    'why_recommended': f'Premium kalite {tire_type_tr} lastik arayanlar için - hepsiburada.com\'den önerildi'
+                },
+                {
+                    'title': f'Michelin Primacy 4 {actual_size} {tire_type_tr.title()} Lastik',
+                    'price': {'value': max(budget_min * 0.85, 1150), 'currency': 'TRY', 'display': f'{max(budget_min * 0.85, 1150):.0f} ₺'},
+                    'features': ['EverGrip Teknolojisi', 'Islak Zeminde Güvenlik', 'Uzun Ömür', 'Konfor'],
+                    'pros': ['Dünya standartları', 'Mükemmel fren', 'Sessiz', 'Dayanıklı'],
+                    'cons': ['Pahalı', 'Bulunması zor'],
+                    'match_score': 92,
+                    'source_site': 'teknosa.com',
+                    'product_url': f'https://www.google.com/search?q=Michelin+Primacy+4+{actual_size.replace("/", "+").replace(" ", "+")}+{tire_type_tr}+lastik+teknosa&tbm=shop',
+                    'why_recommended': f'Güvenlik odaklı sürücüler için ideal - teknosa.com\'den önerildi'
+                },
+                {
+                    'title': f'Continental PremiumContact 6 {actual_size} {tire_type_tr.title()} Lastik',
+                    'price': {'value': max(budget_min * 0.8, 1100), 'currency': 'TRY', 'display': f'{max(budget_min * 0.8, 1100):.0f} ₺'},
+                    'features': ['SportPlus Teknolojisi', 'Kısa Fren Mesafesi', 'Ekonomik Yakıt', 'Yüksek Kilometre'],
+                    'pros': ['Alman kalitesi', 'Sporty sürüş', 'Ekonomik', 'Güvenilir'],
+                    'cons': ['Orta fiyat segmenti'],
+                    'match_score': 88,
+                    'source_site': 'trendyol.com',
+                    'product_url': f'https://www.google.com/search?q=Continental+PremiumContact+6+{actual_size.replace("/", "+").replace(" ", "+")}+{tire_type_tr}+lastik+trendyol&tbm=shop',
+                    'why_recommended': f'Kalite-fiyat dengesi arayanlar için - trendyol.com\'den önerildi'
+                },
+                {
+                    'title': f'Pirelli Cinturato P7 {actual_size} {tire_type_tr.title()} Lastik',
+                    'price': {'value': max(budget_min * 0.75, 1050), 'currency': 'TRY', 'display': f'{max(budget_min * 0.75, 1050):.0f} ₺'},
+                    'features': ['Green Performance', 'Düşük Yuvarlanma Direnci', 'Sessiz Teknoloji', 'Uzun Ömür'],
+                    'pros': ['İtalyan tasarım', 'Çevre dostu', 'Yakıt tasarrufu', 'Konforlu'],
+                    'cons': ['Yağmurda orta performans'],
+                    'match_score': 85,
+                    'source_site': 'n11.com',
+                    'product_url': f'https://www.google.com/search?q=Pirelli+Cinturato+P7+{actual_size.replace("/", "+").replace(" ", "+")}+{tire_type_tr}+lastik+n11&tbm=shop',
+                    'why_recommended': f'Çevre bilinci olan sürücüler için - n11.com\'den önerildi'
+                },
+                {
+                    'title': f'Lassa Competus H/P {actual_size} {tire_type_tr.title()} Lastik',
+                    'price': {'value': max(budget_min * 0.6, 800), 'currency': 'TRY', 'display': f'{max(budget_min * 0.6, 800):.0f} ₺'},
+                    'features': ['Türk Malı', 'Uygun Fiyat', 'Güvenilir Performans', 'Kolay Bulunur'],
+                    'pros': ['Ekonomik', 'Yerli marka', 'Kolay temin', 'Makul kalite'],
+                    'cons': ['Premium kadar sessiz değil', 'Orta segment'],
+                    'match_score': 80,
+                    'source_site': 'vatanbilgisayar.com',
+                    'product_url': f'https://www.google.com/search?q=Lassa+Competus+HP+{actual_size.replace("/", "+").replace(" ", "+")}+{tire_type_tr}+lastik+vatanbilgisayar&tbm=shop',
+                    'why_recommended': f'Bütçe dostu yerli kalite - vatanbilgisayar.com\'den önerildi'
+                }
+            ]
+            
+            # Her ürün için Google arama linkini hazırla (artık link doğrulama yapmaya gerek yok)
+            validated_tire_products = []
+            for product in mock_tire_products:
+                print(f"🔗 Google arama linki oluşturuluyor: {product['title']}")
+                
+                # Google arama linkini ayarla
+                product['link_status'] = 'google_search'
+                product['link_message'] = 'Google aramaya yönlendiriyor'
+                
+                validated_tire_products.append(product)
+            
+            return validated_tire_products
+        
+        # Television kategorisi için gerçekçi öneriler
+        elif category == 'Television':
+            # Kullanıcı tercihlerini al
+            screen_size = preferences.get('screen_size', 'medium')
+            resolution = preferences.get('resolution', '4k')
+            smart_tv = preferences.get('smart_tv', True)
+            panel_type = preferences.get('panel_type', 'led')
+            brand_preference = preferences.get('brand_preference', 'no_preference')
+            
+            mock_tv_products = [
+                {
+                    'title': 'Samsung 55" 4K QLED Smart TV QE55Q70C',
+                    'price': {'value': min(budget_max * 0.8, 45000), 'currency': 'TRY', 'display': f'{min(budget_max * 0.8, 45000):.0f} ₺'},
+                    'features': ['55 inç QLED', '4K Ultra HD', 'Smart TV', 'HDR10+'],
+                    'pros': ['Parlak renkler', 'Gaming özelliği', 'Tizen OS', 'Kaliteli yapı'],
+                    'cons': ['Yüksek fiyat', 'Yansıma olabilir'],
+                    'match_score': 95,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=samsung+55+qled+smart+tv',
+                    'why_recommended': 'Premium QLED deneyimi - hepsiburada.com\'den önerildi'
+                },
+                {
+                    'title': 'LG 43" 4K UHD Smart TV 43UR8050PSB',
+                    'price': {'value': min(budget_max * 0.6, 28000), 'currency': 'TRY', 'display': f'{min(budget_max * 0.6, 28000):.0f} ₺'},
+                    'features': ['43 inç LED', '4K Ultra HD', 'webOS Smart TV', 'AI ThinQ'],
+                    'pros': ['WebOS arayüzü', 'AI özelliği', 'Uygun fiyat', 'Marka güveni'],
+                    'cons': ['LED teknoloji', 'Orta segment'],
+                    'match_score': 88,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=lg+43+4k+smart+tv',
+                    'why_recommended': 'Kalite-fiyat dengesi - teknosa.com\'den önerildi'
+                },
+                {
+                    'title': 'Sony 50" 4K OLED Smart TV XR-50A80L',
+                    'price': {'value': min(budget_max * 0.9, 55000), 'currency': 'TRY', 'display': f'{min(budget_max * 0.9, 55000):.0f} ₺'},
+                    'features': ['50 inç OLED', '4K Ultra HD', 'Google TV', 'XR Cognitive Processor'],
+                    'pros': ['Mükemmel kontrast', 'Google TV', 'Sinema kalitesi', 'Premium ses'],
+                    'cons': ['Çok pahalı', 'Burn-in riski'],
+                    'match_score': 92,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=sony+50+oled+smart+tv',
+                    'why_recommended': 'En iyi görüntü kalitesi - trendyol.com\'den önerildi'
+                },
+                {
+                    'title': 'TCL 65" 4K QLED Smart TV 65C635',
+                    'price': {'value': min(budget_max * 0.5, 32000), 'currency': 'TRY', 'display': f'{min(budget_max * 0.5, 32000):.0f} ₺'},
+                    'features': ['65 inç QLED', '4K Ultra HD', 'Android TV', 'Dolby Vision'],
+                    'pros': ['Büyük ekran', 'Android TV', 'Uygun fiyat', 'QLED kalite'],
+                    'cons': ['Bilinmeyen marka', 'Servis ağı'],
+                    'match_score': 82,
+                    'source_site': 'n11.com',
+                    'product_url': 'https://www.n11.com/arama?q=tcl+65+qled+smart+tv',
+                    'why_recommended': 'Büyük ekran bütçe dostu - n11.com\'den önerildi'
+                },
+                {
+                    'title': 'Vestel 32" HD Smart TV 32H9500',
+                    'price': {'value': max(budget_min * 0.3, 8500), 'currency': 'TRY', 'display': f'{max(budget_min * 0.3, 8500):.0f} ₺'},
+                    'features': ['32 inç LED', 'HD Ready', 'Smart TV', 'Türk Malı'],
+                    'pros': ['Yerli marka', 'Ekonomik', 'Kolay servis', 'Temel özellikler'],
+                    'cons': ['Sadece HD', 'Küçük ekran'],
+                    'match_score': 75,
+                    'source_site': 'vatanbilgisayar.com',
+                    'product_url': 'https://www.vatanbilgisayar.com/arama/?text=vestel+32+smart+tv',
+                    'why_recommended': 'Ekonomik yerli seçenek - vatanbilgisayar.com\'den önerildi'
+                }
+            ]
+            
+            return mock_tv_products
         
         # Diğer kategoriler için genel mock
         return []

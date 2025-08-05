@@ -80,73 +80,49 @@ function handleChatboxEntry() {
         return;
     }
     
-    // Arama butonunu devre dışı bırak
-    const searchBtn = document.getElementById('chatbox-send');
-    const originalText = searchBtn.innerHTML;
-    const loadingText = currentLanguage === 'tr' ? '<i class="fas fa-spinner fa-spin"></i> Aranıyor...' : '<i class="fas fa-spinner fa-spin"></i> Searching...';
-    searchBtn.innerHTML = loadingText;
-    searchBtn.disabled = true;
-    
-    showLoadingScreen();
+    // Modern AI creation screen göster
+    showAICreationScreen();
     
     // API çağrısı
-                fetch('/detect_category', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: input })
-                })
-                .then(res => res.json())
+    fetch('/detect_category', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: input })
+    })
+    .then(res => res.json())
     .then(data => {
-        hideLoadingScreen();
-        
-        // Butonu eski haline getir
-        searchBtn.innerHTML = originalText;
-        searchBtn.disabled = false;
+        hideAICreationScreen();
         
         if (data.category) {
             category = data.category;
-                        step = 1;
-                        answers = [];
+            step = 1;
+            answers = [];
             
-            // Basit geçiş
-                        document.querySelector('.landing').style.display = 'none';
-                        document.getElementById('interaction').style.display = '';
-                        askAgent();
-                    } else {
-            const errorMsg = currentLanguage === 'tr' ? 'Aradığınız kategoriyi bulamadım. Lütfen başka bir şey deneyin.' : 'Could not find the category you are looking for. Please try something else.';
-            alert(errorMsg);
+            // Modern geçiş
+            document.querySelector('.landing').style.display = 'none';
+            document.getElementById('interaction').style.display = '';
+            askAgent();
+        } else {
+            showErrorScreen();
         }
     })
     .catch(error => {
         console.error("Arama hatası:", error);
-        hideLoadingScreen();
-        
-        // Butonu eski haline getir
-        searchBtn.innerHTML = originalText;
-        searchBtn.disabled = false;
-        
-        const errorMsg = currentLanguage === 'tr' ? "Bir hata oluştu, lütfen tekrar deneyin." : "An error occurred, please try again.";
-        alert(errorMsg);
+        hideAICreationScreen();
+        showErrorScreen();
     });
 }
 
 let step = 0;
 let category = null;
 let answers = [];
-let asked_spec_ids = []; // ✅ Sorduğumuz spec'lerin ID'lerini takip et
-let pending_asked_spec_id = null; // ✅ Şu anda sorulan spec'in ID'si
 
 const categoryIcons = {
-    'Mouse': 'fas fa-mouse',
     'Headphones': 'fas fa-headphones',
-    'Phone': 'fas fa-mobile-alt',
-    'Laptop': 'fas fa-laptop',
-    'Keyboard': 'fas fa-keyboard',
-    'Monitor': 'fas fa-desktop',
-    'Speaker': 'fas fa-volume-up',
-    'Camera': 'fas fa-camera',
-    'Tablet': 'fas fa-tablet-alt',
-    'Smartwatch': 'fas fa-clock'
+    'Klima': 'fas fa-snowflake',
+    'Tire': 'fas fa-circle',
+    'Television': 'fas fa-tv',
+    'Telefon': 'fas fa-mobile-alt'
 };
 
 // --- Akıllı Arama & Filtreleme Özelliği ---
@@ -900,95 +876,24 @@ function resetToLanding() {
     interaction.style.display = 'none';
     landing.style.display = '';
     
+    // Hide all screens
+    hideAICreationScreen();
+    hideErrorScreen();
+    
     // Reset all content
     document.querySelector('.recommendations').innerHTML = '';
-        document.querySelector('.question').innerHTML = '';
-        document.querySelector('.options').innerHTML = '';
-        document.querySelector('.error').textContent = '';
+    document.querySelector('.question').innerHTML = '';
+    document.querySelector('.options').innerHTML = '';
+    document.querySelector('.error').textContent = '';
     
     // Reset variables
-        step = 0;
-        category = null;
-        answers = [];
-        asked_spec_ids = []; // ✅ Spec ID'leri sıfırla
-        pending_asked_spec_id = null; // ✅ Pending spec ID'yi sıfırla
+    step = 0;
+    category = null;
+    answers = [];
     
     // Clear search input
     const searchInput = document.getElementById('chatbox-input');
     if (searchInput) searchInput.value = '';
-}
-
-function showLoadingScreen() {
-    hideLoadingScreen();
-    let loadingDiv = document.getElementById('custom-loading');
-    if (!loadingDiv) {
-        const loadingText = currentLanguage === 'tr' ? 'AI İşliyor...' : 'AI Processing...';
-        const loadingSubtext = currentLanguage === 'tr' 
-            ? 'Yapay zeka tercihlerinizi analiz ediyor ve size en uygun ürünleri buluyor.'
-            : 'AI is analyzing your preferences and finding the most suitable products for you.';
-        const resetText = currentLanguage === 'tr' ? 'Sıfırla' : 'Reset';
-        
-        loadingDiv = document.createElement('div');
-        loadingDiv.id = 'custom-loading';
-        loadingDiv.className = 'loading-container';
-        loadingDiv.innerHTML = `
-            <div class="loading-spinner"></div>
-            <div class="loading-text">${loadingText}</div>
-            <div class="loading-subtext">${loadingSubtext}</div>
-            <div class="progress-container">
-                <div class="progress-bar" id="ai-progress" style="width: 0%"></div>
-            </div>
-            <button class="emergency-reset" id="emergency-reset">
-                <i class="fas fa-redo"></i> ${resetText}
-            </button>
-        `;
-        
-        // Acil durum sıfırlama butonu
-        const resetButton = loadingDiv.querySelector('#emergency-reset');
-        resetButton.onclick = () => {
-            isRequestInProgress = false;
-            hideLoadingScreen();
-            resetToLanding();
-        };
-        
-        document.body.appendChild(loadingDiv);
-    }
-    
-    loadingDiv.style.display = 'flex';
-    animateProgress();
-}
-
-function animateProgress() {
-    const progressBar = document.getElementById('ai-progress');
-    if (!progressBar) return;
-    
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += Math.random() * 3 + 1;
-        if (progress > 90) progress = 90;
-        
-        progressBar.style.width = progress + '%';
-        
-        if (!document.getElementById('custom-loading') || 
-            document.getElementById('custom-loading').style.display === 'none') {
-            clearInterval(interval);
-        }
-    }, 200);
-}
-
-function hideLoadingScreen() {
-    let loadingDiv = document.getElementById('custom-loading');
-    if (loadingDiv) {
-        const progressBar = document.getElementById('ai-progress');
-        if (progressBar) {
-            progressBar.style.width = '100%';
-            setTimeout(() => {
-                loadingDiv.style.display = 'none';
-            }, 300);
-        } else {
-            loadingDiv.style.display = 'none';
-        }
-    }
 }
 
 let isRequestInProgress = false;
@@ -1021,19 +926,6 @@ function handleOption(opt) {
         }
         
         answers.push(opt);
-        
-        // ✅ Bu cevaba karşılık gelen spec ID'yi kaydet
-        if (pending_asked_spec_id) {
-            asked_spec_ids.push(pending_asked_spec_id);
-            console.log(`📝 Added spec_id to asked_spec_ids: ${pending_asked_spec_id}`);
-            console.log(`📝 Current asked_spec_ids:`, asked_spec_ids);
-            pending_asked_spec_id = null; // Clear pending
-        } else {
-            // Fallback: eski sistemde spec_id olmayabilir, boş ekle
-            asked_spec_ids.push(null);
-            console.log(`⚠️ No pending_asked_spec_id, added null`);
-        }
-        
         step++;
         
         document.querySelector('.error').textContent = '';
@@ -1072,17 +964,16 @@ function askAgent() {
     
     let specs = window.currentSpecs && window.currentSpecs[category] ? window.currentSpecs[category] : [];
     if (step > specs.length) {
-        showLoadingScreen();
+        showAICreationScreen();
     }
     
     const timeoutId = setTimeout(() => {
         if (isRequestInProgress) {
             console.log("Zaman aşımı oluştu!");
             isRequestInProgress = false;
-            hideLoadingScreen();
+            hideAICreationScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            const timeoutMsg = currentLanguage === 'tr' ? 'İstek zaman aşımına uğradı. AI analizi uzun sürdü, lütfen tekrar deneyin.' : 'Request timed out. AI analysis took too long, please try again.';
-            document.querySelector('.error').textContent = timeoutMsg;
+            showErrorScreen();
         }
     }, 45000);
     
@@ -1093,7 +984,6 @@ function askAgent() {
             step: step, 
             category: category, 
             answers: answers,
-            asked_spec_ids: asked_spec_ids, // ✅ Sorduğumuz spec'lerin ID'lerini gönder
             language: currentLanguage
         })
     })
@@ -1117,15 +1007,8 @@ function askAgent() {
         console.log("Response keys:", Object.keys(data));
         
         if (data.question && data.options) {
-            hideLoadingScreen();
+            hideAICreationScreen();
             window.currentQuestionTooltip = data.tooltip || null;
-            
-            // ✅ Sorduğumuz spec'in ID'sini kaydet
-            if (data.asked_spec_id) {
-                console.log(`📝 Storing pending asked_spec_id: ${data.asked_spec_id}`);
-                pending_asked_spec_id = data.asked_spec_id;
-            }
-            
             renderQuestion(data.question, data.options, data.emoji || '🔍');
         } else if (data.type === 'modern_recommendation' && data.recommendations) {
             // Modern search engine response
@@ -1152,13 +1035,13 @@ function askAgent() {
         } else if (data.categories) {
             renderLanding(data.categories);
         } else if (data.error) {
-            hideLoadingScreen();
+            hideAICreationScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            document.querySelector('.error').textContent = data.error;
+            showErrorScreen();
         } else if (data.type === 'error' && data.fallback_recommendations) {
             // Error with fallback recommendations
             console.log("Error occurred but fallback recommendations provided");
-            hideLoadingScreen();
+            hideAICreationScreen();
             renderRecommendations(data.fallback_recommendations);
             
             // Error message'ı göster ama bloke etme
@@ -1168,20 +1051,18 @@ function askAgent() {
             showTemporaryMessage(errorMsg, 'warning');
         } else {
             console.error('Beklenmeyen yanıt formatı:', data);
-            hideLoadingScreen();
+            hideAICreationScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            const unexpectedMsg = currentLanguage === 'tr' ? 'Beklenmeyen bir yanıt alındı. Lütfen sayfayı yenileyin.' : 'An unexpected response was received. Please refresh the page.';
-            document.querySelector('.error').textContent = unexpectedMsg;
+            showErrorScreen();
         }
     })
     .catch(err => {
         clearTimeout(timeoutId);
         isRequestInProgress = false;
         
-        hideLoadingScreen();
+        hideAICreationScreen();
         if (loadingElement) loadingElement.style.display = 'none';
-        const errorMsg = currentLanguage === 'tr' ? 'Sunucuya erişilemiyor: ' : 'Cannot access server: ';
-        document.querySelector('.error').textContent = errorMsg + err.message;
+        showErrorScreen();
         console.error('Hata:', err);
     });
 }
@@ -1436,3 +1317,61 @@ window.onload = () => {
     // Ürünleri yükle
     loadProducts();
 };
+
+// Ana sayfaya dönüş fonksiyonu
+function goToHomePage() {
+    // Tüm ekranları gizle
+    hideErrorScreen();
+    hideAICreationScreen();
+    hideLoadingScreen();
+    
+    // Interaction'ı gizle ve landing'i göster
+    document.getElementById('interaction').style.display = 'none';
+    document.querySelector('.landing').style.display = 'block';
+    
+    // Değişkenleri sıfırla
+    step = 0;
+    category = null;
+    answers = [];
+    
+    // Input'u temizle
+    document.getElementById('chatbox-input').value = '';
+    
+    // Arama butonunu aktif hale getir
+    const searchBtn = document.getElementById('chatbox-send');
+    const originalText = currentLanguage === 'tr' ? '<i class="fas fa-search"></i> <span>AI ile Bul</span>' : '<i class="fas fa-search"></i> <span>Find with AI</span>';
+    searchBtn.innerHTML = originalText;
+    searchBtn.disabled = false;
+}
+
+// AI Creation Screen fonksiyonları
+function showAICreationScreen() {
+    document.getElementById('ai-creation-screen').style.display = 'flex';
+    
+    // Progress bar animasyonu
+    setTimeout(() => {
+        const progressBar = document.querySelector('.ai-progress-bar');
+        if (progressBar) progressBar.style.width = '75%';
+    }, 1000);
+    
+    setTimeout(() => {
+        const progressBar = document.querySelector('.ai-progress-bar');
+        if (progressBar) progressBar.style.width = '100%';
+    }, 2000);
+}
+
+function hideAICreationScreen() {
+    document.getElementById('ai-creation-screen').style.display = 'none';
+    // Progress bar'ı sıfırla
+    const progressBar = document.querySelector('.ai-progress-bar');
+    if (progressBar) progressBar.style.width = '45%';
+}
+
+// Error Screen fonksiyonları
+function showErrorScreen() {
+    document.getElementById('error-screen').style.display = 'flex';
+}
+
+function hideErrorScreen() {
+    document.getElementById('error-screen').style.display = 'none';
+}

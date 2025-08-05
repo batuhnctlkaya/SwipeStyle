@@ -314,7 +314,7 @@ class CategoryGenerator:
                     "original_query": query,
                     "confidence": 0.9,
                     "data": category_data,
-                    "message": f"New category '{category_name}' created successfully"
+                    "message": f"New category '{category_name}' created successfully with detailed specifications"
                 }
             else:
                 return {"match_type": "creation_failed", "message": "Failed to create category"}
@@ -400,32 +400,78 @@ class CategoryGenerator:
                - For air conditioners: 8-15k₺, 15-25k₺, 25-35k₺, 35-50k₺, 50k₺+
                - For headphones: 200-500₺, 500-1k₺, 1-2k₺, 2-4k₺, 4k₺+
                
-            2. Create "specs" array with 4-6 most relevant specifications for {category_name}
+            2. Create "specs" array with 4-7 most relevant specifications for {category_name}
             3. Each spec must have: id, type, label (tr/en), emoji, tooltip (tr/en), weight
             4. Types: "single_choice" (for options), "boolean" (for yes/no), "range" (for numeric ranges)
             5. For single_choice, include "options" array with id and label (tr/en)
             6. Make questions specific and relevant to {category_name} buying decisions
             7. Use appropriate Turkish and English translations
             8. Include important technical specifications that matter for purchase decisions
-            9. Add helpful tooltips that guide user decisions
-            10. Weight more important specs higher (0.5 - 1.0)
+            9. Add helpful tooltips that guide user decisions (min 15 words each)
+            10. Weight specs by importance: 1.0 (most important) → 0.9 → 0.8 → 0.7 → 0.6 → 0.5 (least important)
+            11. Follow up order must match weight order (highest weight first)
             
-            CATEGORY-SPECIFIC GUIDANCE:
-            - For electronics: ask about brand preference, warranty, performance needs
-            - For appliances: ask about capacity, energy efficiency, features
-            - For fashion: ask about style, material, occasion
-            - For sports: ask about usage type, frequency, skill level
+            DETAILED SPEC REQUIREMENTS:
+            - Create comprehensive questions that help users make informed decisions
+            - Each single_choice should have 3-6 meaningful options
+            - Always include "Fark etmez" or "No preference" option for single_choice specs
+            - Use specific ranges, sizes, or technical details in options (e.g., "64-128GB", "6.0-6.5 inch")
+            - Questions should be practical and relate to real usage scenarios
+            - Avoid generic questions like "quality" - be specific about what quality means
+            
+            CATEGORY-SPECIFIC DETAILED GUIDANCE:
+            - For phones: camera quality, battery life, performance level, storage, screen size, OS, brand, special features
+            - For laptops: primary use, processor type, RAM, storage type, screen size, portability, battery life, brand
+            - For headphones: form factor, wireless, ANC, sound quality, comfort, use case, brand
+            - For appliances: capacity/size, energy efficiency, smart features, installation type, brand
+            - For vehicles/parts: compatibility, usage type, brand, size/specifications, special features
+            - For electronics: performance level, connectivity, compatibility, brand, warranty, special features
+            
+            EMOJI REQUIREMENTS:
+            - Use only simple, widely supported emojis (avoid complex or rare emojis)
+            - Test emoji compatibility: 📱💻🎧📺🖱️⌨️🖥️📷🔋⚡🌐🏢📏🎯🛡️🚗
+            - Avoid emojis with skin tone modifiers or complex combinations
+            - Each spec must have exactly one relevant emoji
+            
+            QUALITY VALIDATION:
+            - Ensure all questions are clear and unambiguous
+            - Avoid complex technical terms that may confuse users
+            - Questions should lead to actionable purchase decisions
+            - Include "Bilmiyorum/Fark etmez" or "No preference" options where appropriate
+            - Test question flow to prevent infinite loops
+            
+            EXAMPLE HIGH-QUALITY SPEC (for reference):
+            {{
+                "id": "camera_quality",
+                "type": "single_choice",
+                "label": {{
+                    "tr": "Kamera kalitesi ne kadar önemli?",
+                    "en": "How important is camera quality?"
+                }},
+                "emoji": "📸",
+                "tooltip": {{
+                    "tr": "Sosyal medya, profesyonel fotoğraf veya günlük kullanım için kamera önceliğinizi belirtin.",
+                    "en": "Specify your camera priority for social media, professional photography, or daily use."
+                }},
+                "options": [
+                    {{"id": "professional", "label": {{"tr": "Çok önemli (Profesyonel kalite)", "en": "Very important (Professional quality)"}}}},
+                    {{"id": "good", "label": {{"tr": "Önemli (İyi kalite)", "en": "Important (Good quality)"}}}},
+                    {{"id": "basic", "label": {{"tr": "Temel yeterli", "en": "Basic is sufficient"}}}},
+                    {{"id": "no_preference", "label": {{"tr": "Fark etmez", "en": "No preference"}}}}
+                ],
+                "weight": 1.0
+            }}
             
             OUTPUT ONLY VALID JSON (no markdown, no explanations):
             """
             
-            print(f"🤖 Yeni kategori oluşturuluyor: {category_name} (Türkiye pazarı araştırması ile)")
+            print(f"🤖 Yeni kategori oluşturuluyor: {category_name} (Detaylı specler ve Türkiye pazarı araştırması ile)")
             response = generate_with_retry(self.model, generation_prompt, max_retries=3, delay=3)
             return self._parse_ai_response(response.text, category_name)
             
         except Exception as e:
             print(f"❌ Category spec generation error: {e}")
-            return self._get_default_template(category_name)
+            return None
     
     def _research_turkish_market_prices(self, category_name):
         """
@@ -618,9 +664,9 @@ class CategoryGenerator:
             print(f"❌ JSON parse error: {e}")
             print(f"📄 Problematic content (first 500 chars): {json_content[:500] if 'json_content' in locals() else text[:500]}")
             
-            # As fallback, try to extract at least some basic structure
-            print(f"🔄 Attempting fallback parsing...")
-            return self._fallback_category_creation(category_name)
+            # Fallback template kaldırıldı - artık None döner
+            print(f"❌ JSON parse başarısız, kategori oluşturulamadı: {category_name}")
+            return None
             
         except Exception as e:
             print(f"❌ Unexpected parsing error: {e}")
@@ -634,10 +680,10 @@ class CategoryGenerator:
             category_name (str): Kategori adı
             
         Returns:
-            dict: Fallback kategori şablonu
+            None: Fallback template kaldırıldı
         """
-        print(f"🔄 Creating fallback template for: {category_name}")
-        return self._get_default_template(category_name)
+        print(f"❌ AI kategori oluşturma başarısız oldu: {category_name}")
+        return None
     
     def _load_categories(self):
         """
@@ -678,59 +724,12 @@ class CategoryGenerator:
             with open(categories_path, 'w', encoding='utf-8') as f:
                 json.dump(categories, f, indent=2, ensure_ascii=False)
                 
-            print(f"✅ Category '{category_name}' saved successfully")
+            print(f"✅ Category '{category_name}' saved successfully with detailed specifications")
             return True
         except Exception as e:
             print(f"❌ Save error: {e}")
             return False
     
-    def _get_default_template(self, category_name):
-        """
-        AI oluşturma başarısız olduğunda varsayılan şablon döner.
-        
-        Args:
-            category_name (str): Kategori adı
-            
-        Returns:
-            dict: Varsayılan kategori şablonu
-        """
-        return {
-            "budget_bands": {
-                "tr": ["1-3k₺", "3-6k₺", "6-12k₺", "12-20k₺", "20k₺+"],
-                "en": ["$30-100", "$100-200", "$200-400", "$400-600", "$600+"]
-            },
-            "specs": [
-                {
-                    "id": "quality",
-                    "type": "single_choice",
-                    "label": {"tr": f"{category_name} kalitesi?", "en": f"{category_name} quality?"},
-                    "emoji": "⭐",
-                    "tooltip": {
-                        "tr": f"{category_name} için kalite seviyenizi seçin.",
-                        "en": f"Choose quality level for your {category_name}."
-                    },
-                    "options": [
-                        {"id": "basic", "label": {"tr": "Temel", "en": "Basic"}},
-                        {"id": "standard", "label": {"tr": "Standart", "en": "Standard"}},
-                        {"id": "premium", "label": {"tr": "Premium", "en": "Premium"}},
-                        {"id": "no_preference", "label": {"tr": "Fark etmez", "en": "No preference"}}
-                    ],
-                    "weight": 1.0
-                },
-                {
-                    "id": "brand_importance",
-                    "type": "boolean",
-                    "label": {"tr": "Marka önemli mi?", "en": "Is brand important?"},
-                    "emoji": "🏷️",
-                    "tooltip": {
-                        "tr": "Ürün seçiminde marka önemli bir faktör mü?",
-                        "en": "Is brand an important factor in product selection?"
-                    },
-                    "weight": 0.7
-                }
-            ]
-        }
-
 # Flask route integration
 def add_dynamic_category_route(app):
     """
