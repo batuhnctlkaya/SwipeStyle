@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
     
     <style>
         /* Enhanced Color Palette - Light Mode */
@@ -68,28 +68,6 @@
         [data-theme="dark"] .recommendation-item:hover {
             background: linear-gradient(135deg, #16213e, #1a1a2e);
         }
-        
-        /* Dark Mode - Rating and Description */
-        [data-theme="dark"] .rating-value {
-            color: var(--text-dark);
-        }
-        
-        [data-theme="dark"] .review-count {
-            color: var(--text-gray);
-        }
-        
-        [data-theme="dark"] .product-description {
-            color: var(--text-gray);
-            border-top-color: var(--border-color);
-        }
-        
-        [data-theme="dark"] .recommendation-name {
-            color: var(--text-dark);
-        }
-        
-        [data-theme="dark"] .recommendation-price {
-            color: #60a5fa;
-        }
 
         /* Dark Mode için özel stiller */
         [data-theme="dark"] .header {
@@ -100,36 +78,6 @@
             background: linear-gradient(145deg, #0a0a0a 0%, #000000 100%);
             border: 1px solid #2d3748;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-        
-        /* Dark mode autocomplete styles */
-        [data-theme="dark"] .autocomplete-dropdown {
-            background: var(--bg-white);
-            border-color: var(--border-color);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 99999;
-        }
-        
-        [data-theme="dark"] .autocomplete-item {
-            border-bottom-color: var(--border-color);
-        }
-        
-        [data-theme="dark"] .autocomplete-item:hover,
-        [data-theme="dark"] .autocomplete-item.highlighted {
-            background: var(--bg-gray);
-        }
-        
-        [data-theme="dark"] .autocomplete-text {
-            color: var(--text-dark);
-        }
-        
-        [data-theme="dark"] .autocomplete-text strong {
-            color: #60a5fa;
-        }
-        
-        [data-theme="dark"] .autocomplete-icon,
-        [data-theme="dark"] .autocomplete-category {
-            color: var(--text-gray);
         }
         
         [data-theme="dark"] .category-card {
@@ -208,7 +156,7 @@
         }
         
         [data-theme="dark"] .theme-switch .moon-icon {
-            right: 6px;
+            right: 3px;
         }
         
         /* Siyah-beyaz minimalist theme switch */
@@ -298,10 +246,15 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideOutRight {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100px); }
         }
 
         /* Base Styles */
@@ -349,28 +302,6 @@
             display: flex;
             gap: 8px;
             align-items: center;
-        }
-        
-        .creator-link {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
-            padding: 8px 10px;
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .creator-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-            color: #ffd700;
         }
         
         .lang-btn {
@@ -502,8 +433,8 @@
             margin-bottom: 30px;
             box-shadow: var(--shadow);
             animation: fadeIn 0.8s ease-out 0.2s both;
-            overflow: visible;
             position: relative;
+            z-index: 1002;
         }
         
         .search-container {
@@ -512,14 +443,13 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            position: relative;
         }
         
         .search-input-wrapper {
+            position: relative;
             flex: 1;
             min-width: 250px;
             max-width: 400px;
-            position: relative;
         }
         
         .search-input {
@@ -532,79 +462,134 @@
             color: var(--text-dark);
             font-family: 'Inter', sans-serif;
             transition: all 0.2s ease;
-            box-sizing: border-box;
         }
         
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-            border-radius: 6px 6px 0 0;
-        }
-        
-        .search-input:focus + .autocomplete-dropdown {
-            border-radius: 0 0 6px 6px;
-        }
-        
-        /* Autocomplete Dropdown Styles */
         .autocomplete-dropdown {
-            position: fixed;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
             background: var(--bg-white);
             border: 1px solid var(--border-color);
             border-top: none;
-            border-radius: 0 0 6px 6px;
-            max-height: 200px;
+            border-radius: 0 0 8px 8px;
+            max-height: 240px;
             overflow-y: auto;
-            z-index: 99999;
+            z-index: 1000;
             display: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            min-width: 250px;
-        }
-        
-        .autocomplete-dropdown.show {
-            display: block;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
         }
         
         .autocomplete-item {
             padding: 12px 16px;
             cursor: pointer;
             border-bottom: 1px solid var(--border-color);
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            position: relative;
         }
         
-        .autocomplete-item:hover,
-        .autocomplete-item.highlighted {
-            background: var(--bg-gray);
+        .autocomplete-item span {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.4;
+            order: 1;
+        }
+        
+        .autocomplete-item .icon {
+            font-size: 16px;
+            color: var(--text-gray);
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            order: 2;
+            align-self: flex-end;
         }
         
         .autocomplete-item:last-child {
             border-bottom: none;
         }
         
-        .autocomplete-icon {
+        .autocomplete-item:hover {
+            background: var(--bg-gray);
+            transform: translateX(2px);
+        }
+        
+        .autocomplete-item.selected {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateX(4px);
+        }
+        
+        .autocomplete-item.selected span {
+            color: white;
+        }
+        
+        .autocomplete-item .icon {
+            font-size: 16px;
             color: var(--text-gray);
-            font-size: 0.9rem;
-            width: 16px;
-            text-align: center;
+            opacity: 0.7;
+            transition: all 0.2s ease;
         }
         
-        .autocomplete-text {
-            color: var(--text-dark);
-            font-size: 0.95rem;
-        }
-        
-        .autocomplete-text strong {
+        .autocomplete-item:hover .icon {
+            opacity: 1;
             color: var(--primary-blue);
-            font-weight: 600;
         }
         
-        .autocomplete-category {
-            color: var(--text-gray);
-            font-size: 0.8rem;
-            margin-left: auto;
+        .autocomplete-item.selected .icon {
+            color: white;
+            opacity: 1;
+        }
+        
+        .autocomplete-item.selected span {
+            color: white;
+        }
+        
+        [data-theme="dark"] .autocomplete-dropdown {
+            background: rgba(26, 26, 46, 0.95);
+            border-color: var(--border-color);
+            backdrop-filter: blur(15px);
+        }
+        
+        [data-theme="dark"] .autocomplete-item {
+            border-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .autocomplete-item span {
+            color: var(--text-dark);
+        }
+        
+        [data-theme="dark"] .autocomplete-item:hover {
+            background: rgba(79, 70, 229, 0.1);
+            border-left: 3px solid var(--primary-blue);
+        }
+        
+        [data-theme="dark"] .autocomplete-item.selected {
+            background: var(--primary-blue);
+            border-left: 3px solid var(--primary-blue);
+        }
+        
+        /* Animation for autocomplete items */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
         
         .search-input::placeholder {
@@ -635,6 +620,8 @@
 
         /* Category Grid */
         .card-grid {
+            position: relative;
+            z-index: 1;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
@@ -672,6 +659,8 @@
         .category-icon {
             font-size: 2.5rem;
             margin-bottom: 12px;
+            font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Pro', 'FontAwesome', 'Font Awesome 5 Free', 'Font Awesome 5 Pro', sans-serif;
+            font-weight: 900;
         }
         
         .category-label {
@@ -741,6 +730,168 @@
             z-index: 10000;
         }
         
+        /* AI Category Creation Screen */
+        .ai-creation-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 15000;
+            padding: 20px;
+            color: white;
+        }
+        
+        [data-theme="dark"] .ai-creation-screen {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+        
+        .ai-creation-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .ai-creation-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffffff, #f0f9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .ai-creation-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .ai-creation-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+        
+        .ai-creation-status {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+        
+        .ai-creation-details {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+        
+        .ai-creation-progress {
+            width: 300px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+        }
+        
+        .ai-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffffff, #f0f9ff);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            animation: shimmer 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
+        }
+        
+        /* Error Screen */
+        .error-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 15000;
+            padding: 20px;
+            color: white;
+        }
+        
+        .error-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .error-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .home-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+        
         [data-theme="dark"] .loading-container {
             background: rgba(15, 23, 42, 0.95);
         }
@@ -806,147 +957,211 @@
 
         /* Recommendations */
         .recommendations {
-            background: var(--bg-white);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
+            background: transparent; /* Remove container background */
+            border: none;
+            padding: 0;
             margin-top: 20px;
-            animation: fadeIn 0.6s ease-out;
         }
-        
+
         .recommendations h2 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 600;
             color: var(--text-dark);
             text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .recommendation-item {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border-color: #d1d5db;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 16px;
         }
-        
-        .recommendation-item {
-            background: var(--bg-gray);
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 8px;
-            border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
-            position: relative;
+
+        .product-info .product-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
         }
-        
-        .recommendation-item:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Product Rating Styles */
-        .product-rating {
-            display: flex;
+
+        .match-badge {
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            margin: 8px 0;
-            font-size: 0.9rem;
-        }
-        
-        .stars {
-            display: flex;
-            gap: 2px;
-        }
-        
-        .stars i {
-            color: #fbbf24;
-            font-size: 0.85rem;
-        }
-        
-        .rating-value {
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-left: 4px;
-        }
-        
-        .review-count {
-            color: var(--text-gray);
+            gap: 6px;
+            background: #fefce8; /* light yellow */
+            color: #a16207; /* dark yellow */
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 0.8rem;
+            font-weight: 500;
         }
         
-        /* Product Description Styles */
-        .product-description {
-            color: var(--text-gray);
-            font-size: 0.85rem;
-            line-height: 1.4;
-            margin: 8px 0;
-            padding: 8px 0;
-            border-top: 1px solid var(--border-color);
+        .match-badge .fa-star {
+            color: #f59e0b;
         }
-        
-        /* Recommendation Content Layout */
-        .recommendation-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        
-        .recommendation-name {
+
+        .product-price {
+            font-size: 1.25rem;
             font-weight: 600;
             color: var(--text-dark);
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .product-details {
+            margin-bottom: 20px;
+        }
+
+        .product-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .product-tag {
+            background: var(--bg-gray);
+            color: var(--text-gray);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .product-description {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .product-footer {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .store-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--cta-orange);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
             font-size: 0.95rem;
-            line-height: 1.3;
-            letter-spacing: 0.02em;
-            /* Ensure hyphens are visible and preserved */
-            font-feature-settings: "kern" 1;
-            word-break: keep-all;
-            hyphens: none;
-            /* Allow text to wrap properly */
-            white-space: normal;
-            overflow-wrap: break-word;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            min-width: 220px;
+        }
+
+        .store-button.hepsiburada { background-color: #ff6000; }
+        .store-button.trendyol { background-color: #f27a1a; }
+        .store-button.amazon { background-color: #ff9900; }
+        .store-button.teknosa { background-color: #ff4e00; }
+        .store-button.vatan { background-color: #004494; }
+        .store-button.n11 { background-color: #e53935; }
+        .store-button.default { background-color: var(--cta-orange); }
+
+        .store-button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
-        .recommendation-price {
-            font-weight: 700;
-            color: var(--primary-blue);
-            font-size: 1.1rem;
-            margin: 4px 0;
-        }
-        
-        /* Premium Badge */
-        .premium-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--premium-gradient);
+        /* Link Status Styles */
+        .buy-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-color);
             color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
             font-weight: 600;
-            box-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-top: 8px;
         }
         
-        /* Discount Badge */
-        .discount-badge {
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            background: var(--discount-red);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+        .buy-link:hover {
+            background: var(--accent-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
         
-        /* Game Badge */
-        .game-badge {
-            position: absolute;
-            bottom: -8px;
-            right: -8px;
-            background: var(--game-gradient);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
-            animation: pulse 2s infinite;
+        /* Güvenli link açma için override */
+        .buy-link[href="#"], .buy-link[href=""], .buy-link[href*="undefined"] {
+            background: var(--text-gray);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .buy-link[href="#"]:hover, .buy-link[href=""]:hover, .buy-link[href*="undefined"]:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Link Status Variants */
+        .link-valid {
+            background: var(--primary-green);
+        }
+        
+        .link-valid:hover {
+            background: #10b981;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        }
+        
+        .link-repaired {
+            background: var(--warning-color);
+            color: var(--text-dark);
+        }
+        
+        .link-repaired:hover {
+            background: #f59e0b;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        
+        .link-fallback {
+            background: var(--info-color);
+        }
+        
+        .link-fallback:hover {
+            background: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .link-failed {
+            background: var(--danger-color);
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .link-failed:hover {
+            background: var(--danger-color);
+            transform: none;
+            box-shadow: none;
         }
         
         .back-btn {
@@ -972,14 +1187,33 @@
 
         /* Error Styling */
         .error {
-            background: var(--discount-red-light);
+            display: none;
+        }
+        
+        .error-message {
+            background: #fef2f2;
             border: 1px solid #fecaca;
-            border-radius: 6px;
-            padding: 12px;
-            color: var(--discount-red);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
             text-align: center;
-            margin-top: 12px;
-            font-size: 0.9rem;
+            color: #991b1b;
+        }
+        
+        .error-message h3 {
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+        
+        [data-theme="dark"] .error-message {
+            background: #450a0a;
+            border-color: #7f1d1d;
+            color: #fecaca;
+        }
+        
+        [data-theme="dark"] .error-message h3 {
+            color: #f87171;
         }
 
         /* Responsive Design */
@@ -999,49 +1233,6 @@
             .landing { padding: 25px 15px; }
             .header-controls { position: static; justify-content: center; margin-top: 15px; }
             .theme-toggle { position: static; justify-content: center; margin-top: 15px; }
-            
-            /* Mobile-specific recommendation styles */
-            .product-rating {
-                flex-wrap: wrap;
-                gap: 4px;
-                font-size: 0.8rem;
-            }
-            
-            .product-description {
-                font-size: 0.8rem;
-                line-height: 1.3;
-            }
-            
-            .recommendation-name {
-                font-size: 0.9rem;
-            }
-            
-            .recommendation-price {
-                font-size: 1rem;
-            }
-            
-            /* Mobile autocomplete styles */
-            .search-input-wrapper {
-                min-width: 100%;
-                max-width: none;
-            }
-            
-            .autocomplete-dropdown {
-                max-height: 150px;
-            }
-            
-            .autocomplete-item {
-                padding: 10px 12px;
-                font-size: 0.9rem;
-            }
-            
-            .autocomplete-icon {
-                font-size: 0.8rem;
-            }
-            
-            .autocomplete-category {
-                display: none; /* Hide category on mobile to save space */
-            }
         }
         
         @media (max-width: 480px) {
@@ -1049,7 +1240,11 @@
             .tagline { font-size: 0.85rem; }
             .hero-title { font-size: 1.4rem; }
             .category-card { min-height: 100px; padding: 16px 10px; }
-            .category-icon { font-size: 2rem; }
+            .category-icon { 
+                font-size: 2rem; 
+                font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Pro', 'FontAwesome', 'Font Awesome 5 Free', 'Font Awesome 5 Pro', sans-serif;
+                font-weight: 900;
+            }
             .category-label { font-size: 1rem; }
             .loading-text { font-size: 1rem; }
             .loading-subtext { font-size: 0.8rem; padding: 0 12px; }
@@ -1057,14 +1252,15 @@
         }
     </style>
 </head>
-<body>
+
+  <body>
     <!-- Header -->
     <header class="header">
         <!-- Theme Toggle - Sol üstte -->
         <div class="theme-toggle">
             <div class="theme-switch active" data-theme="light" title="Toggle Theme">
-                <span class="icon sun-icon">�</span>
-                <span class="icon moon-icon">�</span>
+                <span class="icon sun-icon">🌕</span>
+                <span class="icon moon-icon">🌑</span>
             </div>
         </div>
         
@@ -1075,16 +1271,12 @@
         
         <!-- Header Controls - Sağ üstte -->
         <div class="header-controls">
-            <!-- Category Creator Link -->
-            <a href="/category-creator" class="creator-link" title="Category Creator Agent">
-                <i class="fas fa-robot"></i>
-            </a>
             <!-- Language Selector -->
             <button class="lang-btn active" data-lang="tr">
-                <span class="lang-icon">��</span>TR
+                <span class="lang-icon">🇹🇷</span>TR
             </button>
             <button class="lang-btn" data-lang="en">
-                <span class="lang-icon">��</span>EN
+                <span class="lang-icon">🇺🇸</span>EN
             </button>
         </div>
     </header>
@@ -1100,7 +1292,8 @@
         <div class="search-section">
             <div class="search-container">
                 <div class="search-input-wrapper">
-                    <input id="chatbox-input" type="text" placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." class="search-input" data-tr-placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." data-en-placeholder="Example: wireless headphones, gaming laptop, smartphone..." autocomplete="off">
+                    <input id="chatbox-input" type="text" placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." class="search-input" data-tr-placeholder="Örnek: kablosuz kulaklık, gaming laptop, akıllı telefon..." data-en-placeholder="Example: wireless headphones, gaming laptop, smartphone...">
+                    <div id="autocomplete-dropdown" class="autocomplete-dropdown"></div>
                 </div>
                 <button id="chatbox-send" class="search-btn">
                     <i class="fas fa-search"></i> <span data-tr="AI ile Bul" data-en="Find with AI">AI ile Bul</span>
@@ -1112,8 +1305,48 @@
         <div class="card-grid" id="category-cards"></div>
     </div>
     
+    <!-- AI Category Creation Screen -->
+    <div id="ai-creation-screen" class="ai-creation-screen">
+        <div class="ai-creation-content">
+            <h1 class="ai-creation-title">
+                <i class="fas fa-robot"></i> AI Çalışıyor
+            </h1>
+            <p class="ai-creation-subtitle" data-tr="AI sizin için özel kategori oluşturuyor..." data-en="AI is creating a custom category for you...">
+                AI sizin için özel kategori oluşturuyor...
+            </p>
+            <div class="ai-creation-spinner"></div>
+            <div class="ai-creation-status" data-tr="Kategori analiz ediliyor..." data-en="Analyzing category...">
+                Kategori analiz ediliyor...
+            </div>
+            <div class="ai-creation-details" data-tr="Bu işlem birkaç saniye sürebilir. AI en iyi spesifikasyonları hazırlıyor." data-en="This may take a few seconds. AI is preparing the best specifications.">
+                Bu işlem birkaç saniye sürebilir. AI en iyi spesifikasyonları hazırlıyor.
+            </div>
+            <div class="ai-creation-progress">
+                <div class="ai-progress-bar" style="width: 45%"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Error Screen -->
+    <div id="error-screen" class="error-screen">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h1 class="error-title" data-tr="Kategori Oluşturulamadı" data-en="Category Could Not Be Created">
+                Kategori Oluşturulamadı
+            </h1>
+            <p class="error-message" data-tr="AI servisimizde geçici bir sorun var. Lütfen mevcut kategorilerden birini seçin veya daha sonra tekrar deneyin." data-en="There's a temporary issue with our AI service. Please choose from existing categories or try again later.">
+                AI servisimizde geçici bir sorun var. Lütfen mevcut kategorilerden birini seçin veya daha sonra tekrar deneyin.
+            </p>
+            <button class="home-btn" onclick="goToHomePage()" data-tr="Ana Sayfaya Dön" data-en="Go to Home Page">
+                <i class="fas fa-home"></i> Ana Sayfaya Dön
+            </button>
+        </div>
+    </div>
+    
     <div id="interaction" class="interaction" style="display:none;">
-        <div class="loading" style="color: var(--text-gray); margin-bottom: 20px; text-align: center;">
+        <div class="loading" style="color: var(--text-gray); margin-bottom: 20px; text-align: center; display: none;">
             <i class="fas fa-spinner fa-spin"></i> <span data-tr="Yükleniyor..." data-en="Loading...">Yükleniyor...</span>
         </div>
         <div class="question"></div>
@@ -1122,10 +1355,7 @@
         <div class="error"></div>
     </div>
     
-    <!-- Autocomplete Dropdown - positioned absolutely relative to body -->
-    <div id="autocomplete-dropdown" class="autocomplete-dropdown"></div>
-    
     <!-- Script -->
-    <script src="main_enhanced.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
