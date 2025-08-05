@@ -499,7 +499,7 @@ function showAutocompleteSuggestions(suggestions) {
             <i class="${suggestion.icon} icon" title="${suggestion.category}"></i>
         `;
         
-        item.addEventListener('click', () => {
+        item.addEventListener('mousedown', () => {
             selectAutocompleteItem(suggestion);
         });
         
