@@ -358,3 +358,15 @@
 📩 /ask veri: {'step': 4, 'category': 'Mouse', 'answers': ['Optik (Yeterli)', 'Kablosuz (2.4 GHz)', 'Önemli'], 'language': 'tr'}
 📩 /ask veri: {'step': 5, 'category': 'Mouse', 'answers': ['Optik (Yeterli)', 'Kablosuz (2.4 GHz)', 'Önemli', 'Hayır'], 'language': 'tr'}
 📩 /ask veri: {'step': 6, 'category': 'Mouse', 'answers': ['Optik (Yeterli)', 'Kablosuz (2.4 GHz)', 'Önemli', 'Hayır', '800-1500₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'İyi'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'İyi', '1000-2000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'Temel'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'Temel', '1000-2000₺'], 'language': 'tr'}
