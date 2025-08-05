@@ -49,8 +49,12 @@ install_requirements()
 
 import json
 from flask import Flask, request, jsonify, send_from_directory
+from dotenv import load_dotenv
 from app.agent import Agent
 from app.agent import detect_category_from_query
+
+# .env dosyasını yükle (SerpAPI anahtarı için kritik!)
+load_dotenv()
 from app.category_generator import add_dynamic_category_route
 
 app = Flask(__name__, static_folder='website')

@@ -647,7 +647,11 @@ function renderRecommendations(recs) {
     console.log("📊 Length:", recs ? recs.length : 'null/undefined');
     console.log("📊 Full data:", JSON.stringify(recs, null, 2));
     
-    hideLoadingScreen();
+    // Loading ekranlarını gizle
+    hideAICreationScreen();
+    const loadingElement = document.querySelector('.loading');
+    if (loadingElement) loadingElement.style.display = 'none';
+    
     const recDiv = document.querySelector('.recommendations');
     
     const titleText = currentLanguage === 'tr' ? 'Önerilen Ürünler' : 'Recommended Products';
@@ -997,7 +1001,12 @@ function askAgent() {
     .then(data => {
         clearTimeout(timeoutId);
         isRequestInProgress = false;
-        console.log("Sunucudan gelen yanıt:", data);
+        console.log("🔄 Sunucudan gelen yanıt:", data);
+        console.log("🔍 Response type:", data.type);
+        console.log("🔍 Response keys:", Object.keys(data));
+        console.log("🔍 Has recommendations:", !!data.recommendations);
+        console.log("🔍 Has question:", !!data.question);
+        console.log("🔍 Has options:", !!data.options);
         
         console.log("Response has question:", !!data.question);
         console.log("Response has options:", !!data.options);
@@ -1007,38 +1016,72 @@ function askAgent() {
         console.log("Response keys:", Object.keys(data));
         
         if (data.question && data.options) {
+            console.log("✅ Rendering question...");
             hideAICreationScreen();
             window.currentQuestionTooltip = data.tooltip || null;
             renderQuestion(data.question, data.options, data.emoji || '🔍');
         } else if (data.type === 'modern_recommendation' && data.recommendations) {
+            console.log("✅ Modern recommendation path triggered");
             // Modern search engine response
-            console.log("Modern recommendations found:", data.recommendations.length);
+            console.log("🚀 Modern recommendations found:", data.recommendations.length);
+            console.log("📦 Modern recommendation data:", JSON.stringify(data, null, 2));
+            
+            hideAICreationScreen();
             renderRecommendations(data.recommendations);
             
             // Grounding results varsa göster
             if (data.grounding_results) {
-                console.log("Grounding results:", data.grounding_results);
+                console.log("🔍 Grounding results:", data.grounding_results);
             }
             
             // Shopping results varsa göster
             if (data.shopping_results) {
-                console.log("Shopping results:", data.shopping_results.length);
+                console.log("🛒 Shopping results:", data.shopping_results.length);
             }
             
             // Sources varsa göster
             if (data.sources) {
-                console.log("Sources:", data.sources.length);
+                console.log("📄 Sources:", data.sources.length);
+            }
+            
+            // Modern search başarı bilgisi göster
+            const modernMessage = currentLanguage === 'tr' ? 
+                '✅ Online arama sistemi aktif - Güncel piyasa verilerimizle ürün önerilerinizi sunuyoruz.' : 
+                '✅ Online search system active - Showing product recommendations with current market data.';
+            
+            showInfoMessage(modernMessage);
+        } else if (data.type === 'fallback_recommendation' && data.recommendations) {
+            console.log("✅ Fallback recommendation path triggered");
+            // Fallback recommendations - güvenilir öneriler
+            console.log("Fallback recommendations found:", data.recommendations.length);
+            hideAICreationScreen();
+            renderRecommendations(data.recommendations);
+            
+            // Fallback durumu için özel bildirim
+            const fallbackMessage = currentLanguage === 'tr' ? 
+                '⚠️ Online arama servisi şu anda kullanılamıyor. Size önceden hazırlanmış kaliteli ürün önerilerimizi sunuyoruz.' : 
+                '⚠️ Online search service is currently unavailable. We are showing you our pre-prepared quality product recommendations.';
+            
+            showInfoMessage(fallbackMessage);
+            
+            // Ek mesaj varsa da göster
+            if (data.message && data.message !== fallbackMessage) {
+                setTimeout(() => showInfoMessage(data.message), 2000);
             }
         } else if (data.recommendations) {
+            console.log("✅ Legacy recommendation path triggered");
             // Legacy recommendations
             renderRecommendations(data.recommendations);
         } else if (data.categories) {
+            console.log("✅ Categories path triggered");
             renderLanding(data.categories);
         } else if (data.error) {
+            console.log("❌ Error path triggered");
             hideAICreationScreen();
             if (loadingElement) loadingElement.style.display = 'none';
             showErrorScreen();
         } else if (data.type === 'error' && data.fallback_recommendations) {
+            console.log("✅ Error with fallback path triggered");
             // Error with fallback recommendations
             console.log("Error occurred but fallback recommendations provided");
             hideAICreationScreen();
@@ -1048,9 +1091,9 @@ function askAgent() {
             const errorMsg = currentLanguage === 'tr' ? 
                 'Arama sisteminde bir sorun oluştu, yedek öneriler gösteriliyor.' : 
                 'Search system error occurred, showing fallback recommendations.';
-            showTemporaryMessage(errorMsg, 'warning');
+            showInfoMessage(errorMsg);
         } else {
-            console.error('Beklenmeyen yanıt formatı:', data);
+            console.error('❌ Hiçbir path eşleşmedi! Beklenmeyen yanıt formatı:', data);
             hideAICreationScreen();
             if (loadingElement) loadingElement.style.display = 'none';
             showErrorScreen();
@@ -1368,6 +1411,53 @@ function hideAICreationScreen() {
 }
 
 // Error Screen fonksiyonları
+function showInfoMessage(message) {
+    // Info mesajı için stil oluştur
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'info-message';
+    infoDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+        z-index: 10000;
+        max-width: 350px;
+        font-size: 14px;
+        line-height: 1.4;
+        animation: slideInRight 0.3s ease;
+    `;
+    infoDiv.innerHTML = `
+        <i class="fas fa-info-circle" style="margin-right: 8px; color: #fbbf24;"></i>
+        ${message}
+    `;
+    
+    document.body.appendChild(infoDiv);
+    
+    // 5 saniye sonra otomatik olarak kaldır
+    setTimeout(() => {
+        if (infoDiv.parentNode) {
+            infoDiv.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(infoDiv);
+            }, 300);
+        }
+    }, 5000);
+    
+    // Tıklayınca kapat
+    infoDiv.addEventListener('click', () => {
+        if (infoDiv.parentNode) {
+            infoDiv.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(infoDiv);
+            }, 300);
+        }
+    });
+}
+
 function showErrorScreen() {
     document.getElementById('error-screen').style.display = 'flex';
 }

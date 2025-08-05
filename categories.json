@@ -1069,5 +1069,236 @@
         "weight": 0.3
       }
     ]
+  },
+  "Drone": {
+    "budget_bands": {
+      "tr": [
+        "2.000 - 7.000 ₺",
+        "7.000 - 15.000 ₺",
+        "15.000 - 40.000 ₺",
+        "40.000 - 80.000 ₺",
+        "80.000 ₺+"
+      ],
+      "en": [
+        "2.000 - 7.000 ₺",
+        "7.000 - 15.000 ₺",
+        "15.000 - 40.000 ₺",
+        "40.000 - 80.000 ₺",
+        "80.000 ₺+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "camera_quality",
+        "type": "single_choice",
+        "label": {
+          "tr": "Kamera kalitesi sizin için ne kadar önemli?",
+          "en": "How important is camera quality to you?"
+        },
+        "emoji": "📸",
+        "tooltip": {
+          "tr": "Fotoğraf ve video çekimleriniz için hangi seviyede bir kamera performansına ihtiyacınız var? Profesyonel çekimler mi, yoksa hobi amaçlı mı kullanacaksınız?",
+          "en": "What level of camera performance do you need for your photos and videos? Will you use it for professional shots or as a hobby?"
+        },
+        "options": [
+          {
+            "id": "professional",
+            "label": {
+              "tr": "Çok önemli (Profesyonel düzeyde)",
+              "en": "Very important (Professional level)"
+            }
+          },
+          {
+            "id": "high",
+            "label": {
+              "tr": "Önemli (Yüksek çözünürlük)",
+              "en": "Important (High resolution)"
+            }
+          },
+          {
+            "id": "moderate",
+            "label": {
+              "tr": "Orta seviye yeterli",
+              "en": "Moderate level is sufficient"
+            }
+          },
+          {
+            "id": "basic",
+            "label": {
+              "tr": "Temel düzey yeterli",
+              "en": "Basic level is sufficient"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "flight_time",
+        "type": "single_choice",
+        "label": {
+          "tr": "Uçuş süresi sizin için ne kadar önemli?",
+          "en": "How important is flight time to you?"
+        },
+        "emoji": "🔋",
+        "tooltip": {
+          "tr": "Drone'un tek şarjla havada kalma süresi ne kadar önemli? Daha uzun uçuşlar için daha yüksek bir uçuş süresi tercih edin.",
+          "en": "How important is the drone's flight time on a single charge? Choose a higher flight time for longer flights."
+        },
+        "options": [
+          {
+            "id": "40_plus",
+            "label": {
+              "tr": "Çok önemli (40+ dakika)",
+              "en": "Very important (40+ minutes)"
+            }
+          },
+          {
+            "id": "30_40",
+            "label": {
+              "tr": "Önemli (30-40 dakika)",
+              "en": "Important (30-40 minutes)"
+            }
+          },
+          {
+            "id": "20_30",
+            "label": {
+              "tr": "Orta seviye (20-30 dakika)",
+              "en": "Moderate level (20-30 minutes)"
+            }
+          },
+          {
+            "id": "less_than_20",
+            "label": {
+              "tr": "Düşük (20 dakikadan az)",
+              "en": "Low (Less than 20 minutes)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.9
+      },
+      {
+        "id": "obstacle_avoidance",
+        "type": "boolean",
+        "label": {
+          "tr": "Engel algılama sistemi gerekli mi?",
+          "en": "Is obstacle avoidance system necessary?"
+        },
+        "emoji": "🛡️",
+        "tooltip": {
+          "tr": "Drone'un çevresindeki engelleri otomatik olarak algılayıp çarpışmaları önlemesi sizin için önemli mi? Özellikle kapalı alanlarda veya karmaşık ortamlarda uçuş yapacaksanız önemlidir.",
+          "en": "Is it important for the drone to automatically detect obstacles around it and prevent collisions? It is especially important if you will be flying indoors or in complex environments."
+        },
+        "weight": 0.8
+      },
+      {
+        "id": "range",
+        "type": "single_choice",
+        "label": {
+          "tr": "Menzil sizin için ne kadar önemli?",
+          "en": "How important is range to you?"
+        },
+        "emoji": "🎯",
+        "tooltip": {
+          "tr": "Drone'un kontrol cihazından ne kadar uzaklaşabileceği sizin için önemli mi? Uzak mesafelerde çekim yapmak istiyorsanız yüksek bir menzil tercih edin.",
+          "en": "How important is the distance the drone can travel from the controller to you? Choose a high range if you want to shoot at long distances."
+        },
+        "options": [
+          {
+            "id": "5km_plus",
+            "label": {
+              "tr": "Çok önemli (5km+)",
+              "en": "Very important (5km+)"
+            }
+          },
+          {
+            "id": "2_5km",
+            "label": {
+              "tr": "Önemli (2-5km)",
+              "en": "Important (2-5km)"
+            }
+          },
+          {
+            "id": "1_2km",
+            "label": {
+              "tr": "Orta (1-2km)",
+              "en": "Moderate (1-2km)"
+            }
+          },
+          {
+            "id": "less_than_1km",
+            "label": {
+              "tr": "Düşük (1km'den az)",
+              "en": "Low (Less than 1km)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.7
+      },
+      {
+        "id": "size_portability",
+        "type": "single_choice",
+        "label": {
+          "tr": "Boyut ve taşınabilirlik sizin için ne kadar önemli?",
+          "en": "How important are size and portability to you?"
+        },
+        "emoji": "📏",
+        "tooltip": {
+          "tr": "Drone'un boyutu ve taşınabilirliği sizin için ne kadar önemli? Seyahatlerde kolayca taşımak istiyorsanız, katlanabilir ve hafif bir model tercih edin.",
+          "en": "How important is the size and portability of the drone to you? If you want to carry it easily on travels, prefer a foldable and lightweight model."
+        },
+        "options": [
+          {
+            "id": "very_portable",
+            "label": {
+              "tr": "Çok önemli (Katlanabilir, kompakt)",
+              "en": "Very important (Foldable, compact)"
+            }
+          },
+          {
+            "id": "moderate_portable",
+            "label": {
+              "tr": "Orta seviye (Taşınabilir)",
+              "en": "Moderate level (Portable)"
+            }
+          },
+          {
+            "id": "size_not_important",
+            "label": {
+              "tr": "Boyut önemli değil",
+              "en": "Size is not important"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.6
+      }
+    ]
   }
 }

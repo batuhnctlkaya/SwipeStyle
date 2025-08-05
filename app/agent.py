@@ -615,7 +615,7 @@ class Agent:
         return question_data
 
     def _generate_recommendations(self, category, preferences, specs, language):
-        """Modern Search Engine kullanarak öneri oluştur"""
+        """Modern Search Engine kullanarak öneri oluştur - fallback sistemi ile"""
         try:
             print(f"🚀 Modern Search Engine ile öneri oluşturuluyor: {category}")
             
@@ -629,32 +629,137 @@ class Agent:
             # Ürün arama yap
             search_results = search_engine.search_products(search_preferences)
             
-            if search_results['status'] == 'success':
-                return {
+            if search_results['status'] == 'success' and search_results.get('recommendations'):
+                print(f"✅ Modern search engine başarılı, {len(search_results['recommendations'])} öneri döndü")
+                
+                # Budget filtreleme uygula
+                filtered_recommendations = self._filter_recommendations_by_budget(
+                    search_results['recommendations'], 
+                    preferences, 
+                    category
+                )
+                
+                print(f"💰 Budget filtreleme sonrası: {len(filtered_recommendations)} öneri kaldı")
+                
+                # Eğer budget filtreleme sonrası hiç ürün yoksa fallback'e geç
+                if not filtered_recommendations:
+                    print(f"⚠️ Budget filtreleme sonrası hiç ürün kalmadı, fallback'e geçiliyor")
+                    fallback_recommendations = self._get_fallback_recommendations(category, preferences, language)
+                    return {
+                        'type': 'fallback_recommendation',
+                        'message': f'Seçtiğiniz bütçe aralığında ürün bulunamadı. Size benzer ürünler öneriyoruz.',
+                        'recommendations': fallback_recommendations,
+                        'category': category,
+                        'preferences': preferences,
+                        'confidence_score': self._calculate_confidence_score(preferences, specs),
+                        'budget_filter_applied': True
+                    }
+                
+                response_data = {
                     'type': 'modern_recommendation',
-                    'grounding_results': search_results['grounding_results'],
-                    'shopping_results': search_results['shopping_results'],
-                    'sources': search_results['sources'],
-                    'recommendations': search_results['recommendations'],
+                    'grounding_results': search_results.get('grounding_results', []),
+                    'shopping_results': search_results.get('shopping_results', []),
+                    'sources': search_results.get('sources', []),
+                    'recommendations': filtered_recommendations,
+                    'category': category,
+                    'preferences': preferences,
+                    'confidence_score': self._calculate_confidence_score(preferences, specs),
+                    'budget_filter_applied': True,
+                    'original_count': len(search_results['recommendations']),
+                    'filtered_count': len(filtered_recommendations)
+                }
+                
+                print(f"🎯 Response data keys: {list(response_data.keys())}")
+                print(f"📊 Recommendations count in response: {len(response_data['recommendations'])}")
+                print(f"📦 First recommendation preview: {response_data['recommendations'][0] if response_data['recommendations'] else 'None'}")
+                
+                return response_data
+            else:
+                print(f"⚠️ Modern search engine başarısız veya boş sonuç, fallback'e geçiliyor")
+                fallback_recommendations = self._get_fallback_recommendations(category, preferences, language)
+                return {
+                    'type': 'fallback_recommendation',
+                    'message': 'Arama sistemi geçici olarak sınırlı, önerilerimizi sunuyoruz',
+                    'recommendations': fallback_recommendations,
                     'category': category,
                     'preferences': preferences,
                     'confidence_score': self._calculate_confidence_score(preferences, specs)
                 }
-            else:
-                return {
-                    'type': 'error',
-                    'message': search_results.get('message', 'Arama sistemi hatası'),
-                    'fallback_recommendations': self._get_fallback_recommendations(category, preferences, language)
-                }
             
         except Exception as e:
             print(f"❌ Modern search engine hatası: {e}")
+            print(f"🔄 Fallback önerilerine geçiliyor...")
+            fallback_recommendations = self._get_fallback_recommendations(category, preferences, language)
             return {
-                'type': 'error',
-                'message': 'Arama sistemi geçici olarak kullanılamıyor',
-                'fallback_recommendations': self._get_fallback_recommendations(category, preferences, language)
+                'type': 'fallback_recommendation',
+                'message': 'Arama sistemi geçici olarak kullanılamıyor, güvenilir önerilerimizi sunuyoruz',
+                'recommendations': fallback_recommendations,
+                'category': category,
+                'preferences': preferences,
+                'confidence_score': self._calculate_confidence_score(preferences, specs),
+                'fallback_reason': str(e)
             }
     
+    def _filter_recommendations_by_budget(self, recommendations, preferences, category):
+        """Önerileri kullanıcının bütçe aralığına göre filtrele"""
+        try:
+            budget_min, budget_max = self._extract_budget_range(preferences)
+            
+            if not budget_min and not budget_max:
+                print("💰 Budget aralığı yok, filtreleme yapılmayacak")
+                return recommendations
+            
+            print(f"💰 Budget filtreleme: {budget_min} - {budget_max} TL")
+            
+            filtered = []
+            for rec in recommendations:
+                try:
+                    # Fiyat bilgisini çıkar
+                    price_value = None
+                    
+                    if 'price' in rec:
+                        if isinstance(rec['price'], dict):
+                            price_value = rec['price'].get('value')
+                        elif isinstance(rec['price'], (int, float)):
+                            price_value = rec['price']
+                        elif isinstance(rec['price'], str):
+                            # String fiyat parse et
+                            import re
+                            price_match = re.search(r'(\d+(?:\.\d+)?)', rec['price'].replace('.', '').replace(',', ''))
+                            if price_match:
+                                price_value = float(price_match.group(1))
+                    
+                    if price_value is None:
+                        print(f"⚠️ Fiyat bilgisi bulunamadı: {rec.get('title', 'Unknown')}")
+                        continue
+                    
+                    # Budget kontrolü
+                    price_in_range = True
+                    
+                    if budget_min and price_value < budget_min:
+                        price_in_range = False
+                        print(f"❌ {rec.get('title', 'Unknown')}: {price_value} TL < {budget_min} TL (minimum)")
+                    
+                    if budget_max and price_value > budget_max:
+                        price_in_range = False
+                        print(f"❌ {rec.get('title', 'Unknown')}: {price_value} TL > {budget_max} TL (maximum)")
+                    
+                    if price_in_range:
+                        print(f"✅ {rec.get('title', 'Unknown')}: {price_value} TL - Bütçe aralığında")
+                        filtered.append(rec)
+                    
+                except Exception as e:
+                    print(f"⚠️ Fiyat filtreleme hatası {rec.get('title', 'Unknown')}: {e}")
+                    # Hata durumunda ürünü dahil et
+                    filtered.append(rec)
+            
+            print(f"💰 Filtreleme tamamlandı: {len(recommendations)} -> {len(filtered)} ürün")
+            return filtered
+            
+        except Exception as e:
+            print(f"❌ Budget filtreleme genel hatası: {e}")
+            return recommendations
+
     def _prepare_search_preferences(self, category, preferences, language):
         """Preferences'ları modern search sistemi için hazırla"""
         # Budget bilgisini çıkar
@@ -743,7 +848,50 @@ class Agent:
         # Bütçe bilgisini al
         budget_min, budget_max = self._extract_budget_range(preferences)
         
-        if category == 'Phone':
+        if category == 'Drone':
+            return [
+                {
+                    'title': 'DJI Mini 3',
+                    'price': {'value': min(budget_max or 15000, 15000), 'currency': 'TRY', 'display': f'{min(budget_max or 15000, 15000):.0f} ₺'},
+                    'features': ['4K Kamera', '38 Dakika Uçuş', 'Katlanabilir Tasarım', 'GPS'],
+                    'pros': ['Güvenilir marka', 'Uzun uçuş süresi', 'Kompakt taşınabilir'],
+                    'cons': ['Yüksek fiyat', 'Rüzgara hassas'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=dji+mini+3+drone',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Başlangıç seviyesi için mükemmel drone'
+                },
+                {
+                    'title': 'DJI Air 2S',
+                    'price': {'value': min(budget_max or 25000, 25000), 'currency': 'TRY', 'display': f'{min(budget_max or 25000, 25000):.0f} ₺'},
+                    'features': ['5.4K Video', '31 Dakika Uçuş', 'Engel Algılama', '1 inch Sensör'],
+                    'pros': ['Profesyonel kalite', 'Güçlü özellikler', 'İleri seviye kamera'],
+                    'cons': ['Pahalı', 'Ağır'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=dji+air+2s+drone',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Profesyonel çekimler için ideal'
+                },
+                {
+                    'title': 'Hubsan H117S Zino',
+                    'price': {'value': min(budget_max or 8000, 8000), 'currency': 'TRY', 'display': f'{min(budget_max or 8000, 8000):.0f} ₺'},
+                    'features': ['4K Kamera', '23 Dakika Uçuş', '1km Menzil', 'GPS Return'],
+                    'pros': ['Uygun fiyat', 'İyi kamera', 'Kolay kullanım'],
+                    'cons': ['Daha kısa uçuş süresi', 'Sınırlı özellikler'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=hubsan+zino+drone',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Bütçe dostu seçenek'
+                }
+            ]
+        
+        elif category == 'Phone':
             return [
                 {
                     'title': 'Samsung Galaxy A54 5G 128GB',
@@ -786,18 +934,234 @@ class Agent:
                 }
             ]
         
+        elif category == 'Headphones':
+            return [
+                {
+                    'title': 'Sony WH-1000XM5',
+                    'price': {'value': min(budget_max or 12000, 12000), 'currency': 'TRY', 'display': f'{min(budget_max or 12000, 12000):.0f} ₺'},
+                    'features': ['Üst Seviye ANC', '30 Saat Pil', 'Kablosuz', 'Premium Ses'],
+                    'pros': ['Mükemmel ses kalitesi', 'Güçlü gürültü engelleme', 'Konforlu'],
+                    'cons': ['Pahalı', 'Büyük boyut'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=sony+wh-1000xm5',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium ses deneyimi için ideal'
+                },
+                {
+                    'title': 'Apple AirPods Pro 2',
+                    'price': {'value': min(budget_max or 8000, 8000), 'currency': 'TRY', 'display': f'{min(budget_max or 8000, 8000):.0f} ₺'},
+                    'features': ['Uzamsal Ses', 'ANC', 'İOS Entegrasyonu', 'Kablosuz Şarj'],
+                    'pros': ['Apple ekosistemi', 'Kompakt tasarım', 'İyi ANC'],
+                    'cons': ['İOS odaklı', 'Pahalı'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=apple+airpods+pro+2',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Apple kullanıcıları için mükemmel'
+                },
+                {
+                    'title': 'JBL Tune 770NC',
+                    'price': {'value': min(budget_max or 3000, 3000), 'currency': 'TRY', 'display': f'{min(budget_max or 3000, 3000):.0f} ₺'},
+                    'features': ['ANC', 'Bluetooth', '70 Saat Pil', 'Hızlı Şarj'],
+                    'pros': ['Uygun fiyat', 'Uzun pil ömrü', 'İyi ses'],
+                    'cons': ['Orta seviye build quality'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=jbl+tune+770nc',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Bütçe dostu ANC kulaklık'
+                }
+            ]
+
+        elif category == 'Klima':
+            return [
+                {
+                    'title': 'Daikin FTXM35R Comfora',
+                    'price': {'value': min(budget_max or 25000, 25000), 'currency': 'TRY', 'display': f'{min(budget_max or 25000, 25000):.0f} ₺'},
+                    'features': ['Inverter', 'A++ Enerji', '12.000 BTU', 'R32 Gaz'],
+                    'pros': ['Güvenilir marka', 'Sessiz çalışma', 'Enerji tasarrufu'],
+                    'cons': ['Yüksek fiyat', 'Kurulum gerekli'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=daikin+comfora+klima',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium kalite ve enerji tasarrufu'
+                },
+                {
+                    'title': 'Mitsubishi MSZ-HR25VF',
+                    'price': {'value': min(budget_max or 20000, 20000), 'currency': 'TRY', 'display': f'{min(budget_max or 20000, 20000):.0f} ₺'},
+                    'features': ['Inverter', 'Wi-Fi', '9.000 BTU', 'Plasma Quad Plus'],
+                    'pros': ['Japon teknolojisi', 'Akıllı özellikler', 'Güçlü soğutma'],
+                    'cons': ['Pahalı servis', 'Karmaşık kumanda'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=mitsubishi+klima',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Teknoloji ve kalite odaklı'
+                },
+                {
+                    'title': 'Arçelik Inverter 12570 EI',
+                    'price': {'value': min(budget_max or 15000, 15000), 'currency': 'TRY', 'display': f'{min(budget_max or 15000, 15000):.0f} ₺'},
+                    'features': ['Inverter', 'A+ Enerji', '12.000 BTU', '10 Yıl Garanti'],
+                    'pros': ['Türk markası', 'Uygun fiyat', 'Yaygın servis'],
+                    'cons': ['Daha az özellik', 'Ses seviyesi'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=arcelik+inverter+klima',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Yerli üretim güvenilir seçenek'
+                }
+            ]
+
+        elif category == 'Television':
+            return [
+                {
+                    'title': 'Samsung 55" QN90C Neo QLED',
+                    'price': {'value': min(budget_max or 40000, 40000), 'currency': 'TRY', 'display': f'{min(budget_max or 40000, 40000):.0f} ₺'},
+                    'features': ['4K', 'Neo QLED', 'Quantum Matrix', 'Tizen OS'],
+                    'pros': ['Mükemmel görüntü', 'Akıllı özellikler', 'Premium tasarım'],
+                    'cons': ['Pahalı', 'Karmaşık menüler'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=samsung+55+qn90c+neo+qled',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium görüntü kalitesi'
+                },
+                {
+                    'title': 'LG 55" C3 OLED evo',
+                    'price': {'value': min(budget_max or 35000, 35000), 'currency': 'TRY', 'display': f'{min(budget_max or 35000, 35000):.0f} ₺'},
+                    'features': ['4K OLED', 'WebOS', 'Dolby Vision', '120Hz'],
+                    'pros': ['OLED teknolojisi', 'Sinema kalitesi', 'Gaming desteği'],
+                    'cons': ['Burn-in riski', 'Parlak ortamlarda sorun'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=lg+55+c3+oled',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Sinema ve oyun deneyimi'
+                },
+                {
+                    'title': 'Xiaomi TV A2 43"',
+                    'price': {'value': min(budget_max or 8000, 8000), 'currency': 'TRY', 'display': f'{min(budget_max or 8000, 8000):.0f} ₺'},
+                    'features': ['4K HDR', 'Android TV', 'Dolby Audio', 'Chromecast'],
+                    'pros': ['Uygun fiyat', 'Android TV', 'İyi özellikler'],
+                    'cons': ['Orta seviye panel', 'Ses kalitesi'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=xiaomi+tv+a2+43',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Bütçe dostu akıllı TV'
+                }
+            ]
+
+        elif category == 'Tire':
+            return [
+                {
+                    'title': 'Michelin Pilot Sport 4 225/45 R17',
+                    'price': {'value': min(budget_max or 2500, 2500), 'currency': 'TRY', 'display': f'{min(budget_max or 2500, 2500):.0f} ₺'},
+                    'features': ['Spor Lastik', 'Yüksek Performans', 'Islak Yol Tutuşu', 'Uzun Ömür'],
+                    'pros': ['Mükemmel tutuş', 'Premium marka', 'Güvenli'],
+                    'cons': ['Pahalı', 'Gürültü seviyesi'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=michelin+pilot+sport+4',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium performans lastiği'
+                },
+                {
+                    'title': 'Bridgestone Turanza T005 205/55 R16',
+                    'price': {'value': min(budget_max or 1800, 1800), 'currency': 'TRY', 'display': f'{min(budget_max or 1800, 1800):.0f} ₺'},
+                    'features': ['Konfor Odaklı', 'Düşük Gürültü', 'Enerji Tasarrufu', 'Uzun Ömür'],
+                    'pros': ['Konforlu sürüş', 'Güvenilir marka', 'Dayanıklı'],
+                    'cons': ['Spor performans sınırlı'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=bridgestone+turanza+t005',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Konfor ve güvenlik odaklı'
+                },
+                {
+                    'title': 'Lassa Competus H/P 215/60 R17',
+                    'price': {'value': min(budget_max or 1200, 1200), 'currency': 'TRY', 'display': f'{min(budget_max or 1200, 1200):.0f} ₺'},
+                    'features': ['SUV Lastiği', 'Türk Malı', 'Uygun Fiyat', 'Dört Mevsim'],
+                    'pros': ['Uygun fiyat', 'Yerli üretim', 'SUV uyumlu'],
+                    'cons': ['Performans sınırlı', 'Gürültü'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=lassa+competus+suv+lastik',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Bütçe dostu yerli seçenek'
+                }
+            ]
+
+        elif category == 'Telefon':
+            return [
+                {
+                    'title': 'iPhone 15 128GB',
+                    'price': {'value': min(budget_max or 35000, 35000), 'currency': 'TRY', 'display': f'{min(budget_max or 35000, 35000):.0f} ₺'},
+                    'features': ['A17 Pro Chip', '48MP Kamera', 'iOS 17', 'USB-C'],
+                    'pros': ['Premium performans', 'Uzun destek', 'Mükemmel kamera'],
+                    'cons': ['Pahalı', 'Lightning yerine USB-C'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=iphone+15+128gb',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium iPhone deneyimi'
+                },
+                {
+                    'title': 'Samsung Galaxy S23 256GB',
+                    'price': {'value': min(budget_max or 25000, 25000), 'currency': 'TRY', 'display': f'{min(budget_max or 25000, 25000):.0f} ₺'},
+                    'features': ['Snapdragon 8 Gen 2', '50MP Kamera', 'Android 14', '8GB RAM'],
+                    'pros': ['Güçlü performans', 'İyi kamera', 'Samsung ekosistemi'],
+                    'cons': ['OneUI arayüzü', 'Pil ömrü'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=samsung+galaxy+s23+256gb',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Android flagship deneyimi'
+                },
+                {
+                    'title': 'Xiaomi Redmi Note 13 Pro 256GB',
+                    'price': {'value': min(budget_max or 12000, 12000), 'currency': 'TRY', 'display': f'{min(budget_max or 12000, 12000):.0f} ₺'},
+                    'features': ['Dimensity 7200', '200MP Kamera', 'AMOLED Ekran', '67W Şarj'],
+                    'pros': ['Fiyat/performans', 'Hızlı şarj', 'İyi ekran'],
+                    'cons': ['MIUI arayüzü', 'Plastik gövde'],
+                    'match_score': 80,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=xiaomi+redmi+note+13+pro',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'En iyi fiyat/performans'
+                }
+            ]
+
         # Diğer kategoriler için genel fallback
-        return [
-            {
-                'title': f'Önerilen {category}',
-                'price': {'value': budget_min or 1000, 'currency': 'TRY', 'display': f'{budget_min or 1000:.0f} ₺'},
-                'features': ['Kaliteli', 'Güvenilir'],
-                'pros': ['İyi performans'],
-                'cons': ['Sınırlı bilgi'],
-                'match_score': 75,
-                'source_site': 'hepsiburada.com',
-                'product_url': f'https://www.hepsiburada.com/ara?q={category.lower()}',
-                'link_status': 'fallback',
+        else:
+            return [
+                {
+                    'title': f'Önerilen {category}',
+                    'price': {'value': budget_min or 1000, 'currency': 'TRY', 'display': f'{budget_min or 1000:.0f} ₺'},
+                    'features': ['Kaliteli', 'Güvenilir'],
+                    'pros': ['İyi performans'],
+                    'cons': ['Sınırlı bilgi'],
+                    'match_score': 75,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': f'https://www.hepsiburada.com/ara?q={category.lower()}',
+                    'link_status': 'fallback',
                 'link_message': 'Hepsiburada arama sayfası',
                 'why_recommended': 'Genel öneri - detaylı arama yapılamadı'
             }

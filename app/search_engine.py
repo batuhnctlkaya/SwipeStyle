@@ -27,8 +27,12 @@ import re
 from typing import Dict, List, Optional, Tuple
 from datetime import datetime, timedelta
 import google.generativeai as genai
+from dotenv import load_dotenv
 from .config import setup_gemini, get_gemini_model, generate_with_retry
 from urllib.parse import urlparse, parse_qs
+
+# .env dosyasını yükle
+load_dotenv()
 
 class ModernSearchEngine:
     """
