@@ -48,6 +48,7 @@ def install_requirements():
 install_requirements()
 
 import json
+from datetime import datetime
 from flask import Flask, request, jsonify, send_from_directory
 from app.agent import Agent
 from app.agent import detect_category_from_query
@@ -55,6 +56,27 @@ from app.category_generator import add_dynamic_category_route
 
 app = Flask(__name__, static_folder='website')
 agent = Agent()
+
+def log_api_response(endpoint, input_data, output_data):
+    """
+    API response'larını loglar
+    
+    Args:
+        endpoint (str): API endpoint adı
+        input_data (dict): Gelen veri
+        output_data (dict): Dönen veri
+    """
+    try:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        with open('agent_output_log.txt', 'a', encoding='utf-8') as f:
+            f.write(f"\n🌐 [{timestamp}] API RESPONSE: {endpoint}\n")
+            f.write(f"INPUT: {json.dumps(input_data, indent=2, ensure_ascii=False)}\n")
+            f.write(f"OUTPUT: {json.dumps(output_data, indent=2, ensure_ascii=False)}\n")
+            f.write(f"-"*40 + "\n")
+            
+    except Exception as e:
+        print(f"❌ API response logging error: {e}")
 
 # Dinamik kategori oluşturma özelliğini ekle
 add_dynamic_category_route(app)
@@ -87,9 +109,15 @@ def detect_category():
     # Dosyaya da yazadıralım
     with open('debug_log.txt', 'a', encoding='utf-8') as f:
         f.write(f"🔍 /detect_category veri: {data}\n")
+    
     query = data.get('query', '')
     category = detect_category_from_query(query)
-    return jsonify({'category': category})
+    response = {'category': category}
+    
+    # API response'unu logla
+    log_api_response("/detect_category", data, response)
+    
+    return jsonify(response)
 
 @app.route('/')
 def index():
@@ -153,13 +181,14 @@ def ask():
     
     Döner:
     - Soru varsa: {"question": "...", "options": ["Yes", "No"], "emoji": "🎧"}
-    - Öneriler varsa: {"recommendations": [...]}
+    - Öneriler varsa: {"recommendations": [...], "amazon_products": [...]}
     - Hata varsa: {"error": "..."}
     
     Özellikler:
     - Dinamik soru akışı
     - Tercih analizi
     - Güven skoru hesaplama
+    - Amazon ürün entegrasyonu
     - Çok dilli destek
     """
     data = request.json
@@ -169,8 +198,96 @@ def ask():
     # Dosyaya da yazdıralım
     with open('debug_log.txt', 'a', encoding='utf-8') as f:
         f.write(f"📩 /ask veri: {data}\n")
+    
     response = agent.handle(data)
+    
+    # API response'unu logla
+    log_api_response("/ask", data, response)
+    
     return jsonify(response)
+
+@app.route('/amazon/product/<asin>', methods=['GET'])
+def get_amazon_product(asin):
+    """
+    Amazon ürün detaylarını döndürür.
+    
+    Bu endpoint, belirli bir Amazon ürününün detaylı bilgilerini çeker.
+    
+    Args:
+        asin: Amazon ASIN kodu
+        
+    Returns:
+        JSON: Ürün detayları
+    """
+    try:
+        from app.amazon_api import AmazonAPI
+        
+        api = AmazonAPI()
+        product_details = api.get_product_details(asin)
+        
+        if product_details:
+            return jsonify({
+                'success': True,
+                'product': product_details
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'Ürün bulunamadı'
+            }), 404
+            
+    except Exception as e:
+        print(f"❌ Amazon ürün detay hatası: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Ürün detayları alınamadı'
+        }), 500
+
+@app.route('/amazon/search', methods=['POST'])
+def search_amazon_products():
+    """
+    Amazon'da ürün arama yapar.
+    
+    POST isteği bekler:
+    {
+        "query": "laptop",
+        "max_results": 10,
+        "min_price": 1000,
+        "max_price": 5000
+    }
+    
+    Returns:
+        JSON: Bulunan ürünler
+    """
+    try:
+        from app.amazon_api import AmazonAPI
+        
+        data = request.json
+        query = data.get('query', '')
+        max_results = data.get('max_results', 10)
+        min_price = data.get('min_price')
+        max_price = data.get('max_price')
+        
+        api = AmazonAPI()
+        products = api.search_products(
+            query=query,
+            max_results=max_results,
+            min_price=min_price,
+            max_price=max_price
+        )
+        
+        return jsonify({
+            'success': True,
+            'products': products,
+            'count': len(products)
+        })
+        
+    except Exception as e:
+        print(f"❌ Amazon arama hatası: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Arama yapılamadı'
+        }), 500
 
 if __name__ == '__main__':
     """
@@ -179,4 +296,4 @@ if __name__ == '__main__':
     Debug modu açık, port 8080'de çalışır.
     Production ortamında debug=False yapılmalıdır.
     """
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=8082)

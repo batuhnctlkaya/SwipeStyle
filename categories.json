@@ -1,44 +1,4 @@
 {
-<<<<<<< HEAD
-  "Mouse": {
-    "specs": [
-      {"key": "Kablosuz", "question": "Kablosuz mouse mu arıyorsunuz?", "emoji": "🖱️"},
-      {"key": "Ergonomik", "question": "Rahat kullanım için ergonomik tasarım önemli mi?", "emoji": "🖐️"},
-      {"key": "DPI", "question": "Yüksek hassasiyet (DPI) ister misiniz?", "emoji": "🎯"},
-      {"key": "Makro Tuşlar", "question": "Ekstra programlanabilir tuşlar gerekli mi?", "emoji": "🔲"},
-      {"key": "RGB", "question": "Renkli ışıklandırma (RGB) ister misiniz?", "emoji": "🌈"}
-    ]
-  },
-  "Headphones": {
-    "specs": [
-      {"key": "Kablosuz", "question": "Kablosuz kulaklık mu arıyorsunuz?", "emoji": "🎧"},
-      {"key": "ANC", "question": "Gürültü engelleme özelliği önemli mi?", "emoji": "🔇"},
-      {"key": "Bass", "question": "Güçlü bass sesi ister misiniz?", "emoji": "🎵"},
-      {"key": "Mikrofon Kalitesi", "question": "Kaliteli mikrofon önemli mi?", "emoji": "🎤"},
-      {"key": "Kulak İçi", "question": "Kulak içi (in-ear) mi tercih edersiniz?", "emoji": "👂"},
-      {"key": "Kulak Üstü", "question": "Kulak üstü (over-ear) mi tercih edersiniz?", "emoji": "🦻"}
-    ]
-  },
-  "Phone": {
-    "specs": [
-      {"key": "Kamera", "question": "Profesyonel fotoğraf çekimi önemli mi?", "emoji": "📸"},
-      {"key": "Batarya", "question": "Uzun pil ömrü arıyor musunuz?", "emoji": "🔋"},
-      {"key": "Ekran", "question": "Büyük ve kaliteli ekran ister misiniz?", "emoji": "📱"},
-      {"key": "Depolama", "question": "Fazla depolama alanı gerekli mi?", "emoji": "💾"},
-      {"key": "İşlemci", "question": "Hızlı performans önemli mi?", "emoji": "⚡"}
-    ]
-  },
-  "Laptop": {
-    "specs": [
-      {"key": "RAM", "question": "Yüksek RAM kapasitesi ister misiniz?", "emoji": "🧠"},
-      {"key": "SSD", "question": "Hızlı SSD disk ister misiniz?", "emoji": "💽"},
-      {"key": "Ekran Boyutu", "question": "Büyük ekran tercih eder misiniz?", "emoji": "🖥️"},
-      {"key": "Pil Ömrü", "question": "Uzun pil ömrü önemli mi?", "emoji": "🔋"},
-      {"key": "Ağırlık", "question": "Hafif ve taşınabilir laptop mu arıyorsunuz?", "emoji": "🏋️"}
-    ]
-  }
-}
-=======
   "Headphones": {
     "budget_bands": {
       "tr": [
@@ -98,179 +58,50 @@
         "id": "wireless",
         "type": "boolean",
         "label": {
-          "tr": "Kablosuz olsun mu?",
-          "en": "Wireless?"
+          "tr": "Kablosuz bağlantı ister misiniz?",
+          "en": "Do you want wireless connectivity?"
         },
         "emoji": "📶",
         "tooltip": {
-          "tr": "Kablosuz kulaklıklar daha özgür hareket sunar ama pil ömrü gerektirir. Kablolu olanlar her zaman çalışır.",
-          "en": "Wireless headphones offer freedom of movement but require battery life. Wired ones always work."
+          "tr": "Kablosuz kulaklıklar daha özgür hareket imkanı sağlar.",
+          "en": "Wireless headphones provide more freedom of movement."
         },
-        "weight": 0.9
+        "weight": 0.8
       },
       {
         "id": "anc",
         "type": "boolean",
         "label": {
-          "tr": "Aktif gürültü engelleme (ANC) önemli mi?",
-          "en": "Is ANC important?"
+          "tr": "Aktif gürültü engelleme önemli mi?",
+          "en": "Is active noise cancellation important?"
         },
         "emoji": "🔇",
         "tooltip": {
-          "tr": "ANC çevredeki gürültüleri elektronik olarak bastırır. Gürültülü ortamlarda (uçak, metro) çok faydalıdır.",
-          "en": "ANC electronically cancels surrounding noise. Very useful in noisy environments (plane, subway)."
-        },
-        "weight": 1.0
-      },
-      {
-        "id": "mic_quality",
-        "type": "boolean",
-        "label": {
-          "tr": "Mikrofon kalitesi önemli mi?",
-          "en": "Is mic quality important?"
-        },
-        "emoji": "🎤",
-        "tooltip": {
-          "tr": "Telefon görüşmeleri, online toplantılar veya oyun oynuyorsanız mikrofon kalitesi önemlidir.",
-          "en": "Microphone quality matters if you make phone calls, attend online meetings, or play games."
+          "tr": "ANC dış gürültüleri engeller, sessiz ortam sağlar.",
+          "en": "ANC blocks external noise for a quiet environment."
         },
         "weight": 0.7
-      },
-      {
-        "id": "battery_life_hours",
-        "type": "number",
-        "label": {
-          "tr": "Minimum pil ömrü (saat)?",
-          "en": "Min battery life (hours)?"
-        },
-        "emoji": "🔋",
-        "weight": 0.6,
-        "depends_on": [
-          {
-            "id": "wireless",
-            "eq": true
-          }
-        ],
-        "min": 0,
-        "max": 80
-      },
-      {
-        "id": "water_resistance",
-        "type": "boolean",
-        "label": {
-          "tr": "Suya dayanıklılık ister misiniz?",
-          "en": "Need water resistance?"
-        },
-        "emoji": "💧",
-        "weight": 0.4,
-        "depends_on": [
-          {
-            "id": "form_factor",
-            "eq": "in_ear"
-          }
-        ]
       }
     ]
   },
   "Phone": {
     "budget_bands": {
       "tr": [
-        "5-10k₺",
-        "10-20k₺",
-        "20-35k₺",
-        "35-50k₺",
-        "50k₺+"
+        "3-8k₺",
+        "8-15k₺",
+        "15-25k₺",
+        "25-40k₺",
+        "40k₺+"
       ],
       "en": [
-        "$150-300",
-        "$300-600",
-        "$600-1000",
-        "$1000-1500",
-        "$1500+"
+        "$100-250",
+        "$250-500",
+        "$500-800",
+        "$800-1200",
+        "$1200+"
       ]
     },
     "specs": [
-      {
-        "id": "screen_size",
-        "type": "single_choice",
-        "label": {
-          "tr": "Ekran boyutu tercihiniz?",
-          "en": "Preferred screen size?"
-        },
-        "emoji": "📱",
-        "tooltip": {
-          "tr": "Küçük ekranlar tek elle kullanım için ideal, büyük ekranlar video izleme ve oyun için daha uygun.",
-          "en": "Small screens are ideal for one-handed use, large screens better for watching videos and gaming."
-        },
-        "options": [
-          {
-            "id": "compact",
-            "label": {
-              "tr": "Kompakt (≤6.1\") - Tek elle kullanım",
-              "en": "Compact (≤6.1\") - One-handed use"
-            }
-          },
-          {
-            "id": "standard",
-            "label": {
-              "tr": "Standart (6.1-6.7\") - Dengeli",
-              "en": "Standard (6.1-6.7\") - Balanced"
-            }
-          },
-          {
-            "id": "large",
-            "label": {
-              "tr": "Büyük (≥6.7\") - Video ve oyun için",
-              "en": "Large (≥6.7\") - For video and gaming"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 1.0
-      },
-      {
-        "id": "operating_system",
-        "type": "single_choice",
-        "label": {
-          "tr": "İşletim sistemi tercihi?",
-          "en": "Operating system preference?"
-        },
-        "emoji": "⚙️",
-        "tooltip": {
-          "tr": "iOS (iPhone) kullanımı kolay ve güvenli, Android daha çok özelleştirme seçeneği sunar.",
-          "en": "iOS (iPhone) is easy and secure to use, Android offers more customization options."
-        },
-        "options": [
-          {
-            "id": "ios",
-            "label": {
-              "tr": "iOS (iPhone) - Basit ve güvenli",
-              "en": "iOS (iPhone) - Simple and secure"
-            }
-          },
-          {
-            "id": "android",
-            "label": {
-              "tr": "Android - Özelleştirilebilir",
-              "en": "Android - Customizable"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 1.0
-      },
       {
         "id": "camera_quality",
         "type": "single_choice",
@@ -280,392 +111,79 @@
         },
         "emoji": "📸",
         "tooltip": {
-          "tr": "Kamera kalitesi fotoğraf ve video çekimlerinizin netliğini belirler. Sosyal medya paylaşımı yapıyorsanız 'İyi' veya 'Mükemmel' seçin.",
-          "en": "Camera quality determines the sharpness of your photos and videos. Choose 'Good' or 'Excellent' if you share on social media."
+          "tr": "Sosyal medya, profesyonel fotoğraf veya günlük kullanım için kamera önceliğinizi belirtin.",
+          "en": "Specify your camera priority for social media, professional photography, or daily use."
         },
         "options": [
           {
-            "id": "basic",
+            "id": "professional",
             "label": {
-              "tr": "Temel yeterli (Ara sıra çekim)",
-              "en": "Basic is enough (Occasional shooting)"
+              "tr": "Çok önemli (Profesyonel kalite)",
+              "en": "Very important (Professional quality)"
             }
           },
           {
             "id": "good",
             "label": {
-              "tr": "İyi olsun (Sosyal medya için)",
-              "en": "Good quality (For social media)"
+              "tr": "Önemli (İyi kalite)",
+              "en": "Important (Good quality)"
             }
           },
           {
-            "id": "excellent",
+            "id": "basic",
             "label": {
-              "tr": "Mükemmel olsun (Profesyonel seviye)",
-              "en": "Excellent quality (Professional level)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.9
-      },
-      {
-        "id": "storage_capacity",
-        "type": "single_choice",
-        "label": {
-          "tr": "Depolama kapasitesi?",
-          "en": "Storage capacity?"
-        },
-        "emoji": "💾",
-        "tooltip": {
-          "tr": "Depolama kapasitesi, telefonunuzda saklayabileceğiniz uygulama, fotoğraf ve videoların toplam miktarını belirler. Daha büyük rakam = daha fazla içerik depolayabilirsiniz.",
-          "en": "Storage capacity determines how many apps, photos, and videos you can store on your phone. Higher number = more content storage."
-        },
-        "options": [
-          {
-            "id": "64gb",
-            "label": {
-              "tr": "64GB (Temel: ~15,000 fotoğraf)",
-              "en": "64GB (Basic: ~15,000 photos)"
-            }
-          },
-          {
-            "id": "128gb",
-            "label": {
-              "tr": "128GB (Orta: Çok sayıda uygulama)",
-              "en": "128GB (Moderate: Many apps)"
-            }
-          },
-          {
-            "id": "256gb",
-            "label": {
-              "tr": "256GB (Yüksek: Video ve oyun için)",
-              "en": "256GB (High: For videos and games)"
-            }
-          },
-          {
-            "id": "512gb",
-            "label": {
-              "tr": "512GB+ (Ultra: Her şey için bol alan)",
-              "en": "512GB+ (Ultra: Abundant space)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.8
-      },
-      {
-        "id": "gaming_performance",
-        "type": "boolean",
-        "label": {
-          "tr": "Oyun performansı önemli mi?",
-          "en": "Is gaming performance important?"
-        },
-        "emoji": "🎮",
-        "tooltip": {
-          "tr": "Oyun performansı, mobil oyunların akıcılığını etkiler. PUBG, Call of Duty gibi ağır oyunlar oynuyorsanız 'Evet' seçin.",
-          "en": "Gaming performance affects how smoothly mobile games run. Choose 'Yes' if you play heavy games like PUBG or Call of Duty."
-        },
-        "weight": 0.7
-      },
-      {
-        "id": "battery_life",
-        "type": "single_choice",
-        "label": {
-          "tr": "Pil ömrü beklentiniz?",
-          "en": "Battery life expectation?"
-        },
-        "emoji": "🔋",
-        "options": [
-          {
-            "id": "all_day",
-            "label": {
-              "tr": "Tüm gün (8-12 saat)",
-              "en": "All day (8-12 hours)"
-            }
-          },
-          {
-            "id": "longer_than_a_day",
-            "label": {
-              "tr": "Bir günden uzun (12+ saat)",
-              "en": "Longer than a day (12+ hours)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.5
-      }
-    ]
-  },
-  "Klima": {
-    "budget_bands": {
-      "tr": [
-        "3-7k₺",
-        "7-12k₺",
-        "12-20k₺",
-        "20-35k₺",
-        "35k₺+"
-      ],
-      "en": [
-        "$300-700",
-        "$700-1200",
-        "$1200-2000",
-        "$2000-3500",
-        "$3500+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "cooling_capacity",
-        "type": "single_choice",
-        "label": {
-          "tr": "Soğutma kapasitesi (BTU)?",
-          "en": "Cooling capacity (BTU)?"
-        },
-        "emoji": "❄️",
-        "tooltip": {
-          "tr": "BTU değeri klimanın ne kadar alanı soğutabileceğini belirler. 12-16 m² için 9000 BTU, 16-25 m² için 12000 BTU, 25-35 m² için 18000 BTU idealdir.",
-          "en": "BTU value determines how much area the AC can cool. 9000 BTU for 12-16 m², 12000 BTU for 16-25 m², 18000 BTU for 25-35 m² is ideal."
-        },
-        "options": [
-          {
-            "id": "9000btu",
-            "label": {
-              "tr": "9000 BTU (12-16 m² oda)",
-              "en": "9000 BTU (12-16 m² room)"
-            }
-          },
-          {
-            "id": "12000btu",
-            "label": {
-              "tr": "12000 BTU (16-25 m² oda)",
-              "en": "12000 BTU (16-25 m² room)"
-            }
-          },
-          {
-            "id": "18000btu",
-            "label": {
-              "tr": "18000 BTU (25-35 m² oda)",
-              "en": "18000 BTU (25-35 m² room)"
-            }
-          },
-          {
-            "id": "24000btu",
-            "label": {
-              "tr": "24000 BTU (35-50 m² oda)",
-              "en": "24000 BTU (35-50 m² room)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
+              "tr": "Temel yeterli",
+              "en": "Basic is sufficient"
             }
           }
         ],
         "weight": 1.0
       },
       {
-        "id": "energy_efficiency",
-        "type": "single_choice",
+        "id": "battery_life",
+        "type": "boolean",
         "label": {
-          "tr": "Enerji verimliliği sınıfı?",
-          "en": "Energy efficiency class?"
+          "tr": "Uzun pil ömrü öncelikli mi?",
+          "en": "Is long battery life a priority?"
         },
         "emoji": "🔋",
         "tooltip": {
-          "tr": "Daha yüksek enerji sınıfı (A+++) daha az elektrik tüketimi ve daha düşük fatura demektir.",
-          "en": "Higher energy class (A+++) means less electricity consumption and lower bills."
-        },
-        "options": [
-          {
-            "id": "a_plus_plus_plus",
-            "label": {
-              "tr": "A+++ (En verimli)",
-              "en": "A+++ (Most efficient)"
-            }
-          },
-          {
-            "id": "a_plus_plus",
-            "label": {
-              "tr": "A++ (Çok verimli)",
-              "en": "A++ (Very efficient)"
-            }
-          },
-          {
-            "id": "a_plus",
-            "label": {
-              "tr": "A+ (Verimli)",
-              "en": "A+ (Efficient)"
-            }
-          },
-          {
-            "id": "a",
-            "label": {
-              "tr": "A (Standart)",
-              "en": "A (Standard)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.9
-      },
-      {
-        "id": "inverter",
-        "type": "boolean",
-        "label": {
-          "tr": "İnverter teknolojisi önemli mi?",
-          "en": "Is inverter technology important?"
-        },
-        "emoji": "⚙️",
-        "tooltip": {
-          "tr": "İnverter klimalar enerji tasarrufu sağlar ve daha sessiz çalışır. Kompresörü sürekli açıp kapatmak yerine hızını ayarlar.",
-          "en": "Inverter ACs save energy and operate more quietly. They adjust compressor speed instead of turning it on and off."
-        },
-        "weight": 0.9
-      },
-      {
-        "id": "noise_level",
-        "type": "single_choice",
-        "label": {
-          "tr": "Gürültü seviyesi tercihiniz?",
-          "en": "Noise level preference?"
-        },
-        "emoji": "🔊",
-        "tooltip": {
-          "tr": "Düşük gürültü seviyesi özellikle yatak odası gibi sessiz olması gereken alanlarda önemlidir. 19-24 dB çok sessiz, 25-32 dB sessiz, 33-42 dB normal seviyedir.",
-          "en": "Low noise level is important especially in areas that need to be quiet like bedrooms. 19-24 dB is very quiet, 25-32 dB is quiet, 33-42 dB is normal level."
-        },
-        "options": [
-          {
-            "id": "very_quiet",
-            "label": {
-              "tr": "Çok sessiz (<24 dB)",
-              "en": "Very quiet (<24 dB)"
-            }
-          },
-          {
-            "id": "quiet",
-            "label": {
-              "tr": "Sessiz (25-32 dB)",
-              "en": "Quiet (25-32 dB)"
-            }
-          },
-          {
-            "id": "standard",
-            "label": {
-              "tr": "Standart (33-42 dB)",
-              "en": "Standard (33-42 dB)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.7
-      },
-      {
-        "id": "wifi_control",
-        "type": "boolean",
-        "label": {
-          "tr": "WiFi kontrol özelliği ister misiniz?",
-          "en": "Do you want WiFi control?"
-        },
-        "emoji": "📱",
-        "tooltip": {
-          "tr": "WiFi özelliği klimanızı akıllı telefonunuzdan kontrol etmenizi sağlar. Eve gelmeden önce açabilir veya programlayabilirsiniz.",
-          "en": "WiFi feature allows you to control your AC from your smartphone. You can turn it on or schedule it before arriving home."
-        },
-        "weight": 0.6
-      },
-      {
-        "id": "heating",
-        "type": "boolean",
-        "label": {
-          "tr": "Isıtma özelliği gerekli mi?",
-          "en": "Is heating function necessary?"
-        },
-        "emoji": "🔥",
-        "tooltip": {
-          "tr": "Isıtma özellikli klimalar yıl boyunca kullanılabilir ve soğuk havalarda ek ısıtıcı ihtiyacını azaltır.",
-          "en": "ACs with heating function can be used year-round and reduce the need for additional heaters in cold weather."
+          "tr": "Günlük yoğun kullanım için uzun pil ömrü gerekli.",
+          "en": "Long battery life is necessary for heavy daily usage."
         },
         "weight": 0.8
-      },
-      {
-        "id": "air_purification",
-        "type": "boolean",
-        "label": {
-          "tr": "Hava temizleme özelliği önemli mi?",
-          "en": "Is air purification important?"
-        },
-        "emoji": "🌿",
-        "tooltip": {
-          "tr": "Hava temizleme özellikli klimalar toz, polen, bakterileri filtreleyerek daha temiz hava sağlar. Alerji sorunu olanlar için önemlidir.",
-          "en": "ACs with air purification filter dust, pollen, and bacteria for cleaner air. Important for those with allergies."
-        },
-        "weight": 0.5
       }
     ]
   },
-  "Bilgisayar": {
+  "Laptop": {
     "budget_bands": {
       "tr": [
+        "8-15k₺",
         "15-25k₺",
         "25-40k₺",
         "40-60k₺",
-        "60-100k₺",
-        "100k₺+"
+        "60k₺+"
       ],
       "en": [
-        "$500-800",
-        "$800-1300",
-        "$1300-2000",
-        "$2000-3500",
-        "$3500+"
+        "$300-600",
+        "$600-1000",
+        "$1000-1500",
+        "$1500-2500",
+        "$2500+"
       ]
     },
     "specs": [
       {
-        "id": "usage_type",
+        "id": "primary_use",
         "type": "single_choice",
         "label": {
-          "tr": "Kullanım amacınız nedir?",
-          "en": "What's your primary use?"
+          "tr": "Temel kullanım amacınız nedir?",
+          "en": "What is your primary use case?"
         },
         "emoji": "💻",
         "tooltip": {
-          "tr": "Bilgisayarı ne için kullanacağınız en uygun donanımı belirlememize yardımcı olur.",
-          "en": "Your primary use case helps us recommend the most suitable hardware."
+          "tr": "Kullanım amacınız laptop özelliklerini belirler.",
+          "en": "Your use case determines laptop specifications."
         },
         "options": [
           {
@@ -678,15 +196,15 @@
           {
             "id": "gaming",
             "label": {
-              "tr": "Oyun oynama",
+              "tr": "Oyun (Gaming)",
               "en": "Gaming"
             }
           },
           {
-            "id": "design",
+            "id": "creative",
             "label": {
-              "tr": "Tasarım/Video editing",
-              "en": "Design/Video editing"
+              "tr": "Yaratıcı işler (Video, tasarım)",
+              "en": "Creative work (Video, design)"
             }
           },
           {
@@ -694,6 +212,264 @@
             "label": {
               "tr": "Programlama",
               "en": "Programming"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "portability",
+        "type": "boolean",
+        "label": {
+          "tr": "Taşınabilirlik önemli mi?",
+          "en": "Is portability important?"
+        },
+        "emoji": "🎒",
+        "tooltip": {
+          "tr": "Sık seyahat ediyorsanız hafif ve ince laptop tercih edin.",
+          "en": "If you travel frequently, prefer a light and thin laptop."
+        },
+        "weight": 0.7
+      }
+    ]
+  },
+  "Mouse": {
+    "budget_bands": {
+      "tr": [
+        "100-300₺",
+        "300-600₺",
+        "600-1.2k₺",
+        "1.2-2.5k₺",
+        "2.5k₺+"
+      ],
+      "en": [
+        "$5-15",
+        "$15-30",
+        "$30-60",
+        "$60-120",
+        "$120+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "usage_type",
+        "type": "single_choice",
+        "label": {
+          "tr": "Kullanım türünüz nedir?",
+          "en": "What is your usage type?"
+        },
+        "emoji": "🖱️",
+        "tooltip": {
+          "tr": "Kullanım türünüz mouse özelliklerini belirler.",
+          "en": "Your usage type determines mouse features."
+        },
+        "options": [
+          {
+            "id": "office",
+            "label": {
+              "tr": "Ofis/Günlük kullanım",
+              "en": "Office/Daily use"
+            }
+          },
+          {
+            "id": "gaming",
+            "label": {
+              "tr": "Oyun (Gaming)",
+              "en": "Gaming"
+            }
+          },
+          {
+            "id": "design",
+            "label": {
+              "tr": "Tasarım/Grafik",
+              "en": "Design/Graphics"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "wireless",
+        "type": "boolean",
+        "label": {
+          "tr": "Kablosuz mouse ister misiniz?",
+          "en": "Do you want a wireless mouse?"
+        },
+        "emoji": "📶",
+        "tooltip": {
+          "tr": "Kablosuz mouse daha temiz görünüm ve hareket özgürlüğü sağlar.",
+          "en": "Wireless mouse provides cleaner look and freedom of movement."
+        },
+        "weight": 0.6
+      }
+    ]
+  },
+  "Klima": {
+    "budget_bands": {
+      "tr": [
+        "8-15k₺",
+        "15-25k₺",
+        "25-35k₺",
+        "35-50k₺",
+        "50k₺+"
+      ],
+      "en": [
+        "8-15k₺",
+        "15-25k₺",
+        "25-35k₺",
+        "35-50k₺",
+        "50k₺+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "room_size",
+        "type": "single_choice",
+        "label": {
+          "tr": "Klima hangi büyüklükteki bir oda için kullanılacak?",
+          "en": "What size room will the air conditioner be used for?"
+        },
+        "emoji": "📏",
+        "tooltip": {
+          "tr": "Oda büyüklüğüne göre doğru BTU değerini seçmek önemlidir.",
+          "en": "Choosing the right BTU value based on room size is important."
+        },
+        "options": [
+          {
+            "id": "small",
+            "label": {
+              "tr": "Küçük (9-15 m²)",
+              "en": "Small (9-15 m²)"
+            }
+          },
+          {
+            "id": "medium",
+            "label": {
+              "tr": "Orta (15-25 m²)",
+              "en": "Medium (15-25 m²)"
+            }
+          },
+          {
+            "id": "large",
+            "label": {
+              "tr": "Büyük (25 m² +)",
+              "en": "Large (25 m² +)"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "inverter_technology",
+        "type": "boolean",
+        "label": {
+          "tr": "Inverter teknolojisi önemli mi?",
+          "en": "Is inverter technology important?"
+        },
+        "emoji": "⚡",
+        "tooltip": {
+          "tr": "Inverter klimalar daha az enerji tüketir ve daha sessiz çalışır.",
+          "en": "Inverter air conditioners consume less energy and operate more quietly."
+        },
+        "weight": 0.9
+      },
+      {
+        "id": "energy_efficiency",
+        "type": "single_choice",
+        "label": {
+          "tr": "Enerji verimliliği sizin için ne kadar önemli?",
+          "en": "How important is energy efficiency to you?"
+        },
+        "emoji": "🌿",
+        "tooltip": {
+          "tr": "Yüksek enerji sınıfı (A+++) uzun vadede daha az enerji tüketimi anlamına gelir.",
+          "en": "A high energy class (A+++) means less energy consumption in the long run."
+        },
+        "options": [
+          {
+            "id": "very_important",
+            "label": {
+              "tr": "Çok önemli (A+++)",
+              "en": "Very important (A+++)"
+            }
+          },
+          {
+            "id": "important",
+            "label": {
+              "tr": "Önemli (A++ / A++)",
+              "en": "Important (A++ / A++)"
+            }
+          },
+          {
+            "id": "not_important",
+            "label": {
+              "tr": "Çok önemli değil",
+              "en": "Not very important"
+            }
+          }
+        ],
+        "weight": 0.8
+      },
+      {
+        "id": "smart_features",
+        "type": "boolean",
+        "label": {
+          "tr": "Akıllı özellikler (Wi-Fi kontrolü, uygulama) ister misiniz?",
+          "en": "Do you want smart features (Wi-Fi control, app)?"
+        },
+        "emoji": "📱",
+        "tooltip": {
+          "tr": "Akıllı özellikler klimanızı uzaktan kontrol etmenizi sağlar.",
+          "en": "Smart features allow you to control your air conditioner remotely."
+        },
+        "weight": 0.6
+      },
+      {
+        "id": "brand_preference",
+        "type": "single_choice",
+        "label": {
+          "tr": "Marka tercihinizi belirtin",
+          "en": "Specify your brand preference"
+        },
+        "emoji": "🏢",
+        "tooltip": {
+          "tr": "Güvendiğiniz veya daha önce deneyimlediğiniz bir marka var mı?",
+          "en": "Is there a brand you trust or have experienced before?"
+        },
+        "options": [
+          {
+            "id": "daikin",
+            "label": {
+              "tr": "Daikin",
+              "en": "Daikin"
+            }
+          },
+          {
+            "id": "mitsubishi",
+            "label": {
+              "tr": "Mitsubishi Electric",
+              "en": "Mitsubishi Electric"
+            }
+          },
+          {
+            "id": "lg",
+            "label": {
+              "tr": "LG",
+              "en": "LG"
+            }
+          },
+          {
+            "id": "samsung",
+            "label": {
+              "tr": "Samsung",
+              "en": "Samsung"
+            }
+          },
+          {
+            "id": "arcelik_beko",
+            "label": {
+              "tr": "Arçelik/Beko",
+              "en": "Arçelik/Beko"
             }
           },
           {
@@ -704,40 +480,104 @@
             }
           }
         ],
-        "weight": 1.0
-      },
+        "weight": 0.5
+      }
+    ]
+  },
+  "Tire": {
+    "budget_bands": {
+      "tr": [
+        "1.5-3k₺",
+        "3-6k₺",
+        "6-9k₺",
+        "9-15k₺",
+        "15k₺+"
+      ],
+      "en": [
+        "₺1,500-3,000",
+        "₺3,000-6,000",
+        "₺6,000-9,000",
+        "₺9,000-15,000",
+        "₺15,000+"
+      ]
+    },
+    "specs": [
       {
-        "id": "form_factor",
+        "id": "tire_type",
         "type": "single_choice",
         "label": {
-          "tr": "Hangi tip bilgisayar istiyorsunuz?",
-          "en": "What type of computer do you want?"
+          "tr": "Ne tür lastik arıyorsunuz?",
+          "en": "What type of tire are you looking for?"
         },
-        "emoji": "🖥️",
+        "emoji": "🚗",
         "tooltip": {
-          "tr": "Masaüstü daha güçlü ve ekonomik, laptop taşınabilir.",
-          "en": "Desktop is more powerful and economical, laptop is portable."
+          "tr": "Yazlık, kışlık veya dört mevsim lastiği seçiminizi yapın.",
+          "en": "Choose between summer, winter, or all-season tires."
         },
         "options": [
           {
-            "id": "desktop",
+            "id": "summer",
             "label": {
-              "tr": "Masaüstü",
-              "en": "Desktop"
+              "tr": "Yazlık",
+              "en": "Summer"
             }
           },
           {
-            "id": "laptop",
+            "id": "winter",
             "label": {
-              "tr": "Laptop",
-              "en": "Laptop"
+              "tr": "Kışlık",
+              "en": "Winter"
             }
           },
           {
-            "id": "no_preference",
+            "id": "all_season",
             "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
+              "tr": "Dört Mevsim",
+              "en": "All-Season"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "tire_size",
+        "type": "single_choice",
+        "label": {
+          "tr": "Lastik ebatları nedir? (Örn: 205/55 R16)",
+          "en": "What is the tire size? (e.g., 205/55 R16)"
+        },
+        "emoji": "📏",
+        "tooltip": {
+          "tr": "Aracınız için doğru lastik ebatlarını belirtin. Araç ruhsatınızda veya mevcut lastiklerinizde bulabilirsiniz.",
+          "en": "Specify the correct tire size for your vehicle. You can find it in your vehicle registration or on your current tires."
+        },
+        "options": [
+          {
+            "id": "195_65_r15",
+            "label": {
+              "tr": "195/65 R15",
+              "en": "195/65 R15"
+            }
+          },
+          {
+            "id": "205_55_r16",
+            "label": {
+              "tr": "205/55 R16",
+              "en": "205/55 R16"
+            }
+          },
+          {
+            "id": "225_45_r17",
+            "label": {
+              "tr": "225/45 R17",
+              "en": "225/45 R17"
+            }
+          },
+          {
+            "id": "other",
+            "label": {
+              "tr": "Diğer",
+              "en": "Other"
             }
           }
         ],
@@ -750,365 +590,146 @@
           "tr": "Marka tercihiniz var mı?",
           "en": "Do you have a brand preference?"
         },
-        "emoji": "🏷️",
+        "emoji": "🏢",
         "tooltip": {
-          "tr": "Belirli markalar farklı avantajlar sunar.",
-          "en": "Different brands offer different advantages."
+          "tr": "Belirli bir lastik markası tercihiniz varsa belirtin.",
+          "en": "Specify if you have a preference for a particular tire brand."
         },
         "options": [
           {
-            "id": "apple",
+            "id": "bridgestone",
             "label": {
-              "tr": "Apple (Mac)",
-              "en": "Apple (Mac)"
+              "tr": "Bridgestone",
+              "en": "Bridgestone"
             }
           },
           {
-            "id": "windows",
+            "id": "michelin",
             "label": {
-              "tr": "Windows (HP, Dell, Lenovo vs.)",
-              "en": "Windows (HP, Dell, Lenovo etc.)"
+              "tr": "Michelin",
+              "en": "Michelin"
+            }
+          },
+          {
+            "id": "pirelli",
+            "label": {
+              "tr": "Pirelli",
+              "en": "Pirelli"
+            }
+          },
+          {
+            "id": "continental",
+            "label": {
+              "tr": "Continental",
+              "en": "Continental"
+            }
+          },
+          {
+            "id": "lassa",
+            "label": {
+              "tr": "Lassa",
+              "en": "Lassa"
             }
           },
           {
             "id": "no_preference",
             "label": {
-              "tr": "Fark etmez",
+              "tr": "Farketmez",
               "en": "No preference"
             }
           }
         ],
         "weight": 0.7
-      }
-    ]
-  },
-  "Charger": {
-    "budget_bands": {
-      "tr": [
-        "100-250₺",
-        "250-500₺",
-        "500-1000₺",
-        "1000-2000₺",
-        "2000₺+"
-      ],
-      "en": [
-        "$5-15",
-        "$15-30",
-        "$30-60",
-        "$60-120",
-        "$120+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "charger_type",
-        "type": "single_choice",
-        "label": {
-          "tr": "Şarj cihazı tipi?",
-          "en": "Charger type?"
-        },
-        "emoji": "🔌",
-        "tooltip": {
-          "tr": "Kablolu şarj cihazları doğrudan bağlantı sağlarken, kablosuz şarj cihazları cihazı yüzeyine koyarak şarj etme imkanı sunar.",
-          "en": "Wired chargers provide a direct connection, while wireless chargers allow you to charge by simply placing your device on a surface."
-        },
-        "options": [
-          {
-            "id": "wired",
-            "label": {
-              "tr": "Kablolu (Duvar adaptörü, araç şarjı vb.)",
-              "en": "Wired (Wall adapter, car charger, etc.)"
-            }
-          },
-          {
-            "id": "wireless",
-            "label": {
-              "tr": "Kablosuz (Qi uyumlu)",
-              "en": "Wireless (Qi compatible)"
-            }
-          },
-          {
-            "id": "both",
-            "label": {
-              "tr": "Her ikisi de",
-              "en": "Both"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 1.0
       },
       {
-        "id": "power_output_wattage",
-        "type": "single_choice",
-        "label": {
-          "tr": "İstenen güç çıkışı (Watt)?",
-          "en": "Desired power output (Watts)?"
-        },
-        "emoji": "⚡",
-        "tooltip": {
-          "tr": "Daha yüksek Watt değeri, cihazınızın daha hızlı şarj olmasını sağlar. Telefonlar genellikle 20-45W, dizüstü bilgisayarlar 60W+ ister.",
-          "en": "Higher wattage allows your device to charge faster. Phones typically need 20-45W, laptops 60W+."
-        },
-        "options": [
-          {
-            "id": "below_20w",
-            "label": {
-              "tr": "20W altı (Temel telefon şarjı)",
-              "en": "Below 20W (Basic phone charging)"
-            }
-          },
-          {
-            "id": "20_45w",
-            "label": {
-              "tr": "20-45W (Hızlı telefon/tablet şarjı)",
-              "en": "20-45W (Fast phone/tablet charging)"
-            }
-          },
-          {
-            "id": "45_100w",
-            "label": {
-              "tr": "45-100W (Dizüstü bilgisayar/çoklu cihaz)",
-              "en": "45-100W (Laptop/multi-device)"
-            }
-          },
-          {
-            "id": "100w_plus",
-            "label": {
-              "tr": "100W+ (Yüksek performanslı cihazlar)",
-              "en": "100W+ (High-performance devices)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.9
-      },
-      {
-        "id": "number_of_ports",
-        "type": "single_choice",
-        "label": {
-          "tr": "Kaç bağlantı noktası olsun?",
-          "en": "How many ports?"
-        },
-        "emoji": "🔢",
-        "tooltip": {
-          "tr": "Birden fazla cihazı aynı anda şarj etmek istiyorsanız, birden fazla bağlantı noktası olan bir şarj cihazı tercih edin.",
-          "en": "If you want to charge multiple devices simultaneously, choose a charger with multiple ports."
-        },
-        "options": [
-          {
-            "id": "one_port",
-            "label": {
-              "tr": "Tek bağlantı noktası",
-              "en": "One port"
-            }
-          },
-          {
-            "id": "two_ports",
-            "label": {
-              "tr": "İki bağlantı noktası",
-              "en": "Two ports"
-            }
-          },
-          {
-            "id": "three_plus_ports",
-            "label": {
-              "tr": "Üç veya daha fazla bağlantı noktası",
-              "en": "Three or more ports"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.8
-      },
-      {
-        "id": "cable_included",
+        "id": "run_flat",
         "type": "boolean",
         "label": {
-          "tr": "Kablo dahil olsun mu?",
-          "en": "Cable included?"
+          "tr": "Run-flat lastiklere ihtiyacınız var mı?",
+          "en": "Do you need run-flat tires?"
         },
-        "emoji": "🔗",
+        "emoji": "🛡️",
         "tooltip": {
-          "tr": "Bazı şarj cihazları ile birlikte şarj kablosu da gelir, bazıları sadece adaptördür.",
-          "en": "Some chargers come with a charging cable, others are just the adapter."
-        },
-        "weight": 0.7
-      },
-      {
-        "id": "compactness",
-        "type": "boolean",
-        "label": {
-          "tr": "Kompakt/taşınabilir olsun mu?",
-          "en": "Compact/portable?"
-        },
-        "emoji": "✈️",
-        "tooltip": {
-          "tr": "Seyahat veya günlük taşıma için küçük ve hafif bir şarj cihazı önemlidir.",
-          "en": "A small and lightweight charger is important for travel or daily carry."
+          "tr": "Patlasa bile bir süre daha yolculuk yapmanızı sağlayan lastik türü.",
+          "en": "Tires that allow you to continue driving even after a puncture."
         },
         "weight": 0.6
-      }
-    ]
-  },
-  "Hair Dryer": {
-    "budget_bands": {
-      "tr": [
-        "300-600₺",
-        "600-1200₺",
-        "1200-2500₺",
-        "2500-5000₺",
-        "5000₺+"
-      ],
-      "en": [
-        "$20-50",
-        "$50-100",
-        "$100-200",
-        "$200-400",
-        "$400+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "power_wattage",
-        "type": "number",
-        "label": {
-          "tr": "Minimum güç (Watt)?",
-          "en": "Minimum power (Watts)?"
-        },
-        "emoji": "⚡",
-        "tooltip": {
-          "tr": "Daha yüksek güç, saçınızı daha hızlı kurutur ve şekillendirir.",
-          "en": "Higher wattage dries and styles your hair faster."
-        },
-        "weight": 1.0,
-        "min": 1000,
-        "max": 2500
       },
       {
-        "id": "drying_technology",
+        "id": "vehicle_type",
         "type": "single_choice",
         "label": {
-          "tr": "Saç sağlığı teknolojisi önemli mi?",
-          "en": "Is hair health technology important?"
+          "tr": "Araç tipiniz nedir?",
+          "en": "What type of vehicle do you have?"
         },
-        "emoji": "✨",
+        "emoji": "🚘",
         "tooltip": {
-          "tr": "İyonik, seramik veya turmalin gibi teknolojiler, saçınızı kuruturken daha az hasar görmesini sağlar, elektriklenmeyi azaltır ve parlaklık verir.",
-          "en": "Technologies like Ionic, Ceramic, or Tourmaline help reduce hair damage, static, and add shine while drying."
+          "tr": "Binek araç, SUV veya kamyonet için lastik seçiminizi yapın.",
+          "en": "Choose between passenger car, SUV, or truck tires."
         },
         "options": [
           {
-            "id": "advanced",
+            "id": "passenger_car",
             "label": {
-              "tr": "Evet (Saç sağlığı ve parlaklık için)",
-              "en": "Yes (For hair health & shine)"
+              "tr": "Binek Araç",
+              "en": "Passenger Car"
             }
           },
           {
-            "id": "basic",
+            "id": "suv",
             "label": {
-              "tr": "Temel yeterli",
-              "en": "Basic is enough"
+              "tr": "SUV / 4x4",
+              "en": "SUV / 4x4"
             }
           },
           {
-            "id": "no_preference",
+            "id": "truck",
             "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.9
-      },
-      {
-        "id": "heat_speed_settings",
-        "type": "single_choice",
-        "label": {
-          "tr": "Isı ve hız ayarı çeşitliliği?",
-          "en": "Variety of heat & speed settings?"
-        },
-        "emoji": "🌡️",
-        "tooltip": {
-          "tr": "Farklı ısı ve hız ayarları, saç tipinize ve istediğiniz şekillendirmeye göre esneklik sağlar.",
-          "en": "Different heat and speed settings provide flexibility for your hair type and desired styling."
-        },
-        "options": [
-          {
-            "id": "multiple",
-            "label": {
-              "tr": "Çoklu (Farklı ayarlar)",
-              "en": "Multiple (Various settings)"
-            }
-          },
-          {
-            "id": "basic",
-            "label": {
-              "tr": "Temel (Az seçenek)",
-              "en": "Basic (Few options)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
+              "tr": "Kamyonet",
+              "en": "Truck"
             }
           }
         ],
         "weight": 0.8
-      },
+      }
+    ]
+  },
+  "Microphone": {
+    "budget_bands": {
+      "tr": [
+        "1-3k₺",
+        "3-6k₺",
+        "6-12k₺",
+        "12-20k₺",
+        "20k₺+"
+      ],
+      "en": [
+        "$30-100",
+        "$100-200",
+        "$200-400",
+        "$400-600",
+        "$600+"
+      ]
+    },
+    "specs": [
       {
-        "id": "attachments_included",
-        "type": "boolean",
-        "label": {
-          "tr": "Aksesuarlar (difüzör, yoğunlaştırıcı) gerekli mi?",
-          "en": "Are attachments (diffuser, concentrator) needed?"
-        },
-        "emoji": "💨",
-        "tooltip": {
-          "tr": "Difüzör kıvırcık/dalgalı saçlar için, yoğunlaştırıcı ise düz saçlar ve hassas şekillendirme için kullanılır.",
-          "en": "Diffusers are for curly/wavy hair, while concentrators are for straight hair and precise styling."
-        },
-        "weight": 0.7
-      },
-      {
-        "id": "weight_ergonomics",
+        "id": "quality",
         "type": "single_choice",
         "label": {
-          "tr": "Ağırlık ve kullanım kolaylığı?",
-          "en": "Weight and ease of use?"
+          "tr": "Microphone kalitesi?",
+          "en": "Microphone quality?"
         },
-        "emoji": "⚖️",
+        "emoji": "⭐",
         "tooltip": {
-          "tr": "Hafif fön makineleri uzun süreli kullanımda kol yorgunluğunu azaltır. Ergonomik tasarım rahat bir tutuş sağlar.",
-          "en": "Lightweight hair dryers reduce arm fatigue during prolonged use. Ergonomic design ensures a comfortable grip."
+          "tr": "Microphone için kalite seviyenizi seçin.",
+          "en": "Choose quality level for your Microphone."
         },
         "options": [
           {
-            "id": "lightweight",
+            "id": "basic",
             "label": {
-              "tr": "Hafif (Kolay kullanım)",
-              "en": "Lightweight (Easy handling)"
+              "tr": "Temel",
+              "en": "Basic"
             }
           },
           {
@@ -1119,6 +740,13 @@
             }
           },
           {
+            "id": "premium",
+            "label": {
+              "tr": "Premium",
+              "en": "Premium"
+            }
+          },
+          {
             "id": "no_preference",
             "label": {
               "tr": "Fark etmez",
@@ -1126,426 +754,74 @@
             }
           }
         ],
-        "weight": 0.6
+        "weight": 1.0
+      },
+      {
+        "id": "brand_importance",
+        "type": "boolean",
+        "label": {
+          "tr": "Marka önemli mi?",
+          "en": "Is brand important?"
+        },
+        "emoji": "🏷️",
+        "tooltip": {
+          "tr": "Ürün seçiminde marka önemli bir faktör mü?",
+          "en": "Is brand an important factor in product selection?"
+        },
+        "weight": 0.7
       }
     ]
   },
-  "Drill": {
+  "Tablo": {
     "budget_bands": {
       "tr": [
-        "1.000-2.500₺",
-        "2.500-5.000₺",
-        "5.000-10.000₺",
-        "10.000-20.000₺",
-        "20.000₺+"
+        "1-3k₺",
+        "3-6k₺",
+        "6-12k₺",
+        "12-20k₺",
+        "20k₺+"
       ],
       "en": [
-        "$30-75",
-        "$75-150",
-        "$150-300",
-        "$300-600",
+        "$30-100",
+        "$100-200",
+        "$200-400",
+        "$400-600",
         "$600+"
       ]
     },
     "specs": [
       {
-        "id": "drill_type",
+        "id": "quality",
         "type": "single_choice",
         "label": {
-          "tr": "Matkap tipi?",
-          "en": "Drill type?"
+          "tr": "Tablo kalitesi?",
+          "en": "Tablo quality?"
         },
-        "emoji": "🛠️",
+        "emoji": "⭐",
         "tooltip": {
-          "tr": "İşinize göre akülü veya kablolu matkap seçin. Akülü hareket özgürlüğü, kablolu sürekli güç sağlar.",
-          "en": "Choose cordless or corded based on your work. Cordless offers freedom of movement, corded provides continuous power."
-        },
-        "options": [
-          {
-            "id": "cordless",
-            "label": {
-              "tr": "Akülü (Kablosuz, taşınabilir)",
-              "en": "Cordless (Wireless, portable)"
-            }
-          },
-          {
-            "id": "corded",
-            "label": {
-              "tr": "Kablolu (Sürekli güç)",
-              "en": "Corded (Continuous power)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 1.0
-      },
-      {
-        "id": "impact_function",
-        "type": "boolean",
-        "label": {
-          "tr": "Darbeli özelliği olsun mu?",
-          "en": "Need impact function?"
-        },
-        "emoji": "🧱",
-        "tooltip": {
-          "tr": "Darbeli matkaplar tuğla, beton gibi sert yüzeylerde delik açmak için idealdir. Normal matkaplar ahşap ve metal için uygundur.",
-          "en": "Impact drills are ideal for drilling into hard surfaces like brick and concrete. Regular drills are suitable for wood and metal."
-        },
-        "weight": 0.9
-      },
-      {
-        "id": "battery_voltage",
-        "type": "single_choice",
-        "label": {
-          "tr": "Minimum pil voltajı (V)?",
-          "en": "Min battery voltage (V)?"
-        },
-        "emoji": "⚡",
-        "tooltip": {
-          "tr": "Daha yüksek voltaj, daha fazla güç ve tork anlamına gelir, bu da zorlu işler için önemlidir.",
-          "en": "Higher voltage means more power and torque, which is important for tougher jobs."
-        },
-        "depends_on": [
-          {
-            "id": "drill_type",
-            "eq": "cordless"
-          }
-        ],
-        "options": [
-          {
-            "id": "12v",
-            "label": {
-              "tr": "12V (Hafif işler için)",
-              "en": "12V (For light tasks)"
-            }
-          },
-          {
-            "id": "18v",
-            "label": {
-              "tr": "18V (Genel kullanım)",
-              "en": "18V (General purpose)"
-            }
-          },
-          {
-            "id": "20v_plus",
-            "label": {
-              "tr": "20V+ (Ağır işler ve profesyonel)",
-              "en": "20V+ (Heavy duty and professional)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.8
-      },
-      {
-        "id": "chuck_size",
-        "type": "single_choice",
-        "label": {
-          "tr": "Mandren çapı tercihiniz?",
-          "en": "Chuck size preference?"
-        },
-        "emoji": "📏",
-        "tooltip": {
-          "tr": "Mandren çapı, matkap ucunun maksimum boyutunu belirler. Büyük işler için daha büyük mandren gerekir.",
-          "en": "Chuck size determines the maximum drill bit size. A larger chuck is needed for heavy-duty tasks."
-        },
-        "options": [
-          {
-            "id": "10mm",
-            "label": {
-              "tr": "10mm (Küçük ve orta uçlar)",
-              "en": "10mm (Small to medium bits)"
-            }
-          },
-          {
-            "id": "13mm",
-            "label": {
-              "tr": "13mm (Büyük ve çeşitli uçlar)",
-              "en": "13mm (Large and versatile bits)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.7
-      },
-      {
-        "id": "variable_speed",
-        "type": "boolean",
-        "label": {
-          "tr": "Değişken hız özelliği önemli mi?",
-          "en": "Is variable speed important?"
-        },
-        "emoji": "🔄",
-        "tooltip": {
-          "tr": "Değişken hız, farklı malzemelerde daha hassas kontrol ve daha iyi sonuçlar sağlar.",
-          "en": "Variable speed allows for more precise control and better results on different materials."
-        },
-        "weight": 0.6
-      }
-    ]
-  },
-  "Chair": {
-    "budget_bands": {
-      "tr": [
-        "500-1.5k₺",
-        "1.5-3k₺",
-        "3-6k₺",
-        "6-12k₺",
-        "12k₺+"
-      ],
-      "en": [
-        "$50-150",
-        "$150-300",
-        "$300-600",
-        "$600-1200",
-        "$1200+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "chair_type",
-        "type": "single_choice",
-        "label": {
-          "tr": "Kullanım amacı / Sandalye tipi?",
-          "en": "Intended use / Chair type?"
-        },
-        "emoji": "🪑",
-        "tooltip": {
-          "tr": "Ofis sandalyeleri uzun süreli kullanım için, yemek sandalyeleri masalar için, oyuncu sandalyeleri konfor ve destek için, dekoratif sandalyeler ise estetik amaçlıdır.",
-          "en": "Office chairs are for prolonged use, dining chairs for tables, gaming chairs for comfort and support, and accent chairs for aesthetic purposes."
-        },
-        "options": [
-          {
-            "id": "office",
-            "label": {
-              "tr": "Ofis Sandalyesi",
-              "en": "Office Chair"
-            }
-          },
-          {
-            "id": "dining",
-            "label": {
-              "tr": "Yemek Sandalyesi",
-              "en": "Dining Chair"
-            }
-          },
-          {
-            "id": "gaming",
-            "label": {
-              "tr": "Oyuncu Sandalyesi",
-              "en": "Gaming Chair"
-            }
-          },
-          {
-            "id": "accent",
-            "label": {
-              "tr": "Dekoratif / Accent Sandalye",
-              "en": "Accent Chair"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 1.0
-      },
-      {
-        "id": "ergonomic_adjustability",
-        "type": "single_choice",
-        "label": {
-          "tr": "Ergonomik ayarlanabilirlik seviyesi?",
-          "en": "Level of ergonomic adjustability?"
-        },
-        "emoji": "🤸",
-        "tooltip": {
-          "tr": "Ergonomik ayarlar (yükseklik, sırt eğimi, kolçaklar) uzun süreli oturmalarda konfor ve sağlık için önemlidir.",
-          "en": "Ergonomic adjustments (height, recline, armrests) are important for comfort and health during prolonged sitting."
+          "tr": "Tablo için kalite seviyenizi seçin.",
+          "en": "Choose quality level for your Tablo."
         },
         "options": [
           {
             "id": "basic",
             "label": {
-              "tr": "Temel (Sadece yükseklik)",
-              "en": "Basic (Height only)"
+              "tr": "Temel",
+              "en": "Basic"
             }
           },
           {
-            "id": "moderate",
+            "id": "standard",
             "label": {
-              "tr": "Orta (Yükseklik, sırt eğimi)",
-              "en": "Moderate (Height, recline)"
+              "tr": "Standart",
+              "en": "Standard"
             }
           },
           {
-            "id": "advanced",
+            "id": "premium",
             "label": {
-              "tr": "Gelişmiş (Tam ayarlanabilirlik)",
-              "en": "Advanced (Full adjustability)"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.9
-      },
-      {
-        "id": "main_material",
-        "type": "single_choice",
-        "label": {
-          "tr": "Ana malzeme tercihi?",
-          "en": "Preferred main material?"
-        },
-        "emoji": "🛋️",
-        "tooltip": {
-          "tr": "Deri dayanıklı ve lüks, kumaş nefes alabilir ve rahattır, file havalandırma sağlar, ahşap klasik bir görünüm sunar.",
-          "en": "Leather is durable and luxurious, fabric is breathable and comfortable, mesh provides ventilation, wood offers a classic look."
-        },
-        "options": [
-          {
-            "id": "fabric",
-            "label": {
-              "tr": "Kumaş",
-              "en": "Fabric"
-            }
-          },
-          {
-            "id": "leather",
-            "label": {
-              "tr": "Deri / Suni Deri",
-              "en": "Leather / Faux Leather"
-            }
-          },
-          {
-            "id": "mesh",
-            "label": {
-              "tr": "File / Fileli",
-              "en": "Mesh"
-            }
-          },
-          {
-            "id": "wood",
-            "label": {
-              "tr": "Ahşap",
-              "en": "Wood"
-            }
-          },
-          {
-            "id": "no_preference",
-            "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
-            }
-          }
-        ],
-        "weight": 0.8
-      },
-      {
-        "id": "has_wheels",
-        "type": "boolean",
-        "label": {
-          "tr": "Tekerlekli olsun mu?",
-          "en": "Should it have wheels?"
-        },
-        "emoji": "⚙️",
-        "tooltip": {
-          "tr": "Tekerlekli sandalyeler hareket özgürlüğü sağlar, sabit ayaklılar ise daha stabil bir duruş sunar.",
-          "en": "Chairs with wheels offer mobility, while fixed-leg chairs provide more stability."
-        },
-        "weight": 0.7
-      },
-      {
-        "id": "has_armrests",
-        "type": "boolean",
-        "label": {
-          "tr": "Kolçaklı olsun mu?",
-          "en": "Should it have armrests?"
-        },
-        "emoji": "💪",
-        "tooltip": {
-          "tr": "Kolçaklar kol ve omuz desteği sağlar, ancak çalışma alanınızı kısıtlayabilir. Kolçaksız sandalyeler daha az yer kaplar.",
-          "en": "Armrests provide arm and shoulder support, but may restrict your workspace. Armless chairs take up less space."
-        },
-        "weight": 0.6
-      }
-    ]
-  },
-  "Car Mat": {
-    "budget_bands": {
-      "tr": [
-        "100-300₺",
-        "300-700₺",
-        "700-1500₺",
-        "1500-3000₺",
-        "3000₺+"
-      ],
-      "en": [
-        "$10-30",
-        "$30-70",
-        "$70-150",
-        "$150-300",
-        "$300+"
-      ]
-    },
-    "specs": [
-      {
-        "id": "material_type",
-        "type": "single_choice",
-        "label": {
-          "tr": "Malzeme türü tercihiniz?",
-          "en": "Preferred material type?"
-        },
-        "emoji": "🧵",
-        "tooltip": {
-          "tr": "Araç paspasının malzemesi dayanıklılık, temizlik kolaylığı ve estetiği etkiler. Kauçuk dayanıklı ve su geçirmez, halı daha şık.",
-          "en": "The material of the car mat affects durability, ease of cleaning, and aesthetics. Rubber is durable and waterproof, carpet is more stylish."
-        },
-        "options": [
-          {
-            "id": "rubber",
-            "label": {
-              "tr": "Kauçuk (Dayanıklı, su geçirmez)",
-              "en": "Rubber (Durable, waterproof)"
-            }
-          },
-          {
-            "id": "carpet",
-            "label": {
-              "tr": "Halı (Konforlu, şık)",
-              "en": "Carpet (Comfortable, stylish)"
-            }
-          },
-          {
-            "id": "pvc",
-            "label": {
-              "tr": "PVC (Ekonomik, kolay temizlenir)",
-              "en": "PVC (Economical, easy to clean)"
+              "tr": "Premium",
+              "en": "Premium"
             }
           },
           {
@@ -1559,108 +835,222 @@
         "weight": 1.0
       },
       {
-        "id": "fit_type",
+        "id": "brand_importance",
+        "type": "boolean",
+        "label": {
+          "tr": "Marka önemli mi?",
+          "en": "Is brand important?"
+        },
+        "emoji": "🏷️",
+        "tooltip": {
+          "tr": "Ürün seçiminde marka önemli bir faktör mü?",
+          "en": "Is brand an important factor in product selection?"
+        },
+        "weight": 0.7
+      }
+    ]
+  },
+  "Television": {
+    "budget_bands": {
+      "tr": [
+        "4.000-10.000₺",
+        "10.000-25.000₺",
+        "25.000-40.000₺",
+        "40.000-80.000₺",
+        "80.000₺+"
+      ],
+      "en": [
+        "$130-330",
+        "$330-830",
+        "$830-1330",
+        "$1330-2660",
+        "$2660+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "screen_size",
         "type": "single_choice",
         "label": {
-          "tr": "Uyum tipi tercihiniz?",
-          "en": "Preferred fit type?"
+          "tr": "Ekran boyutu ne kadar önemli?",
+          "en": "How important is screen size?"
         },
-        "emoji": "🚗",
+        "emoji": "📺",
         "tooltip": {
-          "tr": "Araca özel paspaslar aracınızın zeminine tam oturur, evrensel paspaslar ise daha uygun fiyatlı ve genel kullanım içindir.",
-          "en": "Vehicle-specific mats perfectly match your vehicle's floor, while universal mats are more affordable and for general use."
+          "tr": "Oturma mesafenize ve oda büyüklüğüne göre uygun ekran boyutunu seçin.",
+          "en": "Choose the appropriate screen size based on your viewing distance and room size."
         },
         "options": [
           {
-            "id": "vehicle_specific",
+            "id": "small",
             "label": {
-              "tr": "Araca Özel (Mükemmel uyum)",
-              "en": "Vehicle-Specific (Perfect fit)"
+              "tr": "Küçük (32-43 inç)",
+              "en": "Small (32-43 inch)"
             }
           },
           {
-            "id": "universal",
+            "id": "medium",
             "label": {
-              "tr": "Evrensel (Çoğu araca uygun)",
-              "en": "Universal (Fits most cars)"
+              "tr": "Orta (43-55 inç)",
+              "en": "Medium (43-55 inch)"
             }
           },
           {
-            "id": "no_preference",
+            "id": "large",
             "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
+              "tr": "Büyük (55-65 inç)",
+              "en": "Large (55-65 inch)"
+            }
+          },
+          {
+            "id": "xlarge",
+            "label": {
+              "tr": "Çok Büyük (65 inç+)",
+              "en": "Extra Large (65 inch+)"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "resolution",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ekran çözünürlüğü ne kadar önemli?",
+          "en": "How important is screen resolution?"
+        },
+        "emoji": "✨",
+        "tooltip": {
+          "tr": "Daha yüksek çözünürlük daha net ve detaylı görüntüler sunar.",
+          "en": "Higher resolution provides clearer and more detailed images."
+        },
+        "options": [
+          {
+            "id": "full_hd",
+            "label": {
+              "tr": "Full HD (1080p)",
+              "en": "Full HD (1080p)"
+            }
+          },
+          {
+            "id": "4k",
+            "label": {
+              "tr": "4K Ultra HD",
+              "en": "4K Ultra HD"
+            }
+          },
+          {
+            "id": "8k",
+            "label": {
+              "tr": "8K Ultra HD",
+              "en": "8K Ultra HD"
             }
           }
         ],
         "weight": 0.9
       },
       {
-        "id": "all_weather_protection",
+        "id": "smart_tv",
         "type": "boolean",
         "label": {
-          "tr": "Her mevsim koruma önemli mi?",
-          "en": "Is all-weather protection important?"
+          "tr": "Akıllı TV özellikleri (Netflix, YouTube) gerekli mi?",
+          "en": "Are Smart TV features (Netflix, YouTube) necessary?"
         },
-        "emoji": "🌧️",
+        "emoji": "🌐",
         "tooltip": {
-          "tr": "Her mevsim paspaslar, çamur, kar ve su gibi dış etkenlere karşı üstün koruma sağlar.",
-          "en": "All-weather mats provide superior protection against outdoor elements like mud, snow, and water."
+          "tr": "Akıllı TV, internete bağlanarak çeşitli uygulamaları kullanmanızı sağlar.",
+          "en": "Smart TV allows you to connect to the internet and use various applications."
         },
         "weight": 0.8
       },
       {
-        "id": "set_configuration",
+        "id": "panel_type",
         "type": "single_choice",
         "label": {
-          "tr": "Paspas seti kaç parçalı olsun?",
-          "en": "How many pieces should the mat set be?"
+          "tr": "Panel tipi tercihiniz nedir?",
+          "en": "What is your preferred panel type?"
         },
-        "emoji": "🔢",
+        "emoji": "🖼️",
         "tooltip": {
-          "tr": "Genellikle sadece ön kısım veya tüm araç için tam set seçenekleri bulunur.",
-          "en": "Typically, options include front-only or a full set for the entire vehicle."
+          "tr": "OLED daha iyi kontrast ve renk doğruluğu sunar, QLED daha parlak ve uygun fiyatlı olabilir.",
+          "en": "OLED offers better contrast and color accuracy, QLED can be brighter and more affordable."
         },
         "options": [
           {
-            "id": "front_2_pieces",
+            "id": "led",
             "label": {
-              "tr": "Ön 2 parça",
-              "en": "Front 2 pieces"
+              "tr": "LED",
+              "en": "LED"
             }
           },
           {
-            "id": "full_set_4_5_pieces",
+            "id": "qled",
             "label": {
-              "tr": "Tam set (4-5 parça)",
-              "en": "Full set (4-5 pieces)"
+              "tr": "QLED",
+              "en": "QLED"
             }
           },
           {
-            "id": "no_preference",
+            "id": "oled",
             "label": {
-              "tr": "Fark etmez",
-              "en": "No preference"
+              "tr": "OLED",
+              "en": "OLED"
             }
           }
         ],
         "weight": 0.7
       },
       {
-        "id": "anti_slip_feature",
-        "type": "boolean",
+        "id": "brand_preference",
+        "type": "single_choice",
         "label": {
-          "tr": "Kaymaz taban özelliği olsun mu?",
-          "en": "Should it have an anti-slip base?"
+          "tr": "Marka tercihin var mı?",
+          "en": "Do you have a brand preference?"
         },
-        "emoji": "🚫",
+        "emoji": "🏢",
         "tooltip": {
-          "tr": "Kaymaz taban, paspasların sürüş esnasında kaymasını önleyerek güvenliği artırır ve paspasın yerinde kalmasını sağlar.",
-          "en": "An anti-slip base prevents the mats from sliding during driving, increasing safety and keeping the mat in place."
+          "tr": "Belirli bir marka mı arıyorsunuz?",
+          "en": "Are you looking for a specific brand?"
         },
+        "options": [
+          {
+            "id": "samsung",
+            "label": {
+              "tr": "Samsung",
+              "en": "Samsung"
+            }
+          },
+          {
+            "id": "lg",
+            "label": {
+              "tr": "LG",
+              "en": "LG"
+            }
+          },
+          {
+            "id": "sony",
+            "label": {
+              "tr": "Sony",
+              "en": "Sony"
+            }
+          },
+          {
+            "id": "other",
+            "label": {
+              "tr": "Diğer",
+              "en": "Other"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Farketmez",
+              "en": "No preference"
+            }
+          }
+        ],
         "weight": 0.6
       }
     ]
   }
 }
->>>>>>> 08f17ad2d7a03b3f8177b4196993bc2448082886

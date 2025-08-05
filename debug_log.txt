@@ -1,35 +1,75 @@
-📩 /ask veri: {'step': 1, 'category': 'Drill', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır', '12V (Hafif işler için)'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır', '12V (Hafif işler için)', '13mm (Büyük ve çeşitli uçlar)'], 'language': 'tr'}
-📩 /ask veri: {'step': 6, 'category': 'Drill', 'answers': ['Akülü (Kablosuz, taşınabilir)', 'Hayır', '12V (Hafif işler için)', '13mm (Büyük ve çeşitli uçlar)', '5.000-10.000₺'], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Chair', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Chair', 'answers': ['Ofis Sandalyesi'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Chair', 'answers': ['Ofis Sandalyesi', 'Orta (Yükseklik, sırt eğimi)'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Chair', 'answers': ['Ofis Sandalyesi', 'Orta (Yükseklik, sırt eğimi)', 'Ahşap'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Chair', 'answers': ['Ofis Sandalyesi', 'Orta (Yükseklik, sırt eğimi)', 'Ahşap', 'Hayır'], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Car Mat', 'answers': ['Üniversal (Genel Uyum)'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Car Mat', 'answers': ['Üniversal (Genel Uyum)', 'Kauçuk'], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez', 'Hayır'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez', 'Hayır', 'Ön 2 parça'], 'language': 'tr'}
-📩 /ask veri: {'step': 6, 'category': 'Car Mat', 'answers': ['Kauçuk (Dayanıklı, su geçirmez)', 'Fark etmez', 'Hayır', 'Ön 2 parça', '300-700₺'], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Hair Dryer', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Bilgisayar', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Bilgisayar', 'answers': ['Tasarım/Video editing'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Bilgisayar', 'answers': ['Tasarım/Video editing', 'Laptop'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Bilgisayar', 'answers': ['Tasarım/Video editing', 'Laptop', '25-40k₺'], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
-📩 /ask veri: {'step': 6, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)'], 'language': 'tr'}
-📩 /ask veri: {'step': 7, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
-📩 /ask veri: {'step': 8, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
-📩 /ask veri: {'step': 9, 'category': 'Car Mat', 'answers': ['Halı (Konforlu, şık)', 'Bilmiyorum', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Araca Özel (Mükemmel uyum)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)', 'Evrensel (Çoğu araca uygun)'], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Car Mat', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)', '25-35k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Tire', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)', '35-50k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Bilmiyorum'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Bilmiyorum', 'Büyük (25 m² +)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Telefon', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Telefon', 'answers': ['Temel yeterli'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Telefon', 'answers': ['Temel yeterli', 'Normal kullanım (8-12 saat)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Telefon', 'answers': ['Temel yeterli', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'asked_spec_ids': ['room_size'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'asked_spec_ids': ['room_size', 'inverter_technology'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', 'Hayır'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', 'Hayır', 'Fark etmez'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features', 'brand_preference'], 'language': 'tr'}
+📩 /ask veri: {'step': 7, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', 'Hayır', 'Fark etmez', '25-35k₺'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features', 'brand_preference', None], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Programlama'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Programlama', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Programlama', 'Evet', '40-60k₺'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Yaratıcı işler (Video, tasarım)'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Yaratıcı işler (Video, tasarım)', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Yaratıcı işler (Video, tasarım)', 'Evet', '40-60k₺'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}
+📩 /ask veri: {'question': 'Merhaba! 40-60 bin TL bütçem var, çok güzel bir laptop arıyorum.', 'language': 'tr'}
+📩 /ask veri: {'question': 'Laptop', 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Programlama'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Programlama', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Programlama', 'Evet', '40-60k₺'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Oyun (Gaming)'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet', '60k₺+'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'asked_spec_ids': ['form_factor'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'asked_spec_ids': ['form_factor', 'wireless'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', 'Evet'], 'asked_spec_ids': ['form_factor', 'wireless', 'anc'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', 'Evet', '6-12k₺'], 'asked_spec_ids': ['form_factor', 'wireless', 'anc', None], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'asked_spec_ids': ['form_factor'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'asked_spec_ids': ['form_factor', 'wireless'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', 'Evet'], 'asked_spec_ids': ['form_factor', 'wireless', 'anc'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', 'Evet', '6-12k₺'], 'asked_spec_ids': ['form_factor', 'wireless', 'anc', None], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Büyük (25 m² +)'], 'asked_spec_ids': ['room_size'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet'], 'asked_spec_ids': ['room_size', 'inverter_technology'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet', 'Çok önemli (A+++)'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet', 'Çok önemli (A+++)', 'Hayır'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet', 'Çok önemli (A+++)', 'Hayır', 'Fark etmez'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features', 'brand_preference'], 'language': 'tr'}
+📩 /ask veri: {'step': 7, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet', 'Çok önemli (A+++)', 'Hayır', 'Fark etmez', '25-35k₺'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features', 'brand_preference', None], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Oyun (Gaming)'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet', '40-60k₺'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}

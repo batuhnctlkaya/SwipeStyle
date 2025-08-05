@@ -367,6 +367,7 @@ class CategoryGenerator:
     def _generate_category_specs(self, category_name):
         """
         AI kullanarak kategori özelliklerini oluşturur.
+        Türkiye pazarı araştırması ile uygun fiyat bantları belirler.
         
         Args:
             category_name (str): Kategori adı
@@ -379,31 +380,129 @@ class CategoryGenerator:
             categories = self._load_categories()
             examples = self._get_category_examples(categories)
             
+            # Get Turkish market price research
+            price_research = self._research_turkish_market_prices(category_name)
+            
             generation_prompt = f"""
             Generate a complete category specification for "{category_name}" following the exact format of existing categories.
+            
+            TURKISH MARKET PRICE RESEARCH:
+            {price_research}
             
             EXISTING CATEGORY EXAMPLES:
             {examples}
             
             REQUIREMENTS:
-            1. Create "budget_bands" with 5 price ranges in both TR and EN
-            2. Create "specs" array with 3-5 relevant specifications
+            1. Create "budget_bands" with 5 realistic price ranges based on Turkish market research
+               - Use actual Turkish prices (₺) that make sense for {category_name}
+               - Example ranges should reflect real market segments
+               - For phones: 3-8k₺, 8-15k₺, 15-25k₺, 25-40k₺, 40k₺+
+               - For air conditioners: 8-15k₺, 15-25k₺, 25-35k₺, 35-50k₺, 50k₺+
+               - For headphones: 200-500₺, 500-1k₺, 1-2k₺, 2-4k₺, 4k₺+
+               
+            2. Create "specs" array with 4-6 most relevant specifications for {category_name}
             3. Each spec must have: id, type, label (tr/en), emoji, tooltip (tr/en), weight
-            4. Types: "single_choice", "boolean", "number"
+            4. Types: "single_choice" (for options), "boolean" (for yes/no), "range" (for numeric ranges)
             5. For single_choice, include "options" array with id and label (tr/en)
-            6. Make it relevant to "{category_name}" products
+            6. Make questions specific and relevant to {category_name} buying decisions
             7. Use appropriate Turkish and English translations
+            8. Include important technical specifications that matter for purchase decisions
+            9. Add helpful tooltips that guide user decisions
+            10. Weight more important specs higher (0.5 - 1.0)
+            
+            CATEGORY-SPECIFIC GUIDANCE:
+            - For electronics: ask about brand preference, warranty, performance needs
+            - For appliances: ask about capacity, energy efficiency, features
+            - For fashion: ask about style, material, occasion
+            - For sports: ask about usage type, frequency, skill level
             
             OUTPUT ONLY VALID JSON (no markdown, no explanations):
             """
             
-            print(f"🤖 Yeni kategori oluşturuluyor: {category_name} (Bu işlem 15-45 saniye sürebilir)")
+            print(f"🤖 Yeni kategori oluşturuluyor: {category_name} (Türkiye pazarı araştırması ile)")
             response = generate_with_retry(self.model, generation_prompt, max_retries=3, delay=3)
             return self._parse_ai_response(response.text, category_name)
             
         except Exception as e:
             print(f"❌ Category spec generation error: {e}")
             return self._get_default_template(category_name)
+    
+    def _research_turkish_market_prices(self, category_name):
+        """
+        Türkiye pazarı için kategori fiyat araştırması yapar.
+        
+        Args:
+            category_name (str): Kategori adı
+            
+        Returns:
+            str: Fiyat araştırması sonuçları
+        """
+        try:
+            if not self.model:
+                return self._get_default_price_ranges(category_name)
+                
+            research_prompt = f"""
+            Research Turkish market prices for "{category_name}" products in 2024-2025.
+            
+            Provide realistic price ranges for different market segments:
+            - Entry level / Budget segment
+            - Mid-range / Popular segment  
+            - Premium / High-end segment
+            - Luxury / Professional segment
+            
+            Consider:
+            - Turkish Lira (₺) pricing
+            - Local market conditions
+            - Popular brands available in Turkey
+            - Import taxes and VAT (18%)
+            - Typical price distribution
+            
+            Format your response as realistic price bands that make sense for the category.
+            
+            Examples for context:
+            - Basic phones: 3-8k₺
+            - Gaming laptops: 15-50k₺
+            - Air conditioners: 8-35k₺
+            - Bluetooth headphones: 200-2k₺
+            - Washing machines: 5-20k₺
+            
+            For {category_name}, provide 5 realistic price bands:
+            """
+            
+            response = generate_with_retry(self.model, research_prompt, max_retries=2, delay=2)
+            return response.text.strip()
+            
+        except Exception as e:
+            print(f"❌ Price research error: {e}")
+            return self._get_default_price_ranges(category_name)
+    
+    def _get_default_price_ranges(self, category_name):
+        """
+        Kategori için varsayılan fiyat aralıkları sağlar.
+        
+        Args:
+            category_name (str): Kategori adı
+            
+        Returns:
+            str: Varsayılan fiyat bilgileri
+        """
+        category_lower = category_name.lower()
+        
+        # Kategori bazlı varsayılan fiyat aralıkları
+        if any(word in category_lower for word in ['phone', 'telefon', 'smartphone']):
+            return "Turkish phone market: Entry 3-8k₺, Mid 8-15k₺, Premium 15-25k₺, Flagship 25-40k₺, Ultra 40k₺+"
+        elif any(word in category_lower for word in ['laptop', 'computer', 'bilgisayar']):
+            return "Turkish laptop market: Basic 8-15k₺, Performance 15-30k₺, Gaming 30-60k₺, Professional 60k₺+"
+        elif any(word in category_lower for word in ['klima', 'klimalar', 'air']):
+            return "Turkish AC market: Basic 8-15k₺, Inverter 15-25k₺, Smart 25-35k₺, Premium 35k₺+"
+        elif any(word in category_lower for word in ['headphone', 'kulaklık', 'earphone']):
+            return "Turkish headphone market: Basic 200-500₺, Good 500-1.5k₺, Premium 1.5-4k₺, Professional 4k₺+"
+        elif any(word in category_lower for word in ['tv', 'televizyon']):
+            return "Turkish TV market: Basic 5-12k₺, Smart 12-25k₺, 4K Premium 25-50k₺, OLED 50k₺+"
+        elif any(word in category_lower for word in ['watch', 'saat', 'smart']):
+            return "Turkish smartwatch market: Basic 500-1.5k₺, Fitness 1.5-3k₺, Premium 3-8k₺, Luxury 8k₺+"
+        else:
+            return f"General Turkish market for {category_name}: Budget 500-2k₺, Mid 2-5k₺, Premium 5-15k₺, Luxury 15k₺+"
     
     def _build_category_context(self, categories):
         """
@@ -459,28 +558,86 @@ class CategoryGenerator:
             dict or None: Ayrıştırılmış kategori verileri
         """
         try:
-            # Clean the response
-            json_content = text.strip()
-            if json_content.startswith('```json'):
-                json_content = json_content[7:]
-            if json_content.endswith('```'):
-                json_content = json_content[:-3]
+            print(f"🔍 Parsing AI response for category: {category_name}")
+            print(f"📄 Raw response length: {len(text)} characters")
             
-            # Parse JSON
+            # Clean the response - multiple attempts
+            json_content = text.strip()
+            
+            # Remove markdown code blocks
+            if '```json' in json_content:
+                start_idx = json_content.find('```json') + 7
+                end_idx = json_content.find('```', start_idx)
+                if end_idx > start_idx:
+                    json_content = json_content[start_idx:end_idx]
+            elif '```' in json_content:
+                start_idx = json_content.find('```') + 3
+                end_idx = json_content.rfind('```')
+                if end_idx > start_idx:
+                    json_content = json_content[start_idx:end_idx]
+            
+            # Remove common prefixes/suffixes
+            json_content = json_content.strip()
+            
+            # Try to find JSON object boundaries
+            if '{' in json_content and '}' in json_content:
+                start_brace = json_content.find('{')
+                # Find the matching closing brace
+                brace_count = 0
+                end_brace = -1
+                for i in range(start_brace, len(json_content)):
+                    if json_content[i] == '{':
+                        brace_count += 1
+                    elif json_content[i] == '}':
+                        brace_count -= 1
+                        if brace_count == 0:
+                            end_brace = i
+                            break
+                
+                if end_brace > start_brace:
+                    json_content = json_content[start_brace:end_brace + 1]
+            
+            print(f"🧹 Cleaned JSON content (first 200 chars): {json_content[:200]}...")
+            
+            # Try to parse JSON
             parsed = json.loads(json_content)
             
             # Validate structure
             if isinstance(parsed, dict) and "budget_bands" in parsed and "specs" in parsed:
+                print(f"✅ Valid category structure found")
                 return parsed
-            elif category_name in parsed:
+            elif isinstance(parsed, dict) and category_name in parsed:
+                print(f"✅ Category found in nested structure")
                 return parsed[category_name]
             
-            print(f"Unexpected AI response format")
+            print(f"❌ Unexpected AI response format - missing required fields")
+            print(f"📊 Response keys: {list(parsed.keys()) if isinstance(parsed, dict) else 'Not a dict'}")
             return None
             
         except json.JSONDecodeError as e:
-            print(f"JSON parse error: {e}")
+            print(f"❌ JSON parse error: {e}")
+            print(f"📄 Problematic content (first 500 chars): {json_content[:500] if 'json_content' in locals() else text[:500]}")
+            
+            # As fallback, try to extract at least some basic structure
+            print(f"🔄 Attempting fallback parsing...")
+            return self._fallback_category_creation(category_name)
+            
+        except Exception as e:
+            print(f"❌ Unexpected parsing error: {e}")
             return None
+    
+    def _fallback_category_creation(self, category_name):
+        """
+        AI parsing başarısız olduğunda fallback kategori oluşturur.
+        
+        Args:
+            category_name (str): Kategori adı
+            
+        Returns:
+            dict: Fallback kategori şablonu
+        """
+        print(f"🔄 Creating fallback template for: {category_name}")
+        return self._get_default_template(category_name)
     
     def _load_categories(self):
         """

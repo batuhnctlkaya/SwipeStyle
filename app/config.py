@@ -65,14 +65,35 @@ def get_gemini_model():
         >>> model = get_gemini_model()
         >>> response = model.generate_content("Merhaba")
     """
+    # Relaxed safety settings to prevent empty responses
+    safety_settings = [
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_NONE"
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_NONE"
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_NONE"
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE"
+        }
+    ]
+    
     return genai.GenerativeModel(
-        'gemini-2.5-flash',
+        'gemini-2.0-flash-exp',  # Updated to more stable model
         generation_config=genai.types.GenerationConfig(
-            temperature=0.7,
-            top_p=0.9,
-            top_k=32,
-            max_output_tokens=2048,
-        )
+            temperature=0.8,  # Increased for more creative responses
+            top_p=0.95,      # Increased for more diverse responses
+            top_k=40,        # Increased for more variety
+            max_output_tokens=4096,  # Increased for longer responses
+        ),
+        safety_settings=safety_settings
     )
 
 def generate_with_retry(model, prompt, max_retries=3, delay=2):
@@ -105,17 +126,32 @@ def generate_with_retry(model, prompt, max_retries=3, delay=2):
         try:
             print(f"🔄 Gemini API isteği (deneme {attempt + 1}/{max_retries})")
             response = model.generate_content(prompt)
-            if response and response.text:
+            
+            # Detailed response checking
+            if response and hasattr(response, 'text') and response.text:
                 print(f"✅ Gemini API başarılı (deneme {attempt + 1})")
+                print(f"📄 Response length: {len(response.text)} characters")
                 return response
+            elif response and hasattr(response, 'candidates') and response.candidates:
+                # Check if response was blocked
+                candidate = response.candidates[0]
+                if hasattr(candidate, 'finish_reason'):
+                    print(f"⚠️ Response blocked: {candidate.finish_reason} (deneme {attempt + 1})")
+                    if hasattr(candidate, 'safety_ratings'):
+                        print(f"🛡️ Safety ratings: {candidate.safety_ratings}")
+                else:
+                    print(f"⚠️ Boş yanıt alındı (deneme {attempt + 1})")
             else:
-                print(f"⚠️ Boş yanıt alındı (deneme {attempt + 1})")
+                print(f"⚠️ Geçersiz response objesi (deneme {attempt + 1})")
+                
         except Exception as e:
             print(f"❌ Gemini API hatası (deneme {attempt + 1}): {e}")
-            if attempt < max_retries - 1:
-                print(f"⏳ {delay} saniye bekleniyor...")
-                time.sleep(delay)
-                delay *= 1.5  # Exponential backoff
-            else:
-                raise e
+            
+        # Wait before retry (except on last attempt)
+        if attempt < max_retries - 1:
+            print(f"⏳ {delay} saniye bekleniyor...")
+            time.sleep(delay)
+            delay *= 1.5  # Exponential backoff
+    
+    print(f"❌ Tüm denemeler başarısız oldu ({max_retries} deneme)")
     return None
