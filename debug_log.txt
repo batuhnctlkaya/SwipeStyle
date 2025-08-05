@@ -370,3 +370,21 @@
 📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)'], 'language': 'tr'}
 📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'Temel'], 'language': 'tr'}
 📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'Temel', '1000-2000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet', 'Önemli değil'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet', 'Önemli değil', 'Temel'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet', 'Önemli değil', 'Temel', '4000₺+'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Keyboard', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Keyboard', 'answers': ['Mekanik'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Keyboard', 'answers': ['Mekanik', 'Bilmiyorum'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Keyboard', 'answers': ['Mekanik', 'Bilmiyorum', 'Tek Renkli'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Keyboard', 'answers': ['Mekanik', 'Bilmiyorum', 'Tek Renkli', 'Kablolu'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Keyboard', 'answers': ['Mekanik', 'Bilmiyorum', 'Tek Renkli', 'Kablolu', '8000₺+'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli değil'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli değil', 'Temel'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli değil', 'Temel', '2000-4000₺'], 'language': 'tr'}

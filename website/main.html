@@ -957,76 +957,136 @@
 
         /* Recommendations */
         .recommendations {
-            background: var(--bg-white);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
+            background: transparent; /* Remove container background */
+            border: none;
+            padding: 0;
             margin-top: 20px;
-            animation: fadeIn 0.6s ease-out;
         }
-        
+
         .recommendations h2 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 600;
             color: var(--text-dark);
             text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .recommendation-item {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border-color: #d1d5db;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 16px;
         }
-        
-        .recommendation-item {
-            background: var(--bg-gray);
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 8px;
-            border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
-            position: relative;
-        }
-        
-        .recommendation-item:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Premium Badge */
-        .premium-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--premium-gradient);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
+
+        .product-info .product-name {
+            font-size: 1.25rem;
             font-weight: 600;
-            box-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);
+            color: var(--text-dark);
+            margin-bottom: 4px;
         }
-        
-        /* Good Match Badge */
-        .good-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--primary-green);
-            color: white;
-            padding: 4px 8px;
+
+        .match-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fefce8; /* light yellow */
+            color: #a16207; /* dark yellow */
+            padding: 4px 10px;
             border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
-        }
-        
-        /* Site Badge */
-        .site-badge {
-            position: absolute;
-            bottom: -8px;
-            left: -8px;
-            background: var(--text-gray);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 8px;
-            font-size: 0.6rem;
+            font-size: 0.8rem;
             font-weight: 500;
+        }
+        
+        .match-badge .fa-star {
+            color: #f59e0b;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .product-details {
+            margin-bottom: 20px;
+        }
+
+        .product-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .product-tag {
+            background: var(--bg-gray);
+            color: var(--text-gray);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .product-description {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .product-footer {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .store-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--cta-orange);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            min-width: 220px;
+        }
+
+        .store-button.hepsiburada { background-color: #ff6000; }
+        .store-button.trendyol { background-color: #f27a1a; }
+        .store-button.amazon { background-color: #ff9900; }
+        .store-button.teknosa { background-color: #ff4e00; }
+        .store-button.vatan { background-color: #004494; }
+        .store-button.n11 { background-color: #e53935; }
+        .store-button.default { background-color: var(--cta-orange); }
+
+        .store-button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
         /* Link Status Styles */
@@ -1251,8 +1311,8 @@
             <h1 class="ai-creation-title">
                 <i class="fas fa-robot"></i> AI Çalışıyor
             </h1>
-            <p class="ai-creation-subtitle" data-tr="Yapay zeka sizin için özel kategori oluşturuyor..." data-en="AI is creating a custom category for you...">
-                Yapay zeka sizin için özel kategori oluşturuyor...
+            <p class="ai-creation-subtitle" data-tr="AI sizin için özel kategori oluşturuyor..." data-en="AI is creating a custom category for you...">
+                AI sizin için özel kategori oluşturuyor...
             </p>
             <div class="ai-creation-spinner"></div>
             <div class="ai-creation-status" data-tr="Kategori analiz ediliyor..." data-en="Analyzing category...">

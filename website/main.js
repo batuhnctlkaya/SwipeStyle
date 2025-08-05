@@ -692,299 +692,96 @@ function renderQuestion(question, options, emoji) {
 
 function renderRecommendations(recs) {
     console.log("🎯 renderRecommendations called");
-    console.log("📊 Recommendations type:", typeof recs);
-    console.log("📊 Is array:", Array.isArray(recs));
-    console.log("📊 Length:", recs ? recs.length : 'null/undefined');
-    console.log("📊 Full data:", JSON.stringify(recs, null, 2));
-    
-    // Loading ekranlarını gizle
+    console.log("📊 Recommendations data:", recs);
+
     hideAICreationScreen();
     const loadingElement = document.querySelector('.loading');
     if (loadingElement) loadingElement.style.display = 'none';
-    
+
     const recDiv = document.querySelector('.recommendations');
-    
     const titleText = currentLanguage === 'tr' ? 'Önerilen Ürünler' : 'Recommended Products';
-    
-    // Check if recs is valid
+
     if (!recs || !Array.isArray(recs) || recs.length === 0) {
         console.error("❌ No valid recommendations to render");
         recDiv.innerHTML = `
             <div class="error-message">
                 <h3>Ürün bulunamadı</h3>
                 <p>Seçimlerinizle eşleşen ürün bulunamadı. Lütfen farklı seçenekler deneyin.</p>
-            </div>
-        `;
+            </div>`;
         return;
     }
-    
-    let html = `
-        <h2><i class="fas fa-star"></i> ${titleText}</h2>
-        <div class="recommendations-grid">
-    `;
-    
+
+    let html = `<h2><i class="fas fa-star"></i> ${titleText}</h2>`;
+
     recs.forEach((r, index) => {
-        console.log(`📦 Processing recommendation ${index}:`, r);
-        console.log(`📦 Recommendation keys:`, Object.keys(r));
-        
-        // Modern search engine format adaptasyonu
         const productTitle = r.title || r.name || 'Ürün';
-        const productPrice = r.price ? 
-            (typeof r.price === 'object' ? r.price.display : r.price) 
-            : 'Fiyat bilgisi yok';
-        const productUrl = r.product_url || r.link || r.url || '';
+        const productPrice = r.price ? (typeof r.price === 'object' ? r.price.display : r.price) : 'Fiyat bilgisi yok';
+        const productUrl = r.product_url || r.link || r.url || '#';
         const productDescription = r.why_recommended || r.description || '';
         const matchScore = r.match_score || 0;
-        const sourceSite = r.source_site || '';
-        
-        console.log(`💰 Product ${index}: title="${productTitle}", price="${productPrice}", url="${productUrl}"`);
-        
-        // URL düzeltme ve validation
-        let url = productUrl;
-        let linkClass = 'buy-link';
-        
-        // URL temizleme ve doğrulama
-        if (url) {
-            console.log(`🔍 Original URL: ${url}`);
-            
-            // URL encoding problemlerini düzelt
-            try {
-                url = decodeURIComponent(url);
-                console.log(`🔧 Decoded URL: ${url}`);
-            } catch (e) {
-                console.warn(`⚠️ URL decode failed: ${e}`);
-            }
-            
-            // HTTP/HTTPS kontrolü
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                if (url.startsWith('www.') || url.includes('.com') || url.includes('.tr')) {
-                    url = 'https://' + url.replace(/^(https?:\/\/)/, '');
-                    console.log(`🔗 Added HTTPS: ${url}`);
-                } else {
-                    // Geçersiz URL ise Google aramasına yönlendir
-                    const searchQuery = encodeURIComponent(productTitle);
-                    url = `https://www.google.com/search?q=${searchQuery}+satın+al`;
-                    console.log(`🔍 Fallback to Google: ${url}`);
-                }
-            }
-            
-            // URL'nin geçerli olduğundan emin ol
-            try {
-                new URL(url);
-                console.log(`✅ Valid URL: ${url}`);
-            } catch (e) {
-                console.warn(`⚠️ Invalid URL detected: ${url}`);
-                
-                // Site-specific fallback URLs with enhanced product targeting
-                let siteFound = false;
-                const searchQuery = encodeURIComponent(productTitle);
-                
-                // Extract brand and model from product title for better targeting
-                const foundBrand = extractBrand(productTitle);
-                const foundModel = extractModel(productTitle);
-                
-                // Build enhanced search query
-                let enhancedQuery = searchQuery;
-                if (foundBrand) {
-                    enhancedQuery = foundBrand + ' ' + searchQuery;
-                }
-                if (foundModel && !searchQuery.toLowerCase().includes(foundModel)) {
-                    enhancedQuery += ' ' + foundModel;
-                }
-                
-                console.log(`🎯 Enhanced search: "${productTitle}" → brand: "${foundBrand}", model: "${foundModel}", query: "${enhancedQuery}"`);
-                
-                // Category mapping for better site navigation
-                const categoryMapping = {
-                    'Headphones': 'kulaklik',
-                    'Phone': 'cep-telefonu', 
-                    'Laptop': 'laptop',
-                    'Television': 'televizyon',
-                    'Drone': 'drone',
-                    'Klima': 'klima'
-                };
-                
-                if (sourceSite) {
-                    console.log(`🎯 Creating enhanced search URL for: ${sourceSite}`);
-                    
-                    const currentCat = getCurrentCategory();
-                    const categoryPath = categoryMapping[currentCat] || '';
-                    
-                    // Fiyat bilgisini de URL'ye ekle
-                    const price = r.price && typeof r.price === 'object' ? r.price.value : null;
-                    const priceParam = price ? `&minPrice=${Math.max(0, price-1000)}&maxPrice=${price+1000}` : '';
-                    
-                    if (sourceSite.includes('teknosa')) {
-                        // Teknosa enhanced URL with category and brand
-                        url = `https://www.teknosa.com/arama?q=${enhancedQuery}${categoryPath ? '&kategori=' + categoryPath : ''}`;
-                        console.log(`🔍 Teknosa enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('hepsiburada')) {
-                        // Hepsiburada enhanced URL with specific product targeting
-                        url = `https://www.hepsiburada.com/ara?q=${enhancedQuery}${priceParam}`;
-                        console.log(`🔍 Hepsiburada enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('trendyol')) {
-                        // Trendyol enhanced URL with brand and model focus
-                        url = `https://www.trendyol.com/sr?q=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
-                        console.log(`🔍 Trendyol enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('n11')) {
-                        // N11 enhanced URL with precise product search
-                        url = `https://www.n11.com/arama?q=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
-                        console.log(`🔍 N11 enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('amazon')) {
-                        // Amazon enhanced URL with department targeting
-                        const dept = categoryPath ? `&i=${categoryPath}` : '';
-                        url = `https://www.amazon.com.tr/s?k=${enhancedQuery}${dept}`;
-                        console.log(`🔍 Amazon enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('gittigidiyor')) {
-                        // GittiGidiyor enhanced URL
-                        url = `https://www.gittigidiyor.com/arama/?k=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
-                        console.log(`🔍 GittiGidiyor enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('ciceksepeti')) {
-                        // ÇiçekSepeti enhanced URL for tech products
-                        url = `https://www.ciceksepeti.com/arama?q=${enhancedQuery}`;
-                        console.log(`🔍 ÇiçekSepeti enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('mediamarkt')) {
-                        // MediaMarkt enhanced URL
-                        url = `https://www.mediamarkt.com.tr/tr/search.html?query=${enhancedQuery}`;
-                        console.log(`🔍 MediaMarkt enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('vatan')) {
-                        // Vatan Bilgisayar enhanced URL
-                        url = `https://www.vatanbilgisayar.com/arama/?text=${enhancedQuery}`;
-                        console.log(`🔍 Vatan enhanced URL: ${url}`);
-                        siteFound = true;
-                    }
-                }
-                
-                // Eğer site-specific URL yoksa Google search
-                if (!siteFound) {
-                    url = `https://www.google.com/search?q=${searchQuery}+satın+al`;
-                    console.log(`🔍 Google fallback URL: ${url}`);
-                }
-                
-                linkClass += ' link-fallback';
-            }
-        }
-        
-        // Link oluştur - link status'u da göster
-        let linkHtml = '';
-        if (url && url !== '' && !url.includes('undefined')) {
-            let linkClass = 'buy-link';
-            let linkIcon = 'fas fa-external-link-alt';
-            let linkText = currentLanguage === 'tr' ? 'Satın Al' : 'Buy Now';
-            
-            // Link durumuna göre stil ve metin ayarla
-            if (r.link_status) {
-                switch (r.link_status) {
-                    case 'valid':
-                        linkClass += ' link-valid';
-                        linkIcon = 'fas fa-check-circle';
-                        break;
-                    case 'repaired':
-                        linkClass += ' link-repaired';
-                        linkIcon = 'fas fa-tools';
-                        linkText = currentLanguage === 'tr' ? 'Onarılan Link' : 'Repaired Link';
-                        break;
-                    case 'fallback':
-                        linkClass += ' link-fallback';
-                        linkIcon = 'fas fa-search';
-                        linkText = currentLanguage === 'tr' ? 'Arama Sayfası' : 'Search Page';
-                        break;
-                    case 'failed':
-                        linkClass += ' link-failed';
-                        linkIcon = 'fas fa-exclamation-triangle';
-                        linkText = currentLanguage === 'tr' ? 'Link Sorunlu' : 'Link Issue';
-                        break;
-                }
-                
-                // Link status mesajını tooltip olarak ekle
-                const tooltipText = r.link_message || 'Link durumu';
-                linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="${linkClass}" title="${tooltipText}">
-                    <i class="${linkIcon}"></i> ${linkText}
-                </a>`;
-            } else {
-                linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="${linkClass}">
-                    <i class="${linkIcon}"></i> ${linkText}
-                </a>`;
-            }
-        } else {
-            // Geçersiz URL için disabled buton
-            linkHtml = `<span class="buy-link link-failed" title="Geçersiz link">
-                <i class="fas fa-exclamation-triangle"></i> ${currentLanguage === 'tr' ? 'Link Mevcut Değil' : 'Link Unavailable'}
-            </span>`;
-        }
-        
-        // Badge'leri ekle
-        let badges = '';
-        
-        // Match score badge
-        if (matchScore >= 90) {
-            const perfectText = currentLanguage === 'tr' ? '⭐ Mükemmel Eşleşme' : '⭐ Perfect Match';
-            badges += `<div class="premium-badge">${perfectText}</div>`;
-        } else if (matchScore >= 80) {
-            const goodText = currentLanguage === 'tr' ? '✅ İyi Eşleşme' : '✅ Good Match';
-            badges += `<div class="good-badge">${goodText}</div>`;
-        }
-        
-        // Site badge - sadece gerçek siteler için
-        if (sourceSite && !sourceSite.includes('mock')) {
-            badges += `<div class="site-badge">${sourceSite}</div>`;
-        }
-        
-        // Features listesi
+        const sourceSite = r.source_site || 'Bilinmeyen Mağaza';
+        const features = r.features || [];
+
         let featuresHtml = '';
-        if (r.features && Array.isArray(r.features)) {
-            const featuresText = r.features.slice(0, 3).join(', '); // İlk 3 özellik
-            featuresHtml = `<div class="recommendation-features">${featuresText}</div>`;
+        if (features.length > 0) {
+            featuresHtml = features.map(feature => `<span class="product-tag">${feature}</span>`).join('');
         }
-        
-        // Pros listesi
-        let prosHtml = '';
-        if (r.pros && Array.isArray(r.pros)) {
-            const prosText = r.pros.slice(0, 2).map(pro => `✓ ${pro}`).join(' '); // İlk 2 artı
-            prosHtml = `<div class="recommendation-pros">${prosText}</div>`;
-        }
-        
+
+        const storeInfo = getStoreInfo(sourceSite);
+
         html += `
             <div class="recommendation-item">
-                ${badges}
-                <div class="recommendation-content">
-                    <div class="recommendation-name">${productTitle}</div>
-                    <div class="recommendation-price">${productPrice}</div>
-                    ${featuresHtml}
-                    ${prosHtml}
-                    ${productDescription ? `<div class="recommendation-description">${productDescription}</div>` : ''}
-                    ${matchScore > 0 ? `<div class="match-score">Uygunluk: %${matchScore}</div>` : ''}
-                    ${linkHtml}
+                <div class="product-header">
+                    <div class="product-info">
+                        <h3 class="product-name">${productTitle}</h3>
+                        <div class="match-badge">
+                            <i class="fas fa-star"></i>
+                            <span>${matchScore}% ${currentLanguage === 'tr' ? 'uygun' : 'match'}</span>
+                        </div>
+                    </div>
+                    <div class="product-price">${productPrice}</div>
+                </div>
+                <div class="product-details">
+                    <div class="product-tags">${featuresHtml}</div>
+                    <p class="product-description">${productDescription}</p>
+                </div>
+                <div class="product-footer">
+                    <a href="${productUrl}" target="_blank" rel="noopener noreferrer" class="store-button ${storeInfo.class}">
+                        <i class="${storeInfo.icon}"></i>
+                        <span>${sourceSite}'da Gör</span>
+                    </a>
                 </div>
             </div>
         `;
     });
-    
+
     const backButtonText = currentLanguage === 'tr' ? 'Yeni Arama Yap' : 'New Search';
-    
     html += `
-        </div>
-        <div class="back-section">
+        <div class="back-section" style="text-align: center; margin-top: 30px;">
             <button id="back-to-categories" class="back-btn">
                 <i class="fas fa-arrow-left"></i> ${backButtonText}
             </button>
         </div>
     `;
-    
+
     recDiv.innerHTML = html;
     document.querySelector('.error').textContent = '';
-    
+
     document.getElementById('back-to-categories').onclick = () => {
         resetToLanding();
     };
+}
+
+function getStoreInfo(storeName) {
+    const lowerCaseName = storeName.toLowerCase();
+    if (lowerCaseName.includes('hepsiburada')) return { class: 'hepsiburada', icon: 'fas fa-shopping-cart' };
+    if (lowerCaseName.includes('trendyol')) return { class: 'trendyol', icon: 'fas fa-store' };
+    if (lowerCaseName.includes('amazon')) return { class: 'amazon', icon: 'fab fa-amazon' };
+    if (lowerCaseName.includes('teknosa')) return { class: 'teknosa', icon: 'fas fa-plug' };
+    if (lowerCaseName.includes('vatan')) return { class: 'vatan', icon: 'fas fa-desktop' };
+    if (lowerCaseName.includes('n11')) return { class: 'n11', icon: 'fas fa-tag' };
+    if (lowerCaseName.includes('media markt')) return { class: 'mediamarkt', icon: 'fas fa-tv' };
+    return { class: 'default-store', icon: 'fas fa-external-link-alt' };
 }
 
 function resetToLanding() {
