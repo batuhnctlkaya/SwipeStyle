@@ -1,0 +1,29 @@
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)', '25-35k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Tire', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)', '35-50k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Bilmiyorum'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Bilmiyorum', 'Büyük (25 m² +)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Telefon', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Telefon', 'answers': ['Temel yeterli'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Telefon', 'answers': ['Temel yeterli', 'Normal kullanım (8-12 saat)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Telefon', 'answers': ['Temel yeterli', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}

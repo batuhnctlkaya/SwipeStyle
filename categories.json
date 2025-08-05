@@ -1,0 +1,1056 @@
+{
+  "Headphones": {
+    "budget_bands": {
+      "tr": [
+        "500-1.5k₺",
+        "1.5-3k₺",
+        "3-6k₺",
+        "6-12k₺",
+        "12k₺+"
+      ],
+      "en": [
+        "$15-50",
+        "$50-100",
+        "$100-200",
+        "$200-400",
+        "$400+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "form_factor",
+        "type": "single_choice",
+        "label": {
+          "tr": "Form faktörü nedir?",
+          "en": "Preferred form factor?"
+        },
+        "emoji": "🎧",
+        "tooltip": {
+          "tr": "Kulak içi kulaklıklar taşınabilir, kulak üstü kulaklıklar daha büyük ses ve konfor sunar.",
+          "en": "In-ear headphones are portable, over-ear headphones offer bigger sound and comfort."
+        },
+        "options": [
+          {
+            "id": "in_ear",
+            "label": {
+              "tr": "Kulak içi (Taşınabilir)",
+              "en": "In-ear (Portable)"
+            }
+          },
+          {
+            "id": "over_ear",
+            "label": {
+              "tr": "Kulak üstü (Konforlu, kaliteli ses)",
+              "en": "Over-ear (Comfortable, quality sound)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "wireless",
+        "type": "boolean",
+        "label": {
+          "tr": "Kablosuz bağlantı ister misiniz?",
+          "en": "Do you want wireless connectivity?"
+        },
+        "emoji": "📶",
+        "tooltip": {
+          "tr": "Kablosuz kulaklıklar daha özgür hareket imkanı sağlar.",
+          "en": "Wireless headphones provide more freedom of movement."
+        },
+        "weight": 0.8
+      },
+      {
+        "id": "anc",
+        "type": "boolean",
+        "label": {
+          "tr": "Aktif gürültü engelleme önemli mi?",
+          "en": "Is active noise cancellation important?"
+        },
+        "emoji": "🔇",
+        "tooltip": {
+          "tr": "ANC dış gürültüleri engeller, sessiz ortam sağlar.",
+          "en": "ANC blocks external noise for a quiet environment."
+        },
+        "weight": 0.7
+      }
+    ]
+  },
+  "Phone": {
+    "budget_bands": {
+      "tr": [
+        "3-8k₺",
+        "8-15k₺",
+        "15-25k₺",
+        "25-40k₺",
+        "40k₺+"
+      ],
+      "en": [
+        "$100-250",
+        "$250-500",
+        "$500-800",
+        "$800-1200",
+        "$1200+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "camera_quality",
+        "type": "single_choice",
+        "label": {
+          "tr": "Kamera kalitesi ne kadar önemli?",
+          "en": "How important is camera quality?"
+        },
+        "emoji": "📸",
+        "tooltip": {
+          "tr": "Sosyal medya, profesyonel fotoğraf veya günlük kullanım için kamera önceliğinizi belirtin.",
+          "en": "Specify your camera priority for social media, professional photography, or daily use."
+        },
+        "options": [
+          {
+            "id": "professional",
+            "label": {
+              "tr": "Çok önemli (Profesyonel kalite)",
+              "en": "Very important (Professional quality)"
+            }
+          },
+          {
+            "id": "good",
+            "label": {
+              "tr": "Önemli (İyi kalite)",
+              "en": "Important (Good quality)"
+            }
+          },
+          {
+            "id": "basic",
+            "label": {
+              "tr": "Temel yeterli",
+              "en": "Basic is sufficient"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "battery_life",
+        "type": "boolean",
+        "label": {
+          "tr": "Uzun pil ömrü öncelikli mi?",
+          "en": "Is long battery life a priority?"
+        },
+        "emoji": "🔋",
+        "tooltip": {
+          "tr": "Günlük yoğun kullanım için uzun pil ömrü gerekli.",
+          "en": "Long battery life is necessary for heavy daily usage."
+        },
+        "weight": 0.8
+      }
+    ]
+  },
+  "Laptop": {
+    "budget_bands": {
+      "tr": [
+        "8-15k₺",
+        "15-25k₺",
+        "25-40k₺",
+        "40-60k₺",
+        "60k₺+"
+      ],
+      "en": [
+        "$300-600",
+        "$600-1000",
+        "$1000-1500",
+        "$1500-2500",
+        "$2500+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "primary_use",
+        "type": "single_choice",
+        "label": {
+          "tr": "Temel kullanım amacınız nedir?",
+          "en": "What is your primary use case?"
+        },
+        "emoji": "💻",
+        "tooltip": {
+          "tr": "Kullanım amacınız laptop özelliklerini belirler.",
+          "en": "Your use case determines laptop specifications."
+        },
+        "options": [
+          {
+            "id": "office",
+            "label": {
+              "tr": "Ofis işleri (Word, Excel, web)",
+              "en": "Office work (Word, Excel, web)"
+            }
+          },
+          {
+            "id": "gaming",
+            "label": {
+              "tr": "Oyun (Gaming)",
+              "en": "Gaming"
+            }
+          },
+          {
+            "id": "creative",
+            "label": {
+              "tr": "Yaratıcı işler (Video, tasarım)",
+              "en": "Creative work (Video, design)"
+            }
+          },
+          {
+            "id": "programming",
+            "label": {
+              "tr": "Programlama",
+              "en": "Programming"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "portability",
+        "type": "boolean",
+        "label": {
+          "tr": "Taşınabilirlik önemli mi?",
+          "en": "Is portability important?"
+        },
+        "emoji": "🎒",
+        "tooltip": {
+          "tr": "Sık seyahat ediyorsanız hafif ve ince laptop tercih edin.",
+          "en": "If you travel frequently, prefer a light and thin laptop."
+        },
+        "weight": 0.7
+      }
+    ]
+  },
+  "Mouse": {
+    "budget_bands": {
+      "tr": [
+        "100-300₺",
+        "300-600₺",
+        "600-1.2k₺",
+        "1.2-2.5k₺",
+        "2.5k₺+"
+      ],
+      "en": [
+        "$5-15",
+        "$15-30",
+        "$30-60",
+        "$60-120",
+        "$120+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "usage_type",
+        "type": "single_choice",
+        "label": {
+          "tr": "Kullanım türünüz nedir?",
+          "en": "What is your usage type?"
+        },
+        "emoji": "🖱️",
+        "tooltip": {
+          "tr": "Kullanım türünüz mouse özelliklerini belirler.",
+          "en": "Your usage type determines mouse features."
+        },
+        "options": [
+          {
+            "id": "office",
+            "label": {
+              "tr": "Ofis/Günlük kullanım",
+              "en": "Office/Daily use"
+            }
+          },
+          {
+            "id": "gaming",
+            "label": {
+              "tr": "Oyun (Gaming)",
+              "en": "Gaming"
+            }
+          },
+          {
+            "id": "design",
+            "label": {
+              "tr": "Tasarım/Grafik",
+              "en": "Design/Graphics"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "wireless",
+        "type": "boolean",
+        "label": {
+          "tr": "Kablosuz mouse ister misiniz?",
+          "en": "Do you want a wireless mouse?"
+        },
+        "emoji": "📶",
+        "tooltip": {
+          "tr": "Kablosuz mouse daha temiz görünüm ve hareket özgürlüğü sağlar.",
+          "en": "Wireless mouse provides cleaner look and freedom of movement."
+        },
+        "weight": 0.6
+      }
+    ]
+  },
+  "Klima": {
+    "budget_bands": {
+      "tr": [
+        "8-15k₺",
+        "15-25k₺",
+        "25-35k₺",
+        "35-50k₺",
+        "50k₺+"
+      ],
+      "en": [
+        "8-15k₺",
+        "15-25k₺",
+        "25-35k₺",
+        "35-50k₺",
+        "50k₺+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "room_size",
+        "type": "single_choice",
+        "label": {
+          "tr": "Klima hangi büyüklükteki bir oda için kullanılacak?",
+          "en": "What size room will the air conditioner be used for?"
+        },
+        "emoji": "📏",
+        "tooltip": {
+          "tr": "Oda büyüklüğüne göre doğru BTU değerini seçmek önemlidir.",
+          "en": "Choosing the right BTU value based on room size is important."
+        },
+        "options": [
+          {
+            "id": "small",
+            "label": {
+              "tr": "Küçük (9-15 m²)",
+              "en": "Small (9-15 m²)"
+            }
+          },
+          {
+            "id": "medium",
+            "label": {
+              "tr": "Orta (15-25 m²)",
+              "en": "Medium (15-25 m²)"
+            }
+          },
+          {
+            "id": "large",
+            "label": {
+              "tr": "Büyük (25 m² +)",
+              "en": "Large (25 m² +)"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "inverter_technology",
+        "type": "boolean",
+        "label": {
+          "tr": "Inverter teknolojisi önemli mi?",
+          "en": "Is inverter technology important?"
+        },
+        "emoji": "⚡",
+        "tooltip": {
+          "tr": "Inverter klimalar daha az enerji tüketir ve daha sessiz çalışır.",
+          "en": "Inverter air conditioners consume less energy and operate more quietly."
+        },
+        "weight": 0.9
+      },
+      {
+        "id": "energy_efficiency",
+        "type": "single_choice",
+        "label": {
+          "tr": "Enerji verimliliği sizin için ne kadar önemli?",
+          "en": "How important is energy efficiency to you?"
+        },
+        "emoji": "🌿",
+        "tooltip": {
+          "tr": "Yüksek enerji sınıfı (A+++) uzun vadede daha az enerji tüketimi anlamına gelir.",
+          "en": "A high energy class (A+++) means less energy consumption in the long run."
+        },
+        "options": [
+          {
+            "id": "very_important",
+            "label": {
+              "tr": "Çok önemli (A+++)",
+              "en": "Very important (A+++)"
+            }
+          },
+          {
+            "id": "important",
+            "label": {
+              "tr": "Önemli (A++ / A++)",
+              "en": "Important (A++ / A++)"
+            }
+          },
+          {
+            "id": "not_important",
+            "label": {
+              "tr": "Çok önemli değil",
+              "en": "Not very important"
+            }
+          }
+        ],
+        "weight": 0.8
+      },
+      {
+        "id": "smart_features",
+        "type": "boolean",
+        "label": {
+          "tr": "Akıllı özellikler (Wi-Fi kontrolü, uygulama) ister misiniz?",
+          "en": "Do you want smart features (Wi-Fi control, app)?"
+        },
+        "emoji": "📱",
+        "tooltip": {
+          "tr": "Akıllı özellikler klimanızı uzaktan kontrol etmenizi sağlar.",
+          "en": "Smart features allow you to control your air conditioner remotely."
+        },
+        "weight": 0.6
+      },
+      {
+        "id": "brand_preference",
+        "type": "single_choice",
+        "label": {
+          "tr": "Marka tercihinizi belirtin",
+          "en": "Specify your brand preference"
+        },
+        "emoji": "🏢",
+        "tooltip": {
+          "tr": "Güvendiğiniz veya daha önce deneyimlediğiniz bir marka var mı?",
+          "en": "Is there a brand you trust or have experienced before?"
+        },
+        "options": [
+          {
+            "id": "daikin",
+            "label": {
+              "tr": "Daikin",
+              "en": "Daikin"
+            }
+          },
+          {
+            "id": "mitsubishi",
+            "label": {
+              "tr": "Mitsubishi Electric",
+              "en": "Mitsubishi Electric"
+            }
+          },
+          {
+            "id": "lg",
+            "label": {
+              "tr": "LG",
+              "en": "LG"
+            }
+          },
+          {
+            "id": "samsung",
+            "label": {
+              "tr": "Samsung",
+              "en": "Samsung"
+            }
+          },
+          {
+            "id": "arcelik_beko",
+            "label": {
+              "tr": "Arçelik/Beko",
+              "en": "Arçelik/Beko"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.5
+      }
+    ]
+  },
+  "Tire": {
+    "budget_bands": {
+      "tr": [
+        "1.5-3k₺",
+        "3-6k₺",
+        "6-9k₺",
+        "9-15k₺",
+        "15k₺+"
+      ],
+      "en": [
+        "₺1,500-3,000",
+        "₺3,000-6,000",
+        "₺6,000-9,000",
+        "₺9,000-15,000",
+        "₺15,000+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "tire_type",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ne tür lastik arıyorsunuz?",
+          "en": "What type of tire are you looking for?"
+        },
+        "emoji": "🚗",
+        "tooltip": {
+          "tr": "Yazlık, kışlık veya dört mevsim lastiği seçiminizi yapın.",
+          "en": "Choose between summer, winter, or all-season tires."
+        },
+        "options": [
+          {
+            "id": "summer",
+            "label": {
+              "tr": "Yazlık",
+              "en": "Summer"
+            }
+          },
+          {
+            "id": "winter",
+            "label": {
+              "tr": "Kışlık",
+              "en": "Winter"
+            }
+          },
+          {
+            "id": "all_season",
+            "label": {
+              "tr": "Dört Mevsim",
+              "en": "All-Season"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "tire_size",
+        "type": "single_choice",
+        "label": {
+          "tr": "Lastik ebatları nedir? (Örn: 205/55 R16)",
+          "en": "What is the tire size? (e.g., 205/55 R16)"
+        },
+        "emoji": "📏",
+        "tooltip": {
+          "tr": "Aracınız için doğru lastik ebatlarını belirtin. Araç ruhsatınızda veya mevcut lastiklerinizde bulabilirsiniz.",
+          "en": "Specify the correct tire size for your vehicle. You can find it in your vehicle registration or on your current tires."
+        },
+        "options": [
+          {
+            "id": "195_65_r15",
+            "label": {
+              "tr": "195/65 R15",
+              "en": "195/65 R15"
+            }
+          },
+          {
+            "id": "205_55_r16",
+            "label": {
+              "tr": "205/55 R16",
+              "en": "205/55 R16"
+            }
+          },
+          {
+            "id": "225_45_r17",
+            "label": {
+              "tr": "225/45 R17",
+              "en": "225/45 R17"
+            }
+          },
+          {
+            "id": "other",
+            "label": {
+              "tr": "Diğer",
+              "en": "Other"
+            }
+          }
+        ],
+        "weight": 0.9
+      },
+      {
+        "id": "brand_preference",
+        "type": "single_choice",
+        "label": {
+          "tr": "Marka tercihiniz var mı?",
+          "en": "Do you have a brand preference?"
+        },
+        "emoji": "🏢",
+        "tooltip": {
+          "tr": "Belirli bir lastik markası tercihiniz varsa belirtin.",
+          "en": "Specify if you have a preference for a particular tire brand."
+        },
+        "options": [
+          {
+            "id": "bridgestone",
+            "label": {
+              "tr": "Bridgestone",
+              "en": "Bridgestone"
+            }
+          },
+          {
+            "id": "michelin",
+            "label": {
+              "tr": "Michelin",
+              "en": "Michelin"
+            }
+          },
+          {
+            "id": "pirelli",
+            "label": {
+              "tr": "Pirelli",
+              "en": "Pirelli"
+            }
+          },
+          {
+            "id": "continental",
+            "label": {
+              "tr": "Continental",
+              "en": "Continental"
+            }
+          },
+          {
+            "id": "lassa",
+            "label": {
+              "tr": "Lassa",
+              "en": "Lassa"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Farketmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.7
+      },
+      {
+        "id": "run_flat",
+        "type": "boolean",
+        "label": {
+          "tr": "Run-flat lastiklere ihtiyacınız var mı?",
+          "en": "Do you need run-flat tires?"
+        },
+        "emoji": "🛡️",
+        "tooltip": {
+          "tr": "Patlasa bile bir süre daha yolculuk yapmanızı sağlayan lastik türü.",
+          "en": "Tires that allow you to continue driving even after a puncture."
+        },
+        "weight": 0.6
+      },
+      {
+        "id": "vehicle_type",
+        "type": "single_choice",
+        "label": {
+          "tr": "Araç tipiniz nedir?",
+          "en": "What type of vehicle do you have?"
+        },
+        "emoji": "🚘",
+        "tooltip": {
+          "tr": "Binek araç, SUV veya kamyonet için lastik seçiminizi yapın.",
+          "en": "Choose between passenger car, SUV, or truck tires."
+        },
+        "options": [
+          {
+            "id": "passenger_car",
+            "label": {
+              "tr": "Binek Araç",
+              "en": "Passenger Car"
+            }
+          },
+          {
+            "id": "suv",
+            "label": {
+              "tr": "SUV / 4x4",
+              "en": "SUV / 4x4"
+            }
+          },
+          {
+            "id": "truck",
+            "label": {
+              "tr": "Kamyonet",
+              "en": "Truck"
+            }
+          }
+        ],
+        "weight": 0.8
+      }
+    ]
+  },
+  "Microphone": {
+    "budget_bands": {
+      "tr": [
+        "1-3k₺",
+        "3-6k₺",
+        "6-12k₺",
+        "12-20k₺",
+        "20k₺+"
+      ],
+      "en": [
+        "$30-100",
+        "$100-200",
+        "$200-400",
+        "$400-600",
+        "$600+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "quality",
+        "type": "single_choice",
+        "label": {
+          "tr": "Microphone kalitesi?",
+          "en": "Microphone quality?"
+        },
+        "emoji": "⭐",
+        "tooltip": {
+          "tr": "Microphone için kalite seviyenizi seçin.",
+          "en": "Choose quality level for your Microphone."
+        },
+        "options": [
+          {
+            "id": "basic",
+            "label": {
+              "tr": "Temel",
+              "en": "Basic"
+            }
+          },
+          {
+            "id": "standard",
+            "label": {
+              "tr": "Standart",
+              "en": "Standard"
+            }
+          },
+          {
+            "id": "premium",
+            "label": {
+              "tr": "Premium",
+              "en": "Premium"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "brand_importance",
+        "type": "boolean",
+        "label": {
+          "tr": "Marka önemli mi?",
+          "en": "Is brand important?"
+        },
+        "emoji": "🏷️",
+        "tooltip": {
+          "tr": "Ürün seçiminde marka önemli bir faktör mü?",
+          "en": "Is brand an important factor in product selection?"
+        },
+        "weight": 0.7
+      }
+    ]
+  },
+  "Tablo": {
+    "budget_bands": {
+      "tr": [
+        "1-3k₺",
+        "3-6k₺",
+        "6-12k₺",
+        "12-20k₺",
+        "20k₺+"
+      ],
+      "en": [
+        "$30-100",
+        "$100-200",
+        "$200-400",
+        "$400-600",
+        "$600+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "quality",
+        "type": "single_choice",
+        "label": {
+          "tr": "Tablo kalitesi?",
+          "en": "Tablo quality?"
+        },
+        "emoji": "⭐",
+        "tooltip": {
+          "tr": "Tablo için kalite seviyenizi seçin.",
+          "en": "Choose quality level for your Tablo."
+        },
+        "options": [
+          {
+            "id": "basic",
+            "label": {
+              "tr": "Temel",
+              "en": "Basic"
+            }
+          },
+          {
+            "id": "standard",
+            "label": {
+              "tr": "Standart",
+              "en": "Standard"
+            }
+          },
+          {
+            "id": "premium",
+            "label": {
+              "tr": "Premium",
+              "en": "Premium"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "brand_importance",
+        "type": "boolean",
+        "label": {
+          "tr": "Marka önemli mi?",
+          "en": "Is brand important?"
+        },
+        "emoji": "🏷️",
+        "tooltip": {
+          "tr": "Ürün seçiminde marka önemli bir faktör mü?",
+          "en": "Is brand an important factor in product selection?"
+        },
+        "weight": 0.7
+      }
+    ]
+  },
+  "Television": {
+    "budget_bands": {
+      "tr": [
+        "4.000-10.000₺",
+        "10.000-25.000₺",
+        "25.000-40.000₺",
+        "40.000-80.000₺",
+        "80.000₺+"
+      ],
+      "en": [
+        "$130-330",
+        "$330-830",
+        "$830-1330",
+        "$1330-2660",
+        "$2660+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "screen_size",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ekran boyutu ne kadar önemli?",
+          "en": "How important is screen size?"
+        },
+        "emoji": "📺",
+        "tooltip": {
+          "tr": "Oturma mesafenize ve oda büyüklüğüne göre uygun ekran boyutunu seçin.",
+          "en": "Choose the appropriate screen size based on your viewing distance and room size."
+        },
+        "options": [
+          {
+            "id": "small",
+            "label": {
+              "tr": "Küçük (32-43 inç)",
+              "en": "Small (32-43 inch)"
+            }
+          },
+          {
+            "id": "medium",
+            "label": {
+              "tr": "Orta (43-55 inç)",
+              "en": "Medium (43-55 inch)"
+            }
+          },
+          {
+            "id": "large",
+            "label": {
+              "tr": "Büyük (55-65 inç)",
+              "en": "Large (55-65 inch)"
+            }
+          },
+          {
+            "id": "xlarge",
+            "label": {
+              "tr": "Çok Büyük (65 inç+)",
+              "en": "Extra Large (65 inch+)"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "resolution",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ekran çözünürlüğü ne kadar önemli?",
+          "en": "How important is screen resolution?"
+        },
+        "emoji": "✨",
+        "tooltip": {
+          "tr": "Daha yüksek çözünürlük daha net ve detaylı görüntüler sunar.",
+          "en": "Higher resolution provides clearer and more detailed images."
+        },
+        "options": [
+          {
+            "id": "full_hd",
+            "label": {
+              "tr": "Full HD (1080p)",
+              "en": "Full HD (1080p)"
+            }
+          },
+          {
+            "id": "4k",
+            "label": {
+              "tr": "4K Ultra HD",
+              "en": "4K Ultra HD"
+            }
+          },
+          {
+            "id": "8k",
+            "label": {
+              "tr": "8K Ultra HD",
+              "en": "8K Ultra HD"
+            }
+          }
+        ],
+        "weight": 0.9
+      },
+      {
+        "id": "smart_tv",
+        "type": "boolean",
+        "label": {
+          "tr": "Akıllı TV özellikleri (Netflix, YouTube) gerekli mi?",
+          "en": "Are Smart TV features (Netflix, YouTube) necessary?"
+        },
+        "emoji": "🌐",
+        "tooltip": {
+          "tr": "Akıllı TV, internete bağlanarak çeşitli uygulamaları kullanmanızı sağlar.",
+          "en": "Smart TV allows you to connect to the internet and use various applications."
+        },
+        "weight": 0.8
+      },
+      {
+        "id": "panel_type",
+        "type": "single_choice",
+        "label": {
+          "tr": "Panel tipi tercihiniz nedir?",
+          "en": "What is your preferred panel type?"
+        },
+        "emoji": "🖼️",
+        "tooltip": {
+          "tr": "OLED daha iyi kontrast ve renk doğruluğu sunar, QLED daha parlak ve uygun fiyatlı olabilir.",
+          "en": "OLED offers better contrast and color accuracy, QLED can be brighter and more affordable."
+        },
+        "options": [
+          {
+            "id": "led",
+            "label": {
+              "tr": "LED",
+              "en": "LED"
+            }
+          },
+          {
+            "id": "qled",
+            "label": {
+              "tr": "QLED",
+              "en": "QLED"
+            }
+          },
+          {
+            "id": "oled",
+            "label": {
+              "tr": "OLED",
+              "en": "OLED"
+            }
+          }
+        ],
+        "weight": 0.7
+      },
+      {
+        "id": "brand_preference",
+        "type": "single_choice",
+        "label": {
+          "tr": "Marka tercihin var mı?",
+          "en": "Do you have a brand preference?"
+        },
+        "emoji": "🏢",
+        "tooltip": {
+          "tr": "Belirli bir marka mı arıyorsunuz?",
+          "en": "Are you looking for a specific brand?"
+        },
+        "options": [
+          {
+            "id": "samsung",
+            "label": {
+              "tr": "Samsung",
+              "en": "Samsung"
+            }
+          },
+          {
+            "id": "lg",
+            "label": {
+              "tr": "LG",
+              "en": "LG"
+            }
+          },
+          {
+            "id": "sony",
+            "label": {
+              "tr": "Sony",
+              "en": "Sony"
+            }
+          },
+          {
+            "id": "other",
+            "label": {
+              "tr": "Diğer",
+              "en": "Other"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Farketmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.6
+      }
+    ]
+  }
+}
