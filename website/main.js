@@ -273,10 +273,31 @@ const autocompleteSuggestions = {
     'k': [
         { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' },
         { text: 'Klavye', icon: 'fas fa-keyboard', category: 'Keyboard' },
-        { text: 'Kamera', icon: 'fas fa-camera', category: 'Camera' },
-        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Kettle', icon: 'fas fa-mug-hot', category: 'Kitchen' },
-        { text: 'Konsol', icon: 'fas fa-gamepad', category: 'Gaming' }
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+    ],
+    'ku': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kul': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kula': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulak': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulakl': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulakli': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulaklik': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulaklık': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
     ],
     'kl': [
         { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
@@ -305,115 +326,95 @@ const autocompleteSuggestions = {
         { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
     ],
     'laptop': [
-        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop HP', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Lenovo', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Asus', icon: 'fas fa-laptop', category: 'Laptop' }
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
     ],
     'm': [
         { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse SteelSeries', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Corsair', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' },
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
     ],
     'mo': [
         { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'mi': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mik': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikr': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikro': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikrof': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikrofo': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikrofon': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mon': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'moni': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'monit': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'monito': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'monitor': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'monitör': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
     ],
     'mou': [
-        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' }
     ],
     'mous': [
-        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' }
     ],
     'mouse': [
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse SteelSeries', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Corsair', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse HyperX', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' }
+
     ],
     't': [
         { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
         { text: 'Tablet', icon: 'fas fa-tablet-alt', category: 'Tablet' },
         { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
-        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
     ],
     'te': [
         { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Tablet', icon: 'fas fa-tablet-alt', category: 'Tablet' },
         { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
         { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
     ],
     'tel': [
         { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
     ],
     'tele': [
         { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
     ],
     'telef': [
-        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' }
     ],
     'telefo': [
-        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Nokia', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' }
     ],
     'telefon': [
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Nokia', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Sony', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' }
     ]
 };
 
