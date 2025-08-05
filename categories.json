@@ -1339,5 +1339,252 @@
         "weight": 0.6
       }
     ]
+  },
+  "Tablet": {
+    "budget_bands": {
+      "tr": [
+        "2.500-5.000₺",
+        "5.500-10.000₺",
+        "11.000-18.000₺",
+        "19.000-30.000₺",
+        "30.000₺+"
+      ],
+      "en": [
+        "2.500-5.000₺",
+        "5.500-10.000₺",
+        "11.000-18.000₺",
+        "19.000-30.000₺",
+        "30.000₺+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "screen_size",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ekran boyutu tercihiniz nedir?",
+          "en": "What is your preferred screen size?"
+        },
+        "emoji": "📏",
+        "tooltip": {
+          "tr": "Ekran boyutu, tablet kullanım deneyiminizi doğrudan etkiler. Daha büyük ekranlar medya tüketimi ve oyun için daha iyi olsa da, taşınabilirlik açısından daha az pratik olabilir. Küçük ekranlar ise daha taşınabilir fakat daha az görsel deneyim sunar. İhtiyaçlarınıza ve kullanım alışkanlıklarınıza göre en uygun boyutu seçmeniz önemlidir. Örneğin, çok fazla video izliyorsanız büyük bir ekran tercih edebilirsiniz, ancak ağırlıklı olarak e-posta ve internet kullanıyorsanız daha küçük bir ekran yeterli olabilir.",
+          "en": "Screen size directly impacts your tablet usage experience. Larger screens are better for media consumption and gaming, but may be less practical in terms of portability. Smaller screens are more portable but offer a less immersive visual experience. Choosing the right size depends on your needs and usage habits. For example, if you watch a lot of videos, you may prefer a larger screen, but if you primarily use email and the internet, a smaller screen might suffice."
+        },
+        "options": [
+          {
+            "id": "small",
+            "label": {
+              "tr": "Küçük (7-8 inç)",
+              "en": "Small (7-8 inch)"
+            }
+          },
+          {
+            "id": "medium",
+            "label": {
+              "tr": "Orta (9-10 inç)",
+              "en": "Medium (9-10 inch)"
+            }
+          },
+          {
+            "id": "large",
+            "label": {
+              "tr": "Büyük (11 inç ve üzeri)",
+              "en": "Large (11 inch and above)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "processor_performance",
+        "type": "single_choice",
+        "label": {
+          "tr": "İşlemci performansı ne kadar önemli?",
+          "en": "How important is processor performance?"
+        },
+        "emoji": "⚡",
+        "tooltip": {
+          "tr": "İşlemci performansı, tabletinizin ne kadar hızlı ve sorunsuz çalışacağını belirler. Daha güçlü işlemciler, ağır uygulamaları ve oyunları daha akıcı bir şekilde çalıştırmanıza olanak tanır. Ancak, daha güçlü işlemciler genellikle daha yüksek fiyatlara sahiptir. Günlük kullanım için orta seviye bir işlemci yeterli olabilirken, yoğun oyun veya video düzenleme gibi işlemler için güçlü bir işlemci gereklidir.  İşlemci çekirdek sayısı ve saat hızı performansı etkileyen faktörlerdir.",
+          "en": "Processor performance determines how fast and smoothly your tablet will run. More powerful processors allow you to run demanding applications and games more smoothly. However, more powerful processors usually come at a higher price. A mid-range processor may suffice for daily use, while a powerful processor is necessary for intensive tasks such as gaming or video editing. The number of processor cores and clock speed are factors affecting performance."
+        },
+        "options": [
+          {
+            "id": "low",
+            "label": {
+              "tr": "Düşük (Temel kullanım için)",
+              "en": "Low (For basic use)"
+            }
+          },
+          {
+            "id": "medium",
+            "label": {
+              "tr": "Orta (Genel kullanım için)",
+              "en": "Medium (For general use)"
+            }
+          },
+          {
+            "id": "high",
+            "label": {
+              "tr": "Yüksek (Oyun ve yoğun kullanım için)",
+              "en": "High (For gaming and intensive use)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.9
+      },
+      {
+        "id": "ram_storage",
+        "type": "single_choice",
+        "label": {
+          "tr": "RAM ve depolama alanı tercihiniz nedir?",
+          "en": "What are your RAM and storage preferences?"
+        },
+        "emoji": "💾",
+        "tooltip": {
+          "tr": "RAM (Bellek), tabletinizin birden fazla uygulamayı aynı anda ne kadar verimli çalıştırabileceğini belirler. Daha fazla RAM, daha fazla uygulama açıp çalıştırmanıza olanak tanır ve performansı artırır. Depolama alanı ise fotoğraf, video, uygulama ve dosyalarınızı saklamak için kullanılır. Daha fazla depolama alanı, daha fazla içerik saklamanıza imkan tanır.  RAM ve depolama alanının büyüklüğü, tabletin fiyatını etkiler. Genel kullanım için 4GB RAM ve 64GB depolama yeterli olabilirken, yoğun kullanım için daha yüksek değerler tercih edilmelidir.",
+          "en": "RAM determines how efficiently your tablet can run multiple apps simultaneously. More RAM allows you to open and run more apps and improves performance. Storage space is used to store your photos, videos, apps, and files. More storage space allows you to store more content. The size of RAM and storage space affects the tablet's price. 4GB RAM and 64GB storage may be sufficient for general use, while higher values should be preferred for intensive use."
+        },
+        "options": [
+          {
+            "id": "low",
+            "label": {
+              "tr": "Düşük (4GB RAM / 64GB Depolama)",
+              "en": "Low (4GB RAM / 64GB Storage)"
+            }
+          },
+          {
+            "id": "medium",
+            "label": {
+              "tr": "Orta (6GB RAM / 128GB Depolama)",
+              "en": "Medium (6GB RAM / 128GB Storage)"
+            }
+          },
+          {
+            "id": "high",
+            "label": {
+              "tr": "Yüksek (8GB RAM / 256GB Depolama veya üzeri)",
+              "en": "High (8GB RAM / 256GB Storage or more)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.8
+      },
+      {
+        "id": "battery_life",
+        "type": "single_choice",
+        "label": {
+          "tr": "Pil ömrü beklentiniz nedir?",
+          "en": "What is your battery life expectation?"
+        },
+        "emoji": "🔋",
+        "tooltip": {
+          "tr": "Pil ömrü, tabletinizi tek şarjla ne kadar süre kullanabileceğinizi belirler. Günlük kullanım alışkanlıklarınıza bağlı olarak değişir. Yoğun kullanım için uzun pil ömrü önemlidir.  Daha uzun pil ömrü genellikle daha büyük ve daha pahalı piller anlamına gelir.  Günlük kullanım için 8-10 saat pil ömrü yeterli olabilirken, daha uzun süreli kullanım için daha yüksek pil ömrüne sahip bir tablet tercih etmelisiniz.",
+          "en": "Battery life determines how long you can use your tablet on a single charge. It varies depending on your daily usage habits. Long battery life is important for heavy use. Longer battery life usually means larger and more expensive batteries. For daily use, 8-10 hours of battery life may be sufficient, while for longer use, you should prefer a tablet with higher battery life."
+        },
+        "options": [
+          {
+            "id": "short",
+            "label": {
+              "tr": "Kısa (6-8 saat)",
+              "en": "Short (6-8 hours)"
+            }
+          },
+          {
+            "id": "medium",
+            "label": {
+              "tr": "Orta (8-10 saat)",
+              "en": "Medium (8-10 hours)"
+            }
+          },
+          {
+            "id": "long",
+            "label": {
+              "tr": "Uzun (10 saat ve üzeri)",
+              "en": "Long (10 hours and above)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.7
+      },
+      {
+        "id": "brand_preference",
+        "type": "single_choice",
+        "label": {
+          "tr": "Tercih ettiğiniz bir marka var mı?",
+          "en": "Do you have a preferred brand?"
+        },
+        "emoji": "🏢",
+        "tooltip": {
+          "tr": "Marka tercihiniz, tabletinizin kalitesi, dayanıklılığı ve müşteri desteği konusunda beklentilerinizi etkiler. Bazı markalar, belirli özelliklerde veya yazılım güncellemelerinde daha iyi olabilir.  Önceki deneyimlerinize veya güvendiğiniz markalara göre seçim yapabilirsiniz.  Ancak, marka her zaman kaliteyi garanti etmez, özelliklere de dikkat etmek önemlidir.",
+          "en": "Your brand preference affects your expectations regarding the quality, durability, and customer support of your tablet. Some brands may be better in specific features or software updates. You can choose based on your previous experiences or brands you trust. However, brand doesn't always guarantee quality; it's important to pay attention to features as well."
+        },
+        "options": [
+          {
+            "id": "samsung",
+            "label": {
+              "tr": "Samsung",
+              "en": "Samsung"
+            }
+          },
+          {
+            "id": "apple",
+            "label": {
+              "tr": "Apple",
+              "en": "Apple"
+            }
+          },
+          {
+            "id": "xiaomi",
+            "label": {
+              "tr": "Xiaomi",
+              "en": "Xiaomi"
+            }
+          },
+          {
+            "id": "huawei",
+            "label": {
+              "tr": "Huawei",
+              "en": "Huawei"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.6
+      }
+    ]
   }
 }
