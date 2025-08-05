@@ -1136,5 +1136,6 @@ window.onload = () => {
     `;
     
     document.getElementById('smart-search-container').innerHTML = smartSearchHtml;
-
+    
+   
 };
