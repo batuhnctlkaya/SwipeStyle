@@ -1,5 +1,5 @@
 """
-SwipeStyle Agent Modülü
+FindFlow Agent Modülü
 
 Bu modül, kullanıcı etkileşimlerini yöneten, dinamik soru-cevap akışını kontrol eden
 ve AI destekli ürün önerileri oluşturan ana agent sınıfını içerir.
@@ -49,7 +49,7 @@ import json
 
 def detect_category_from_query(query):
     """
-    Gelişmiş kategori tespiti - prompt-chained agent mimarisi kullanarak
+    Gelişmiş kategori tespiti - FindFlow prompt-chained agent mimarisi kullanarak
     
     Bu fonksiyon, kullanıcı sorgusunu analiz ederek en uygun ürün kategorisini
     tespit eder. Hem yerel eşleştirme hem de AI destekli tanıma kullanır.
@@ -253,7 +253,7 @@ class Agent:
             return {'error': 'Invalid category or step'}
 
     def _analyze_current_preferences(self, answers, specs):
-        """Mevcut cevapları tercih objesi haline getir"""
+        """FindFlow kullanıcı tercihlerini analiz etme"""
         preferences = {}
         
         print(f"🔍 _analyze_current_preferences:")
@@ -408,7 +408,7 @@ class Agent:
         return int((answered_count / total_count) * 100) if total_count > 0 else 0
 
     def _determine_next_followup(self, specs, preferences, confidence_score, language, category=None, asked_specs=None):
-        """Akıllı follow-up soru belirleme algoritması"""
+        """FindFlow akıllı follow-up soru belirleme algoritması"""
         
         if asked_specs is None:
             asked_specs = []
@@ -694,7 +694,7 @@ class Agent:
         return question_data
 
     def _generate_recommendations(self, category, preferences, specs, language):
-        """Modern Search Engine kullanarak öneri oluştur - fallback sistemi ile"""
+        """FindFlow Modern Search Engine kullanarak öneri oluşturma - fallback sistemi ile"""
         try:
             print(f"🚀 Modern Search Engine ile öneri oluşturuluyor: {category}")
             
@@ -1256,7 +1256,7 @@ class Agent:
     # Amazon entegrasyonu kaldırıldı - modern search sistemi kullanılacak
 
     def _build_gemini_prompt(self, category, preferences, language):
-        """Gemini için gelişmiş prompt oluştur"""
+        """FindFlow Gemini AI için gelişmiş prompt oluşturma"""
         
         # Tercihleri analiz et
         priority_prefs = {}

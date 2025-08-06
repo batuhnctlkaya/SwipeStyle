@@ -1,5 +1,8 @@
 """
-SwipeStyle Akıllı Kategori Üretici Modülü
+FindFlow Akıllı Kategori Üretici Modülü
+=======================================
+
+Bu modül, FindFlow uygulamasının akıllı kategori tespiti ve oluşturma işlevlerini içerir.SwipeStyle Akıllı Kategori Üretici Modülü
 ==========================================
 
 Bu modül, SwipeStyle uygulamasının akıllı kategori tespiti ve oluşturma işlevlerini içerir.
@@ -31,7 +34,7 @@ from .config import setup_gemini, get_gemini_model, generate_with_retry
 
 class CategoryGenerator:
     """
-    Akıllı kategori tespiti ve oluşturma sınıfı.
+    Akıllı kategori tespiti ve oluşturma sınıfı - FindFlow için.
     
     Bu sınıf, kullanıcı sorgularını analiz ederek mevcut kategorilerle eşleştirir
     veya gerekirse yeni kategoriler oluşturur. Prompt-chained AI mimarisi kullanır.

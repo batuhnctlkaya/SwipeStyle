@@ -1,12 +1,14 @@
 /**
- * SwipeStyle Frontend JavaScript
+ * FindFlow Frontend JavaScript
  * Basit ve temiz JavaScript kodu
  */
 
 // Global dil değişkeni
 let currentLanguage = 'tr';
-let currentTheme = 'light';
+let currentTheme = 'light';  // Default light theme
 let currentCategory = ''; // Global kategori değişkeni
+let currentQuestionIndex = 0;
+let totalQuestions = 7;
 
 // Otomatik tamamlama için global değişkenler
 let autocompleteData = [];
@@ -30,7 +32,7 @@ function changeTheme(theme) {
     });
     
     // LocalStorage'a kaydet
-    localStorage.setItem('swipestyle-theme', theme);
+    localStorage.setItem('findflow-theme', theme);
 }
 
 // Dil değiştirme fonksiyonu
@@ -168,10 +170,17 @@ function extractModel(productTitle) {
 const categoryIcons = {
     'Drone': 'fas fa-plane',
     'Headphones': 'fas fa-headphones',
-    'Keyboard': 'fas fa-keyboard',  
+    'Keyboard': 'fas fa-keyboard',
     'Air Conditioner': 'fas fa-snowflake',
     'Phone': 'fas fa-mobile-alt',
-    'Television': 'fas fa-tv'
+    'Television': 'fas fa-tv',
+    'Mouse': 'fas fa-mouse',
+    'Laptop': 'fas fa-laptop',
+    'Monitor': 'fas fa-desktop',
+    'Tablet': 'fas fa-tablet-alt',
+    'Camera': 'fas fa-camera',
+    'Speaker': 'fas fa-volume-up',
+    'Smartwatch': 'fas fa-stopwatch'
 };
 
 // --- Akıllı Arama & Filtreleme Özelliği ---
@@ -273,10 +282,31 @@ const autocompleteSuggestions = {
     'k': [
         { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' },
         { text: 'Klavye', icon: 'fas fa-keyboard', category: 'Keyboard' },
-        { text: 'Kamera', icon: 'fas fa-camera', category: 'Camera' },
-        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
-        { text: 'Kettle', icon: 'fas fa-mug-hot', category: 'Kitchen' },
-        { text: 'Konsol', icon: 'fas fa-gamepad', category: 'Gaming' }
+        { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' }
+    ],
+    'ku': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kul': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kula': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulak': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulakl': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulakli': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulaklik': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
+    ],
+    'kulaklık': [
+        { text: 'Kulaklık', icon: 'fas fa-headphones', category: 'Headphones' }
     ],
     'kl': [
         { text: 'Klima', icon: 'fas fa-snowflake', category: 'Air Conditioner' },
@@ -305,115 +335,95 @@ const autocompleteSuggestions = {
         { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
     ],
     'laptop': [
-        { text: 'Laptop Gaming', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Ultrabook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop 2 in 1', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop MacBook', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Dell', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop HP', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Lenovo', icon: 'fas fa-laptop', category: 'Laptop' },
-        { text: 'Laptop Asus', icon: 'fas fa-laptop', category: 'Laptop' }
+        { text: 'Laptop', icon: 'fas fa-laptop', category: 'Laptop' }
     ],
     'm': [
         { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse SteelSeries', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Corsair', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' },
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
     ],
     'mo': [
         { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'mi': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mik': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikr': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikro': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikrof': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikrofo': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mikrofon': [
+        { text: 'Mikrofon', icon: 'fas fa-microphone', category: 'Microphone' }
+    ],
+    'mon': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'moni': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'monit': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'monito': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'monitor': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
+    ],
+    'monitör': [
+        { text: 'Monitör', icon: 'fas fa-desktop', category: 'Monitor' }
     ],
     'mou': [
-        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' }
     ],
     'mous': [
-        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' }
     ],
     'mouse': [
-        { text: 'Mouse Gaming', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Kablosuz', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Bluetooth', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Logitech', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Razer', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse SteelSeries', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse Corsair', icon: 'fas fa-mouse', category: 'Mouse' },
-        { text: 'Mouse HyperX', icon: 'fas fa-mouse', category: 'Mouse' }
+        { text: 'Mouse', icon: 'fas fa-mouse', category: 'Mouse' }
+
     ],
     't': [
         { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
         { text: 'Tablet', icon: 'fas fa-tablet-alt', category: 'Tablet' },
         { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
-        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
     ],
     'te': [
         { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Tablet', icon: 'fas fa-tablet-alt', category: 'Tablet' },
         { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
         { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
     ],
     'tel': [
         { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
     ],
     'tele': [
         { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'TV', icon: 'fas fa-tv', category: 'TV' },
+        { text: 'Televizyon', icon: 'fas fa-tv', category: 'TV' }
     ],
     'telef': [
-        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' }
     ],
     'telefo': [
-        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Nokia', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' }
     ],
     'telefon': [
-        { text: 'Telefon iPhone', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Samsung', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Xiaomi', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Huawei', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon OnePlus', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Google', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Nokia', icon: 'fas fa-mobile-alt', category: 'Phone' },
-        { text: 'Telefon Sony', icon: 'fas fa-mobile-alt', category: 'Phone' }
+        { text: 'Telefon', icon: 'fas fa-mobile-alt', category: 'Phone' }
     ]
 };
 
@@ -428,7 +438,10 @@ const categoryTranslations = {
     'Speaker': { tr: 'Hoparlör', en: 'Speaker' },
     'Camera': { tr: 'Kamera', en: 'Camera' },
     'Tablet': { tr: 'Tablet', en: 'Tablet' },
-    'Smartwatch': { tr: 'Akıllı Saat', en: 'Smartwatch' }
+    'Smartwatch': { tr: 'Akıllı Saat', en: 'Smartwatch' },
+    'Air Conditioner': { tr: 'Klima', en: 'Air Conditioner' },
+    'Drone': { tr: 'Drone', en: 'Drone' },
+    'Television': { tr: 'Televizyon', en: 'Television' }
 };
 
 // Otomatik tamamlama fonksiyonları
@@ -498,7 +511,7 @@ function showAutocompleteSuggestions(suggestions) {
             <i class="${suggestion.icon} icon" title="${suggestion.category}"></i>
         `;
         
-        item.addEventListener('click', () => {
+        item.addEventListener('mousedown', () => {
             selectAutocompleteItem(suggestion);
         });
         
@@ -644,6 +657,14 @@ function startInteraction(selectedCategory) {
     currentCategory = selectedCategory; // Global kategoriyi güncelle
     step = 1;
     answers = [];
+    currentQuestionIndex = 1;
+    
+    // Get total questions from category specs
+    if (window.currentSpecs && window.currentSpecs[selectedCategory]) {
+        totalQuestions = window.currentSpecs[selectedCategory].length;
+    } else {
+        totalQuestions = 5; // fallback
+    }
     
     // Basit geçiş
     document.querySelector('.landing').style.display = 'none';
@@ -651,8 +672,67 @@ function startInteraction(selectedCategory) {
     askAgent();
 }
 
+// Question progress functions
+function updateQuestionProgress() {
+    const currentElement = document.getElementById('current-question');
+    const totalElement = document.getElementById('total-questions');
+    
+    if (currentElement && totalElement) {
+        currentElement.textContent = currentQuestionIndex;
+        totalElement.textContent = totalQuestions;
+    }
+}
+
+function updateQuestionIcon(emoji) {
+    const iconElement = document.querySelector('.question-icon i');
+    if (iconElement && emoji) {
+        // Map emoji to FontAwesome icon with better icons
+        const iconMap = {
+            '📍': 'fas fa-map-marker-alt',
+            '💰': 'fas fa-dollar-sign',
+            '🏢': 'fas fa-building',
+            '⚡': 'fas fa-bolt',
+            '🖥️': 'fas fa-desktop',
+            '📱': 'fas fa-mobile-alt',
+            '🎮': 'fas fa-gamepad',
+            '🎵': 'fas fa-music',
+            '💡': 'fas fa-lightbulb',
+            '🔧': 'fas fa-wrench',
+            '📐': 'fas fa-ruler-combined',
+            '🌈': 'fas fa-palette',
+            '⌨️': 'fas fa-keyboard',
+            '🖱️': 'fas fa-mouse',
+            '🔍': 'fas fa-search',
+            '❓': 'fas fa-question-circle',
+            '📊': 'fas fa-chart-bar',
+            '🔥': 'fas fa-fire',
+            '⭐': 'fas fa-star',
+            '🎯': 'fas fa-bullseye'
+        };
+        
+        const iconClass = iconMap[emoji] || 'fas fa-question-circle';
+        iconElement.className = iconClass;
+    } else if (iconElement) {
+        // Default icon for category
+        const categoryIcon = categoryIcons[getCurrentCategory()] || 'fas fa-search';
+        iconElement.className = categoryIcon;
+    }
+}
+
+// Go to home page function - removed duplicate, using detailed version below
+
 function renderQuestion(question, options, emoji) {
     const interaction = document.getElementById('interaction');
+    
+    // Update question progress
+    currentQuestionIndex = step;
+    updateQuestionProgress();
+    
+    // Update question icon
+    updateQuestionIcon(emoji);
+    
+    // Update tooltip if available
+    updateQuestionTooltip();
     
     const questionDiv = interaction.querySelector('.question');
     const optionsDiv = interaction.querySelector('.options');
@@ -664,14 +744,9 @@ function renderQuestion(question, options, emoji) {
         return;
     }
     
-    questionDiv.innerHTML = '';
+    questionDiv.innerHTML = question;
     optionsDiv.innerHTML = '';
-    
-    // Soru başlığı
-    const questionTitle = document.createElement('h2');
-    questionTitle.innerHTML = `${emoji} ${question}`;
-    questionDiv.appendChild(questionTitle);
-    
+
     // Seçenekleri oluştur
     options.forEach(opt => {
         const button = document.createElement('button');
@@ -692,299 +767,96 @@ function renderQuestion(question, options, emoji) {
 
 function renderRecommendations(recs) {
     console.log("🎯 renderRecommendations called");
-    console.log("📊 Recommendations type:", typeof recs);
-    console.log("📊 Is array:", Array.isArray(recs));
-    console.log("📊 Length:", recs ? recs.length : 'null/undefined');
-    console.log("📊 Full data:", JSON.stringify(recs, null, 2));
-    
-    // Loading ekranlarını gizle
+    console.log("📊 Recommendations data:", recs);
+
     hideAICreationScreen();
     const loadingElement = document.querySelector('.loading');
     if (loadingElement) loadingElement.style.display = 'none';
-    
+
     const recDiv = document.querySelector('.recommendations');
-    
     const titleText = currentLanguage === 'tr' ? 'Önerilen Ürünler' : 'Recommended Products';
-    
-    // Check if recs is valid
+
     if (!recs || !Array.isArray(recs) || recs.length === 0) {
         console.error("❌ No valid recommendations to render");
         recDiv.innerHTML = `
             <div class="error-message">
                 <h3>Ürün bulunamadı</h3>
                 <p>Seçimlerinizle eşleşen ürün bulunamadı. Lütfen farklı seçenekler deneyin.</p>
-            </div>
-        `;
+            </div>`;
         return;
     }
-    
-    let html = `
-        <h2><i class="fas fa-star"></i> ${titleText}</h2>
-        <div class="recommendations-grid">
-    `;
-    
+
+    let html = `<h2><i class="fas fa-star"></i> ${titleText}</h2>`;
+
     recs.forEach((r, index) => {
-        console.log(`📦 Processing recommendation ${index}:`, r);
-        console.log(`📦 Recommendation keys:`, Object.keys(r));
-        
-        // Modern search engine format adaptasyonu
         const productTitle = r.title || r.name || 'Ürün';
-        const productPrice = r.price ? 
-            (typeof r.price === 'object' ? r.price.display : r.price) 
-            : 'Fiyat bilgisi yok';
-        const productUrl = r.product_url || r.link || r.url || '';
+        const productPrice = r.price ? (typeof r.price === 'object' ? r.price.display : r.price) : 'Fiyat bilgisi yok';
+        const productUrl = r.product_url || r.link || r.url || '#';
         const productDescription = r.why_recommended || r.description || '';
         const matchScore = r.match_score || 0;
-        const sourceSite = r.source_site || '';
-        
-        console.log(`💰 Product ${index}: title="${productTitle}", price="${productPrice}", url="${productUrl}"`);
-        
-        // URL düzeltme ve validation
-        let url = productUrl;
-        let linkClass = 'buy-link';
-        
-        // URL temizleme ve doğrulama
-        if (url) {
-            console.log(`🔍 Original URL: ${url}`);
-            
-            // URL encoding problemlerini düzelt
-            try {
-                url = decodeURIComponent(url);
-                console.log(`🔧 Decoded URL: ${url}`);
-            } catch (e) {
-                console.warn(`⚠️ URL decode failed: ${e}`);
-            }
-            
-            // HTTP/HTTPS kontrolü
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                if (url.startsWith('www.') || url.includes('.com') || url.includes('.tr')) {
-                    url = 'https://' + url.replace(/^(https?:\/\/)/, '');
-                    console.log(`🔗 Added HTTPS: ${url}`);
-                } else {
-                    // Geçersiz URL ise Google aramasına yönlendir
-                    const searchQuery = encodeURIComponent(productTitle);
-                    url = `https://www.google.com/search?q=${searchQuery}+satın+al`;
-                    console.log(`🔍 Fallback to Google: ${url}`);
-                }
-            }
-            
-            // URL'nin geçerli olduğundan emin ol
-            try {
-                new URL(url);
-                console.log(`✅ Valid URL: ${url}`);
-            } catch (e) {
-                console.warn(`⚠️ Invalid URL detected: ${url}`);
-                
-                // Site-specific fallback URLs with enhanced product targeting
-                let siteFound = false;
-                const searchQuery = encodeURIComponent(productTitle);
-                
-                // Extract brand and model from product title for better targeting
-                const foundBrand = extractBrand(productTitle);
-                const foundModel = extractModel(productTitle);
-                
-                // Build enhanced search query
-                let enhancedQuery = searchQuery;
-                if (foundBrand) {
-                    enhancedQuery = foundBrand + ' ' + searchQuery;
-                }
-                if (foundModel && !searchQuery.toLowerCase().includes(foundModel)) {
-                    enhancedQuery += ' ' + foundModel;
-                }
-                
-                console.log(`🎯 Enhanced search: "${productTitle}" → brand: "${foundBrand}", model: "${foundModel}", query: "${enhancedQuery}"`);
-                
-                // Category mapping for better site navigation
-                const categoryMapping = {
-                    'Headphones': 'kulaklik',
-                    'Phone': 'cep-telefonu', 
-                    'Laptop': 'laptop',
-                    'Television': 'televizyon',
-                    'Drone': 'drone',
-                    'Klima': 'klima'
-                };
-                
-                if (sourceSite) {
-                    console.log(`🎯 Creating enhanced search URL for: ${sourceSite}`);
-                    
-                    const currentCat = getCurrentCategory();
-                    const categoryPath = categoryMapping[currentCat] || '';
-                    
-                    // Fiyat bilgisini de URL'ye ekle
-                    const price = r.price && typeof r.price === 'object' ? r.price.value : null;
-                    const priceParam = price ? `&minPrice=${Math.max(0, price-1000)}&maxPrice=${price+1000}` : '';
-                    
-                    if (sourceSite.includes('teknosa')) {
-                        // Teknosa enhanced URL with category and brand
-                        url = `https://www.teknosa.com/arama?q=${enhancedQuery}${categoryPath ? '&kategori=' + categoryPath : ''}`;
-                        console.log(`🔍 Teknosa enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('hepsiburada')) {
-                        // Hepsiburada enhanced URL with specific product targeting
-                        url = `https://www.hepsiburada.com/ara?q=${enhancedQuery}${priceParam}`;
-                        console.log(`🔍 Hepsiburada enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('trendyol')) {
-                        // Trendyol enhanced URL with brand and model focus
-                        url = `https://www.trendyol.com/sr?q=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
-                        console.log(`🔍 Trendyol enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('n11')) {
-                        // N11 enhanced URL with precise product search
-                        url = `https://www.n11.com/arama?q=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
-                        console.log(`🔍 N11 enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('amazon')) {
-                        // Amazon enhanced URL with department targeting
-                        const dept = categoryPath ? `&i=${categoryPath}` : '';
-                        url = `https://www.amazon.com.tr/s?k=${enhancedQuery}${dept}`;
-                        console.log(`🔍 Amazon enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('gittigidiyor')) {
-                        // GittiGidiyor enhanced URL
-                        url = `https://www.gittigidiyor.com/arama/?k=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
-                        console.log(`🔍 GittiGidiyor enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('ciceksepeti')) {
-                        // ÇiçekSepeti enhanced URL for tech products
-                        url = `https://www.ciceksepeti.com/arama?q=${enhancedQuery}`;
-                        console.log(`🔍 ÇiçekSepeti enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('mediamarkt')) {
-                        // MediaMarkt enhanced URL
-                        url = `https://www.mediamarkt.com.tr/tr/search.html?query=${enhancedQuery}`;
-                        console.log(`🔍 MediaMarkt enhanced URL: ${url}`);
-                        siteFound = true;
-                    } else if (sourceSite.includes('vatan')) {
-                        // Vatan Bilgisayar enhanced URL
-                        url = `https://www.vatanbilgisayar.com/arama/?text=${enhancedQuery}`;
-                        console.log(`🔍 Vatan enhanced URL: ${url}`);
-                        siteFound = true;
-                    }
-                }
-                
-                // Eğer site-specific URL yoksa Google search
-                if (!siteFound) {
-                    url = `https://www.google.com/search?q=${searchQuery}+satın+al`;
-                    console.log(`🔍 Google fallback URL: ${url}`);
-                }
-                
-                linkClass += ' link-fallback';
-            }
-        }
-        
-        // Link oluştur - link status'u da göster
-        let linkHtml = '';
-        if (url && url !== '' && !url.includes('undefined')) {
-            let linkClass = 'buy-link';
-            let linkIcon = 'fas fa-external-link-alt';
-            let linkText = currentLanguage === 'tr' ? 'Satın Al' : 'Buy Now';
-            
-            // Link durumuna göre stil ve metin ayarla
-            if (r.link_status) {
-                switch (r.link_status) {
-                    case 'valid':
-                        linkClass += ' link-valid';
-                        linkIcon = 'fas fa-check-circle';
-                        break;
-                    case 'repaired':
-                        linkClass += ' link-repaired';
-                        linkIcon = 'fas fa-tools';
-                        linkText = currentLanguage === 'tr' ? 'Onarılan Link' : 'Repaired Link';
-                        break;
-                    case 'fallback':
-                        linkClass += ' link-fallback';
-                        linkIcon = 'fas fa-search';
-                        linkText = currentLanguage === 'tr' ? 'Arama Sayfası' : 'Search Page';
-                        break;
-                    case 'failed':
-                        linkClass += ' link-failed';
-                        linkIcon = 'fas fa-exclamation-triangle';
-                        linkText = currentLanguage === 'tr' ? 'Link Sorunlu' : 'Link Issue';
-                        break;
-                }
-                
-                // Link status mesajını tooltip olarak ekle
-                const tooltipText = r.link_message || 'Link durumu';
-                linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="${linkClass}" title="${tooltipText}">
-                    <i class="${linkIcon}"></i> ${linkText}
-                </a>`;
-            } else {
-                linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="${linkClass}">
-                    <i class="${linkIcon}"></i> ${linkText}
-                </a>`;
-            }
-        } else {
-            // Geçersiz URL için disabled buton
-            linkHtml = `<span class="buy-link link-failed" title="Geçersiz link">
-                <i class="fas fa-exclamation-triangle"></i> ${currentLanguage === 'tr' ? 'Link Mevcut Değil' : 'Link Unavailable'}
-            </span>`;
-        }
-        
-        // Badge'leri ekle
-        let badges = '';
-        
-        // Match score badge
-        if (matchScore >= 90) {
-            const perfectText = currentLanguage === 'tr' ? '⭐ Mükemmel Eşleşme' : '⭐ Perfect Match';
-            badges += `<div class="premium-badge">${perfectText}</div>`;
-        } else if (matchScore >= 80) {
-            const goodText = currentLanguage === 'tr' ? '✅ İyi Eşleşme' : '✅ Good Match';
-            badges += `<div class="good-badge">${goodText}</div>`;
-        }
-        
-        // Site badge - sadece gerçek siteler için
-        if (sourceSite && !sourceSite.includes('mock')) {
-            badges += `<div class="site-badge">${sourceSite}</div>`;
-        }
-        
-        // Features listesi
+        const sourceSite = r.source_site || 'Bilinmeyen Mağaza';
+        const features = r.features || [];
+
         let featuresHtml = '';
-        if (r.features && Array.isArray(r.features)) {
-            const featuresText = r.features.slice(0, 3).join(', '); // İlk 3 özellik
-            featuresHtml = `<div class="recommendation-features">${featuresText}</div>`;
+        if (features.length > 0) {
+            featuresHtml = features.map(feature => `<span class="product-tag">${feature}</span>`).join('');
         }
-        
-        // Pros listesi
-        let prosHtml = '';
-        if (r.pros && Array.isArray(r.pros)) {
-            const prosText = r.pros.slice(0, 2).map(pro => `✓ ${pro}`).join(' '); // İlk 2 artı
-            prosHtml = `<div class="recommendation-pros">${prosText}</div>`;
-        }
-        
+
+        const storeInfo = getStoreInfo(sourceSite);
+
         html += `
             <div class="recommendation-item">
-                ${badges}
-                <div class="recommendation-content">
-                    <div class="recommendation-name">${productTitle}</div>
-                    <div class="recommendation-price">${productPrice}</div>
-                    ${featuresHtml}
-                    ${prosHtml}
-                    ${productDescription ? `<div class="recommendation-description">${productDescription}</div>` : ''}
-                    ${matchScore > 0 ? `<div class="match-score">Uygunluk: %${matchScore}</div>` : ''}
-                    ${linkHtml}
+                <div class="product-header">
+                    <div class="product-info">
+                        <h3 class="product-name">${productTitle}</h3>
+                        <div class="match-badge">
+                            <i class="fas fa-star"></i>
+                            <span>${matchScore}% ${currentLanguage === 'tr' ? 'uygun' : 'match'}</span>
+                        </div>
+                    </div>
+                    <div class="product-price">${productPrice}</div>
+                </div>
+                <div class="product-details">
+                    <div class="product-tags">${featuresHtml}</div>
+                    <p class="product-description">${productDescription}</p>
+                </div>
+                <div class="product-footer">
+                    <a href="${productUrl}" target="_blank" rel="noopener noreferrer" class="store-button ${storeInfo.class}">
+                        <i class="${storeInfo.icon}"></i>
+                        <span>${sourceSite}'da Gör</span>
+                    </a>
                 </div>
             </div>
         `;
     });
-    
+
     const backButtonText = currentLanguage === 'tr' ? 'Yeni Arama Yap' : 'New Search';
-    
     html += `
-        </div>
-        <div class="back-section">
+        <div class="back-section" style="text-align: center; margin-top: 30px;">
             <button id="back-to-categories" class="back-btn">
                 <i class="fas fa-arrow-left"></i> ${backButtonText}
             </button>
         </div>
     `;
-    
+
     recDiv.innerHTML = html;
     document.querySelector('.error').textContent = '';
-    
+
     document.getElementById('back-to-categories').onclick = () => {
         resetToLanding();
     };
+}
+
+function getStoreInfo(storeName) {
+    const lowerCaseName = storeName.toLowerCase();
+    if (lowerCaseName.includes('hepsiburada')) return { class: 'hepsiburada', icon: 'fas fa-shopping-cart' };
+    if (lowerCaseName.includes('trendyol')) return { class: 'trendyol', icon: 'fas fa-store' };
+    if (lowerCaseName.includes('amazon')) return { class: 'amazon', icon: 'fab fa-amazon' };
+    if (lowerCaseName.includes('teknosa')) return { class: 'teknosa', icon: 'fas fa-plug' };
+    if (lowerCaseName.includes('vatan')) return { class: 'vatan', icon: 'fas fa-desktop' };
+    if (lowerCaseName.includes('n11')) return { class: 'n11', icon: 'fas fa-tag' };
+    if (lowerCaseName.includes('media markt')) return { class: 'mediamarkt', icon: 'fas fa-tv' };
+    return { class: 'default-store', icon: 'fas fa-external-link-alt' };
 }
 
 function resetToLanding() {
@@ -1008,6 +880,7 @@ function resetToLanding() {
     step = 0;
     category = null;
     answers = [];
+    currentQuestionIndex = 0;
     
     // Clear search input
     const searchInput = document.getElementById('chatbox-input');
@@ -1045,6 +918,7 @@ function handleOption(opt) {
         
         answers.push(opt);
         step++;
+        currentQuestionIndex = step;
         
         document.querySelector('.error').textContent = '';
         
@@ -1225,10 +1099,10 @@ function askAgent() {
 }
 
 window.onload = () => {
-    console.log("SwipeStyle uygulaması başlatılıyor...");
+    console.log("FindFlow uygulaması başlatılıyor...");
     
     // Tema tercihini localStorage'dan yükle
-    const savedTheme = localStorage.getItem('swipestyle-theme') || 'light';
+    const savedTheme = localStorage.getItem('findflow-theme') || 'light';
     changeTheme(savedTheme);
     
     // Dil değiştirme event listener'ları
@@ -1350,7 +1224,7 @@ window.onload = () => {
                 });
             }
             
-            console.log("SwipeStyle başarıyla başlatıldı");
+            console.log("FindFlow başarıyla başlatıldı");
         })
         .catch(error => {
             console.error("Kategoriler yüklenirken hata oluştu:", error);
@@ -1578,4 +1452,75 @@ function showErrorScreen() {
 
 function hideErrorScreen() {
     document.getElementById('error-screen').style.display = 'none';
+}
+
+function hideLoadingScreen() {
+    const loadingElement = document.querySelector('.loading');
+    if (loadingElement) {
+        loadingElement.style.display = 'none';
+    }
+}
+
+// Tooltip functions
+function updateQuestionTooltip() {
+    const tooltipWrapper = document.getElementById('question-tooltip');
+    const tooltipText = tooltipWrapper?.querySelector('.tooltip-text');
+    
+    if (!tooltipWrapper || !tooltipText) {
+        return;
+    }
+    
+    // Check if current question has tooltip
+    if (window.currentQuestionTooltip && window.currentQuestionTooltip.trim() !== '') {
+        tooltipText.textContent = window.currentQuestionTooltip;
+        tooltipWrapper.style.display = 'inline-flex';
+        
+        // Add click and hover events for mobile and desktop
+        const tooltipIcon = tooltipWrapper.querySelector('.tooltip-icon');
+        if (tooltipIcon) {
+            // Remove existing event listeners
+            tooltipIcon.replaceWith(tooltipIcon.cloneNode(true));
+            const newTooltipIcon = tooltipWrapper.querySelector('.tooltip-icon');
+            
+            // Desktop hover
+            newTooltipIcon.addEventListener('mouseenter', showTooltip);
+            newTooltipIcon.addEventListener('mouseleave', hideTooltip);
+            
+            // Mobile tap
+            newTooltipIcon.addEventListener('click', toggleTooltip);
+        }
+    } else {
+        tooltipWrapper.style.display = 'none';
+    }
+}
+
+function showTooltip() {
+    const tooltipWrapper = document.getElementById('question-tooltip');
+    const tooltipText = tooltipWrapper?.querySelector('.tooltip-text');
+    if (tooltipText) {
+        tooltipText.style.visibility = 'visible';
+        tooltipText.style.opacity = '1';
+    }
+}
+
+function hideTooltip() {
+    const tooltipWrapper = document.getElementById('question-tooltip');
+    const tooltipText = tooltipWrapper?.querySelector('.tooltip-text');
+    if (tooltipText) {
+        tooltipText.style.visibility = 'hidden';
+        tooltipText.style.opacity = '0';
+    }
+}
+
+function toggleTooltip() {
+    const tooltipWrapper = document.getElementById('question-tooltip');
+    const tooltipText = tooltipWrapper?.querySelector('.tooltip-text');
+    if (tooltipText) {
+        const isVisible = tooltipText.style.visibility === 'visible';
+        if (isVisible) {
+            hideTooltip();
+        } else {
+            showTooltip();
+        }
+    }
 }

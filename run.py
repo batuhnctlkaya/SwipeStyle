@@ -1,5 +1,8 @@
 """
-SwipeStyle Ana Uygulama Dosyası
+FindFlow Ana Uygulama Dosyası
+=======================================
+
+Bu dosya, FindFlow ürün tavsiye sisteminin ana Flask uygulamasını içerir.SwipeStyle Ana Uygulama Dosyası
 ================================
 
 Bu dosya, SwipeStyle ürün tavsiye sisteminin ana Flask uygulamasını içerir.
@@ -29,19 +32,32 @@ Kullanım:
     # Uygulama http://localhost:8080 adresinde çalışır
 """
 
-# Standard imports
-import json
-import os
+# Ensure requirements are installed at startup
+import subprocess
 import sys
+import os
+
+def install_requirements():
+    """
+    Uygulama başlangıcında gerekli paketlerin kurulu olduğundan emin olur.
+    
+    Bu fonksiyon, requirements.txt dosyasındaki tüm bağımlılıkları
+    otomatik olarak kurar. Eğer paketler zaten kuruluysa, 
+    pip bunu atlar ve hata vermez.
+    """
+    req_file = os.path.join(os.path.dirname(__file__), 'requirements.txt')
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', req_file])
+
+install_requirements()
+
+import json
 from flask import Flask, request, jsonify, send_from_directory
 from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-
-# Import app modules
 from app.agent import Agent
 from app.agent import detect_category_from_query
+
+# .env dosyasını yükle (SerpAPI anahtarı için kritik!)
+load_dotenv()
 from app.category_generator import add_dynamic_category_route
 
 app = Flask(__name__, static_folder='website')
@@ -53,7 +69,7 @@ add_dynamic_category_route(app)
 @app.route('/detect_category', methods=['POST'])
 def detect_category():
     """
-    Kullanıcı sorgusundan kategori tespiti yapar.
+    Kullanıcı sorgusundan kategori tespiti yapar - FindFlow AI sistemi.
     
     Bu endpoint, kullanıcının yazdığı metni analiz ederek
     en uygun ürün kategorisini tespit eder. Gerekirse yeni kategori oluşturur.
@@ -129,7 +145,7 @@ def get_categories():
 @app.route('/ask', methods=['POST'])
 def ask():
     """
-    Soru-cevap akışını yönetir ve ürün önerileri döndürür.
+    Soru-cevap akışını yönetir ve FindFlow AI önerileri döndürür.
     
     Bu endpoint, kullanıcının kategori seçiminden sonra
     adım adım sorular sorar ve sonunda ürün önerileri sunar.
@@ -178,13 +194,7 @@ def get_amazon_product(asin):
         JSON: Ürün detayları
     """
     try:
-        try:
-            from app.amazon_api import AmazonAPI
-        except ImportError:
-            return jsonify({
-                'success': False,
-                'error': 'Amazon API modülü bulunamadı'
-            }), 500
+        from app.amazon_api import AmazonAPI
         
         api = AmazonAPI()
         product_details = api.get_product_details(asin)
@@ -224,13 +234,7 @@ def search_amazon_products():
         JSON: Bulunan ürünler
     """
     try:
-        try:
-            from app.amazon_api import AmazonAPI
-        except ImportError:
-            return jsonify({
-                'success': False,
-                'error': 'Amazon API modülü bulunamadı'
-            }), 500
+        from app.amazon_api import AmazonAPI
         
         data = request.json
         query = data.get('query', '')
@@ -263,9 +267,7 @@ if __name__ == '__main__':
     """
     Uygulamayı geliştirme modunda başlatır.
     
-    Debug modu açık, Render için PORT environment variable kullanır.
+    Debug modu açık, port 8080'de çalışır.
     Production ortamında debug=False yapılmalıdır.
     """
-    # Render deployment için PORT environment variable kullan
-    port = int(os.environ.get('PORT', 8082))
-    app.run(debug=False, host='0.0.0.0', port=port)
+    app.run(debug=True, port=8080)

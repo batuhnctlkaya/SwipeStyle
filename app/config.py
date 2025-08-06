@@ -1,5 +1,8 @@
 """
-SwipeStyle Yapılandırma Modülü
+FindFlow Yapılandırma Modülü
+=======================================
+
+Bu modül, FindFlow uygulamasının Gemini AI yapılandırması ve yardımcı fonksiyonlarını içerir.SwipeStyle Yapılandırma Modülü
 ==============================
 
 Bu modül, SwipeStyle uygulamasının Gemini AI yapılandırması ve yardımcı fonksiyonlarını içerir.
@@ -29,7 +32,7 @@ import time
 
 def setup_gemini():
     """
-    Gemini API'yi yapılandırır ve başlatır.
+    Gemini API'yi yapılandırır ve başlatır - FindFlow için optimize edilmiş.
     
     .env dosyasından API anahtarını okur ve Gemini API'yi yapılandırır.
     Başarılı yapılandırma durumunda True, başarısız durumda False döner.
@@ -54,7 +57,7 @@ def get_gemini_model():
     """
     Optimize edilmiş Gemini modeli döner.
     
-    SwipeStyle uygulaması için özel olarak yapılandırılmış
+    FindFlow uygulaması için özel olarak yapılandırılmış
     Gemini modeli oluşturur. Sıcaklık, top_p, top_k ve
     max_output_tokens parametreleri optimize edilmiştir.
     
