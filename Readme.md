@@ -211,16 +211,6 @@ http://localhost:8080
 
 ---
 
-## 👥 Takım ve İletişim
-
-### 🏢 **Geliştirme Ekibi**
-- **Product Manager**: 
-- **AI/ML Engineer**: 
-- **Frontend Developer**: 
-- **Backend Developer**: 
-
----
-
 ## 📊 Performans ve Metrikler
 
 ### ⚡ **Sistem Performansı**
