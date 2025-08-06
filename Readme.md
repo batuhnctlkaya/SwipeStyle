@@ -38,7 +38,7 @@ FindFlow, **yapay zeka teknolojisi** ile desteklenen yeni nesil bir ürün öner
 - Gerçek zamanlı etkileşimli arayüz
 
 ### 📊 **Akıllı Kategori Yönetimi**
-- **5 ana kategori**: Kulaklık, Klima, Lastik, Televizyon, Telefon
+- **5 ana kategori**: Kulaklık, Klima, Televizyon, Telefon, Laptop
 - Dinamik kategori oluşturma sistemi
 - Tercih analizi ve güven skoru hesaplama
 - Bütçe optimizasyonu
@@ -253,10 +253,7 @@ tail -f debug_log.txt
 
 ---
 
-## 📄 Lisans ve Yasal
-
-### 📋 **MIT Lisansı**
-Bu proje MIT lisansı altında sunulmaktadır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+## 📄 Lisans ve Yasal.
 
 ### 🔒 **Gizlilik Politikası**
 - Kullanıcı verileri şifrelenir
