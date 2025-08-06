@@ -523,3 +523,12 @@
 📩 /ask veri: {'step': 4, 'category': 'Television', 'answers': ['Orta (43-55 inç)', '4K Ultra HD', 'Evet'], 'language': 'tr'}
 📩 /ask veri: {'step': 5, 'category': 'Television', 'answers': ['Orta (43-55 inç)', '4K Ultra HD', 'Evet', 'LED'], 'language': 'tr'}
 📩 /ask veri: {'step': 6, 'category': 'Television', 'answers': ['Orta (43-55 inç)', '4K Ultra HD', 'Evet', 'LED', '40.000-80.000₺'], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'vr gözlük'}
+🔍 /detect_category veri: {'query': 'vr gözlük'}
+📩 /ask veri: {'step': 1, 'category': 'Vr Headset', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Vr Headset', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Vr Headset', 'answers': ['Çok Önemli (Yüksek Çözünürlük)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Vr Headset', 'answers': ['Çok Önemli (Yüksek Çözünürlük)', 'Önemli (72-90Hz)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Vr Headset', 'answers': ['Çok Önemli (Yüksek Çözünürlük)', 'Önemli (72-90Hz)', 'Önemli (Gelişmiş Takip)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Vr Headset', 'answers': ['Çok Önemli (Yüksek Çözünürlük)', 'Önemli (72-90Hz)', 'Önemli (Gelişmiş Takip)', 'Önemli'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Vr Headset', 'answers': ['Çok Önemli (Yüksek Çözünürlük)', 'Önemli (72-90Hz)', 'Önemli (Gelişmiş Takip)', 'Önemli', '30.000-50.000₺+'], 'language': 'tr'}

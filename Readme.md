@@ -268,7 +268,7 @@ tail -f debug_log.txt
 ## 🚀 SwipeStyle ile Geleceğin Alışverişini Bugün Deneyimleyin!
 
 [![Hemen Başla](https://img.shields.io/badge/Hemen%20Başla-SwipeStyle-blue?style=for-the-badge&logo=rocket)](http://localhost:8080)
-[![Demo İzle](https://img.shields.io/badge/Demo%20İzle-YouTube-red?style=for-the-badge&logo=youtube)](https://youtube.com/swipestyle)
+[![Demo İzle](https://img.shields.io/badge/Demo%20İzle-YouTube-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=OEdgcSL53Tw)
 
 ---
 
