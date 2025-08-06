@@ -677,12 +677,30 @@ function renderQuestion(question, options, emoji) {
     
     questionDiv.innerHTML = '';
     optionsDiv.innerHTML = '';
-    
-    // Soru başlığı
+
+    // Soru başlığı ve tooltip
+    const questionContainer = document.createElement('div');
+    questionContainer.className = 'question-container';
+
     const questionTitle = document.createElement('h2');
     questionTitle.innerHTML = `${emoji} ${question}`;
-    questionDiv.appendChild(questionTitle);
+    questionContainer.appendChild(questionTitle);
+
+    if (window.currentQuestionTooltip) {
+        const tooltipSpan = document.createElement('span');
+        tooltipSpan.className = 'tooltip';
+        tooltipSpan.innerHTML = '<i class="fas fa-info-circle"></i>';
+        
+        const tooltipText = document.createElement('span');
+        tooltipText.className = 'tooltip-text';
+        tooltipText.textContent = window.currentQuestionTooltip;
+        
+        tooltipSpan.appendChild(tooltipText);
+        questionContainer.appendChild(tooltipSpan);
+    }
     
+    questionDiv.appendChild(questionContainer);
+
     // Seçenekleri oluştur
     options.forEach(opt => {
         const button = document.createElement('button');

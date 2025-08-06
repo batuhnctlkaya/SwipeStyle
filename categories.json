@@ -1847,5 +1847,245 @@
         "weight": 0.6
       }
     ]
+  },
+  "Mouse": {
+    "budget_bands": {
+      "tr": [
+        "100-300₺",
+        "300-700₺",
+        "700-1500₺",
+        "1500-3000₺+",
+        "500-5000₺+"
+      ],
+      "en": [
+        "100-300₺",
+        "300-700₺",
+        "700-1500₺",
+        "1500-3000₺+",
+        "500-5000₺+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "sensor_type",
+        "type": "single_choice",
+        "label": {
+          "tr": "Sensör tipi ne kadar önemli?",
+          "en": "How important is sensor type?"
+        },
+        "emoji": "🎯",
+        "tooltip": {
+          "tr": "Sensör, fare hassasiyetini belirler. Optik sensörler daha yaygın, lazer sensörler yüksek hassasiyet gerektiren işler için daha uygundur.  DPI (Dots Per Inch) değeri yüksek olan sensörler daha hassastır. Oyun için yüksek DPI, genel kullanım için orta seviye DPI yeterlidir. Lazer sensörler genellikle daha pahalıdır.",
+          "en": "The sensor determines mouse sensitivity. Optical sensors are more common, laser sensors are better suited for tasks requiring high precision.  DPI (Dots Per Inch) is a measure of sensitivity. High DPI is good for gaming, medium DPI is sufficient for general use. Laser sensors are usually more expensive."
+        },
+        "options": [
+          {
+            "id": "optical_high",
+            "label": {
+              "tr": "Yüksek hassasiyetli optik (10000 DPI +)",
+              "en": "High precision optical (10000 DPI +)"
+            }
+          },
+          {
+            "id": "optical_mid",
+            "label": {
+              "tr": "Orta hassasiyetli optik (2000-10000 DPI)",
+              "en": "Medium precision optical (2000-10000 DPI)"
+            }
+          },
+          {
+            "id": "laser",
+            "label": {
+              "tr": "Lazer sensör",
+              "en": "Laser sensor"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "connectivity",
+        "type": "single_choice",
+        "label": {
+          "tr": "Bağlantı tipi ne kadar önemli?",
+          "en": "How important is connection type?"
+        },
+        "emoji": "⚡",
+        "tooltip": {
+          "tr": "Kablosuz fareler masaüstü düzenini temiz tutar ve kablo karmaşasını önler. Ancak pil ömrü ve gecikme süresi göz önünde bulundurulmalıdır. Kablolu fareler daha güvenilir ve düşük gecikme süresi sunar, ancak hareket özgürlüğünü kısıtlar. Kablosuz fareler genellikle daha pahalıdır.",
+          "en": "Wireless mice keep the desktop tidy and prevent cable clutter. However, battery life and latency should be considered. Wired mice are more reliable and offer low latency, but limit freedom of movement. Wireless mice are usually more expensive."
+        },
+        "options": [
+          {
+            "id": "wired",
+            "label": {
+              "tr": "Kablolu",
+              "en": "Wired"
+            }
+          },
+          {
+            "id": "wireless",
+            "label": {
+              "tr": "Kablosuz",
+              "en": "Wireless"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.9
+      },
+      {
+        "id": "ergonomics",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ergonomi ne kadar önemli?",
+          "en": "How important is ergonomics?"
+        },
+        "emoji": "🖱️",
+        "tooltip": {
+          "tr": "Ergonomik tasarım, uzun süreli kullanımda bile el yorgunluğunu azaltır.  Özellikle avuç içi boyutu ve el kavrama şekline uygun bir fare seçmek önemlidir.  Ergonomik fareler genellikle daha yüksek fiyatlıdır ancak sağlık ve konfor açısından uzun vadede fayda sağlar.",
+          "en": "Ergonomic design reduces hand fatigue even with prolonged use. Choosing a mouse that suits your palm size and grip style is important. Ergonomic mice are usually more expensive but provide long-term benefits in terms of health and comfort."
+        },
+        "options": [
+          {
+            "id": "very_important",
+            "label": {
+              "tr": "Çok önemli (Ergonomik tasarım)",
+              "en": "Very important (Ergonomic design)"
+            }
+          },
+          {
+            "id": "important",
+            "label": {
+              "tr": "Önemli",
+              "en": "Important"
+            }
+          },
+          {
+            "id": "not_important",
+            "label": {
+              "tr": "Önemli değil",
+              "en": "Not important"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.8
+      },
+      {
+        "id": "buttons_and_features",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ekstra tuşlar ve özellikler önemli mi?",
+          "en": "Are extra buttons and features important?"
+        },
+        "emoji": "⌨️",
+        "tooltip": {
+          "tr": "Ekstra tuşlar, özelleştirilebilir DPI ayarları, programlanabilir makro desteği gibi özellikler, verimliliği artırabilir ve iş akışınızı hızlandırabilir. Özellikle oyun veya grafik tasarım gibi alanlarda faydalıdır. Ancak, bu özellikler fiyatı artırır. İhtiyacınıza göre değerlendirin.",
+          "en": "Extra buttons, customizable DPI settings, programmable macro support, and other features can increase efficiency and speed up your workflow. Particularly useful in gaming or graphic design. However, these features increase the price. Consider your needs."
+        },
+        "options": [
+          {
+            "id": "yes_many",
+            "label": {
+              "tr": "Evet, birçok ek özellik istiyorum",
+              "en": "Yes, I want many extra features"
+            }
+          },
+          {
+            "id": "yes_few",
+            "label": {
+              "tr": "Evet, birkaç ek özellik yeterli",
+              "en": "Yes, a few extra features are enough"
+            }
+          },
+          {
+            "id": "no",
+            "label": {
+              "tr": "Hayır, ek özelliklere ihtiyacım yok",
+              "en": "No, I don't need extra features"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.7
+      },
+      {
+        "id": "brand",
+        "type": "single_choice",
+        "label": {
+          "tr": "Marka tercihiniz var mı?",
+          "en": "Do you have a brand preference?"
+        },
+        "emoji": "🏢",
+        "tooltip": {
+          "tr": "Bazı markalar belirli özelliklerde veya dayanıklılıkta daha iyi olabilir.  Örneğin Logitech, Corsair ve Razer oyun farelerinde popüler markalardır.  Daha önce kullandığınız ve memnun kaldığınız bir marka varsa onu tercih edebilirsiniz. Ancak, markalar genellikle fiyatlandırmada farklılık gösterir.",
+          "en": "Some brands may be better in certain features or durability. For example, Logitech, Corsair, and Razer are popular brands for gaming mice. If you have previously used and been satisfied with a brand, you can prefer it. However, brands often differ in pricing."
+        },
+        "options": [
+          {
+            "id": "logitech",
+            "label": {
+              "tr": "Logitech",
+              "en": "Logitech"
+            }
+          },
+          {
+            "id": "razer",
+            "label": {
+              "tr": "Razer",
+              "en": "Razer"
+            }
+          },
+          {
+            "id": "corsair",
+            "label": {
+              "tr": "Corsair",
+              "en": "Corsair"
+            }
+          },
+          {
+            "id": "other",
+            "label": {
+              "tr": "Diğer",
+              "en": "Other"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.6
+      }
+    ]
   }
 }
