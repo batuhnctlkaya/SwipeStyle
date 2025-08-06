@@ -168,10 +168,17 @@ function extractModel(productTitle) {
 const categoryIcons = {
     'Drone': 'fas fa-plane',
     'Headphones': 'fas fa-headphones',
-    'Keyboard': 'fas fa-keyboard',  
+    'Keyboard': 'fas fa-keyboard',
     'Air Conditioner': 'fas fa-snowflake',
     'Phone': 'fas fa-mobile-alt',
-    'Television': 'fas fa-tv'
+    'Television': 'fas fa-tv',
+    'Mouse': 'fas fa-mouse',
+    'Laptop': 'fas fa-laptop',
+    'Monitor': 'fas fa-desktop',
+    'Tablet': 'fas fa-tablet-alt',
+    'Camera': 'fas fa-camera',
+    'Speaker': 'fas fa-volume-up',
+    'Smartwatch': 'fas fa-stopwatch'
 };
 
 // --- Akıllı Arama & Filtreleme Özelliği ---
@@ -429,7 +436,10 @@ const categoryTranslations = {
     'Speaker': { tr: 'Hoparlör', en: 'Speaker' },
     'Camera': { tr: 'Kamera', en: 'Camera' },
     'Tablet': { tr: 'Tablet', en: 'Tablet' },
-    'Smartwatch': { tr: 'Akıllı Saat', en: 'Smartwatch' }
+    'Smartwatch': { tr: 'Akıllı Saat', en: 'Smartwatch' },
+    'Air Conditioner': { tr: 'Klima', en: 'Air Conditioner' },
+    'Drone': { tr: 'Drone', en: 'Drone' },
+    'Television': { tr: 'Televizyon', en: 'Television' }
 };
 
 // Otomatik tamamlama fonksiyonları

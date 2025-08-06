@@ -390,3 +390,10 @@
 📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli değil', 'Temel', '2000-4000₺'], 'language': 'tr'}
 🔍 /detect_category veri: {'query': 'Tablet'}
 📩 /ask veri: {'step': 1, 'category': 'Tablet', 'answers': [], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'Monitör'}
+📩 /ask veri: {'step': 1, 'category': 'Monitor', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Monitor', 'answers': ['Büyük (27-32 inç)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Monitor', 'answers': ['Büyük (27-32 inç)', '4K Ultra HD'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Monitor', 'answers': ['Büyük (27-32 inç)', '4K Ultra HD', '144Hz'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Monitor', 'answers': ['Büyük (27-32 inç)', '4K Ultra HD', '144Hz', 'Bilmiyorum'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Monitor', 'answers': ['Büyük (27-32 inç)', '4K Ultra HD', '144Hz', 'Bilmiyorum', '30.000₺+'], 'language': 'tr'}

@@ -1,5 +1,5 @@
 {
-  "Klima": {
+  "Air Conditioner": {
     "budget_bands": {
       "tr": [
         "8-15k₺",
@@ -1573,6 +1573,267 @@
             "label": {
               "tr": "Huawei",
               "en": "Huawei"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.6
+      }
+    ]
+  },
+  "Monitor": {
+    "budget_bands": {
+      "tr": [
+        "1.500-3.500₺",
+        "3.500-7.000₺",
+        "7.000-15.000₺",
+        "15.000-30.000₺",
+        "30.000₺+"
+      ],
+      "en": [
+        "1.500-3.500₺",
+        "3.500-7.000₺",
+        "7.000-15.000₺",
+        "15.000-30.000₺",
+        "30.000₺+"
+      ]
+    },
+    "specs": [
+      {
+        "id": "screen_size",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ekran boyutu ne kadar önemli?",
+          "en": "How important is screen size?"
+        },
+        "emoji": "📏",
+        "tooltip": {
+          "tr": "Ekran boyutu, kullanım alanınızı ve konforunuzu doğrudan etkiler.  Küçük ekranlar (24 inç) masaüstü kullanımında yerden tasarruf sağlar ancak büyük belgeleri görüntülemek zorlaştırabilir.  Büyük ekranlar (32 inç veya üzeri) daha rahat bir izleme deneyimi sunar, ancak daha fazla masaüstü alanı gerektirir ve daha pahalı olabilir.  İhtiyaçlarınıza ve kullanım alanınıza göre uygun boyutu seçmek önemlidir.",
+          "en": "Screen size directly impacts your workspace and comfort. Smaller screens (24 inches) save desktop space but can make viewing large documents difficult. Larger screens (32 inches or more) offer a more comfortable viewing experience but require more desktop space and can be more expensive. Choosing the right size based on your needs and workspace is crucial."
+        },
+        "options": [
+          {
+            "id": "small",
+            "label": {
+              "tr": "Küçük (20-24 inç)",
+              "en": "Small (20-24 inch)"
+            }
+          },
+          {
+            "id": "medium",
+            "label": {
+              "tr": "Orta (24-27 inç)",
+              "en": "Medium (24-27 inch)"
+            }
+          },
+          {
+            "id": "large",
+            "label": {
+              "tr": "Büyük (27-32 inç)",
+              "en": "Large (27-32 inch)"
+            }
+          },
+          {
+            "id": "xlarge",
+            "label": {
+              "tr": "Çok Büyük (32 inç+)",
+              "en": "Extra Large (32 inch+)"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 1.0
+      },
+      {
+        "id": "resolution",
+        "type": "single_choice",
+        "label": {
+          "tr": "Ekran çözünürlüğü ne kadar önemli?",
+          "en": "How important is screen resolution?"
+        },
+        "emoji": "✨",
+        "tooltip": {
+          "tr": "Çözünürlük, görüntü netliğini ve ayrıntı seviyesini belirler.  1080p (Full HD) günlük kullanım için yeterlidir, ancak daha büyük ekranlarda pikseller daha belirgin olabilir. 1440p (QHD) daha net ve detaylı bir görüntü sunar, özellikle grafik tasarım veya fotoğraf düzenleme gibi işlerde fark edilir. 4K ultra yüksek çözünürlük, en keskin ve detaylı görüntüyü sağlar, ancak daha yüksek fiyatlı monitörlerde bulunur.",
+          "en": "Resolution determines image clarity and detail level. 1080p (Full HD) is sufficient for daily use, but pixels may be more noticeable on larger screens. 1440p (QHD) provides a sharper and more detailed image, especially noticeable in tasks like graphic design or photo editing. 4K ultra-high resolution provides the sharpest and most detailed image, but is found in higher-priced monitors."
+        },
+        "options": [
+          {
+            "id": "full_hd",
+            "label": {
+              "tr": "Full HD (1080p)",
+              "en": "Full HD (1080p)"
+            }
+          },
+          {
+            "id": "qhd",
+            "label": {
+              "tr": "QHD (1440p)",
+              "en": "QHD (1440p)"
+            }
+          },
+          {
+            "id": "4k",
+            "label": {
+              "tr": "4K Ultra HD",
+              "en": "4K Ultra HD"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.9
+      },
+      {
+        "id": "refresh_rate",
+        "type": "single_choice",
+        "label": {
+          "tr": "Yenileme hızı ne kadar önemli?",
+          "en": "How important is refresh rate?"
+        },
+        "emoji": "⚡",
+        "tooltip": {
+          "tr": "Yenileme hızı, saniyedeki görüntü sayısını belirler ve oyun performansını ve genel akıcılığı etkiler. 60Hz standarttır, ancak 75Hz veya 144Hz gibi daha yüksek yenileme hızları, özellikle hızlı hareketli oyunlarda daha akıcı bir görüntü sağlar.  Daha yüksek yenileme hızları daha pahalıdır, ancak daha pürüzsüz bir deneyim sunar.",
+          "en": "Refresh rate determines the number of frames per second and affects gaming performance and overall smoothness. 60Hz is standard, but higher refresh rates like 75Hz or 144Hz provide a smoother image, especially in fast-paced games. Higher refresh rates are more expensive but offer a smoother experience."
+        },
+        "options": [
+          {
+            "id": "60hz",
+            "label": {
+              "tr": "60Hz",
+              "en": "60Hz"
+            }
+          },
+          {
+            "id": "75hz",
+            "label": {
+              "tr": "75Hz",
+              "en": "75Hz"
+            }
+          },
+          {
+            "id": "144hz",
+            "label": {
+              "tr": "144Hz",
+              "en": "144Hz"
+            }
+          },
+          {
+            "id": "240hz_plus",
+            "label": {
+              "tr": "240Hz+",
+              "en": "240Hz+"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.8
+      },
+      {
+        "id": "panel_type",
+        "type": "single_choice",
+        "label": {
+          "tr": "Panel tipi (IPS, VA, TN) ne kadar önemli?",
+          "en": "How important is panel type (IPS, VA, TN)?"
+        },
+        "emoji": "🖥️",
+        "tooltip": {
+          "tr": "Panel tipi, renk doğruluğu, görüntü açıları ve tepki sürelerini etkiler. IPS paneller en iyi renk doğruluğunu ve geniş görüş açılarını sunar, ancak daha pahalıdır. VA paneller iyi renk doğruluğu ve yüksek kontrast oranları sunar. TN paneller en uygun fiyatlıdır, ancak renk doğruluğu ve görüş açıları daha sınırlıdır.  Kullanım amacınıza göre uygun panel tipini seçmek önemlidir.",
+          "en": "Panel type affects color accuracy, viewing angles, and response times. IPS panels offer the best color accuracy and wide viewing angles but are more expensive. VA panels offer good color accuracy and high contrast ratios. TN panels are the most affordable but have more limited color accuracy and viewing angles. Choosing the right panel type based on your usage is important."
+        },
+        "options": [
+          {
+            "id": "ips",
+            "label": {
+              "tr": "IPS",
+              "en": "IPS"
+            }
+          },
+          {
+            "id": "va",
+            "label": {
+              "tr": "VA",
+              "en": "VA"
+            }
+          },
+          {
+            "id": "tn",
+            "label": {
+              "tr": "TN",
+              "en": "TN"
+            }
+          },
+          {
+            "id": "no_preference",
+            "label": {
+              "tr": "Fark etmez",
+              "en": "No preference"
+            }
+          }
+        ],
+        "weight": 0.7
+      },
+      {
+        "id": "brand_preference",
+        "type": "single_choice",
+        "label": {
+          "tr": "Marka tercihiniz var mı?",
+          "en": "Do you have a brand preference?"
+        },
+        "emoji": "🏢",
+        "tooltip": {
+          "tr": "Bazı markalar belirli teknolojilerde veya müşteri hizmetlerinde daha iyi olabilir. Daha önce kullandığınız veya güvendiğiniz bir marka varsa, bu tercihinizi etkileyebilir.  Ancak, fiyat ve özelliklere odaklanarak en iyi seçimi yapabilirsiniz.",
+          "en": "Some brands may be better in specific technologies or customer service. If you have used or trust a specific brand before, this may influence your preference. However, you can make the best choice by focusing on price and features."
+        },
+        "options": [
+          {
+            "id": "asus",
+            "label": {
+              "tr": "Asus",
+              "en": "Asus"
+            }
+          },
+          {
+            "id": "lg",
+            "label": {
+              "tr": "LG",
+              "en": "LG"
+            }
+          },
+          {
+            "id": "samsung",
+            "label": {
+              "tr": "Samsung",
+              "en": "Samsung"
+            }
+          },
+          {
+            "id": "msi",
+            "label": {
+              "tr": "MSI",
+              "en": "MSI"
             }
           },
           {
