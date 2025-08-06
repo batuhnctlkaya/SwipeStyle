@@ -452,3 +452,14 @@
 📩 /ask veri: {'step': 4, 'category': 'Monitor', 'answers': ['Büyük (27-32 inç)', '4K Ultra HD', '144Hz'], 'language': 'tr'}
 📩 /ask veri: {'step': 5, 'category': 'Monitor', 'answers': ['Büyük (27-32 inç)', '4K Ultra HD', '144Hz', 'TN'], 'language': 'tr'}
 📩 /ask veri: {'step': 6, 'category': 'Monitor', 'answers': ['Büyük (27-32 inç)', '4K Ultra HD', '144Hz', 'TN', '15.000-30.000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Air Conditioner', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Air Conditioner', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Air Conditioner', 'answers': ['Orta (15-25 m²)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Air Conditioner', 'answers': ['Orta (15-25 m²)', 'Evet', 'Önemli (A++ / A++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Air Conditioner', 'answers': ['Orta (15-25 m²)', 'Evet', 'Önemli (A++ / A++)', '35-50k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Orta seviye yeterli'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)', 'Evet', 'Orta (1-2km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)', 'Evet', 'Orta (1-2km)', '40.000 - 80.000 ₺'], 'language': 'tr'}
