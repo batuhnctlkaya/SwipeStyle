@@ -29,54 +29,23 @@ Kullanım:
     # Uygulama http://localhost:8080 adresinde çalışır
 """
 
-# Ensure requirements are installed at startup
-import subprocess
-import sys
-import os
-
-def install_requirements():
-    """
-    Uygulama başlangıcında gerekli paketlerin kurulu olduğundan emin olur.
-    
-    Bu fonksiyon, requirements.txt dosyasındaki tüm bağımlılıkları
-    otomatik olarak kurar. Eğer paketler zaten kuruluysa, 
-    pip bunu atlar ve hata vermez.
-    """
-    req_file = os.path.join(os.path.dirname(__file__), 'requirements.txt')
-    subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', req_file])
-
-install_requirements()
-
+# Standard imports
 import json
-from datetime import datetime
+import os
+import sys
 from flask import Flask, request, jsonify, send_from_directory
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Import app modules
 from app.agent import Agent
 from app.agent import detect_category_from_query
 from app.category_generator import add_dynamic_category_route
 
 app = Flask(__name__, static_folder='website')
 agent = Agent()
-
-def log_api_response(endpoint, input_data, output_data):
-    """
-    API response'larını loglar
-    
-    Args:
-        endpoint (str): API endpoint adı
-        input_data (dict): Gelen veri
-        output_data (dict): Dönen veri
-    """
-    try:
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        with open('agent_output_log.txt', 'a', encoding='utf-8') as f:
-            f.write(f"\n🌐 [{timestamp}] API RESPONSE: {endpoint}\n")
-            f.write(f"INPUT: {json.dumps(input_data, indent=2, ensure_ascii=False)}\n")
-            f.write(f"OUTPUT: {json.dumps(output_data, indent=2, ensure_ascii=False)}\n")
-            f.write(f"-"*40 + "\n")
-            
-    except Exception as e:
-        print(f"❌ API response logging error: {e}")
 
 # Dinamik kategori oluşturma özelliğini ekle
 add_dynamic_category_route(app)
@@ -109,15 +78,9 @@ def detect_category():
     # Dosyaya da yazadıralım
     with open('debug_log.txt', 'a', encoding='utf-8') as f:
         f.write(f"🔍 /detect_category veri: {data}\n")
-    
     query = data.get('query', '')
     category = detect_category_from_query(query)
-    response = {'category': category}
-    
-    # API response'unu logla
-    log_api_response("/detect_category", data, response)
-    
-    return jsonify(response)
+    return jsonify({'category': category})
 
 @app.route('/')
 def index():
@@ -198,12 +161,7 @@ def ask():
     # Dosyaya da yazdıralım
     with open('debug_log.txt', 'a', encoding='utf-8') as f:
         f.write(f"📩 /ask veri: {data}\n")
-    
     response = agent.handle(data)
-    
-    # API response'unu logla
-    log_api_response("/ask", data, response)
-    
     return jsonify(response)
 
 @app.route('/amazon/product/<asin>', methods=['GET'])
@@ -220,7 +178,13 @@ def get_amazon_product(asin):
         JSON: Ürün detayları
     """
     try:
-        from app.amazon_api import AmazonAPI
+        try:
+            from app.amazon_api import AmazonAPI
+        except ImportError:
+            return jsonify({
+                'success': False,
+                'error': 'Amazon API modülü bulunamadı'
+            }), 500
         
         api = AmazonAPI()
         product_details = api.get_product_details(asin)
@@ -260,7 +224,13 @@ def search_amazon_products():
         JSON: Bulunan ürünler
     """
     try:
-        from app.amazon_api import AmazonAPI
+        try:
+            from app.amazon_api import AmazonAPI
+        except ImportError:
+            return jsonify({
+                'success': False,
+                'error': 'Amazon API modülü bulunamadı'
+            }), 500
         
         data = request.json
         query = data.get('query', '')
@@ -293,7 +263,9 @@ if __name__ == '__main__':
     """
     Uygulamayı geliştirme modunda başlatır.
     
-    Debug modu açık, port 8080'de çalışır.
+    Debug modu açık, Render için PORT environment variable kullanır.
     Production ortamında debug=False yapılmalıdır.
     """
-    app.run(debug=True, port=8082)
+    # Render deployment için PORT environment variable kullan
+    port = int(os.environ.get('PORT', 8082))
+    app.run(debug=False, host='0.0.0.0', port=port)

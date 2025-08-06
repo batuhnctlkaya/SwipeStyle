@@ -28,48 +28,363 @@
 📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
 📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
 📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'asked_spec_ids': ['room_size'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'asked_spec_ids': ['room_size', 'inverter_technology'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', 'Hayır'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features'], 'language': 'tr'}
-📩 /ask veri: {'step': 6, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', 'Hayır', 'Fark etmez'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features', 'brand_preference'], 'language': 'tr'}
-📩 /ask veri: {'step': 7, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', 'Hayır', 'Fark etmez', '25-35k₺'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features', 'brand_preference', None], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Programlama'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Programlama', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Programlama', 'Evet', '40-60k₺'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Yaratıcı işler (Video, tasarım)'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Yaratıcı işler (Video, tasarım)', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Yaratıcı işler (Video, tasarım)', 'Evet', '40-60k₺'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}
-📩 /ask veri: {'question': 'Merhaba! 40-60 bin TL bütçem var, çok güzel bir laptop arıyorum.', 'language': 'tr'}
-📩 /ask veri: {'question': 'Laptop', 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Programlama'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Programlama', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Programlama', 'Evet', '40-60k₺'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Oyun (Gaming)'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet', '60k₺+'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'asked_spec_ids': ['form_factor'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'asked_spec_ids': ['form_factor', 'wireless'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', 'Evet'], 'asked_spec_ids': ['form_factor', 'wireless', 'anc'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', 'Evet', '6-12k₺'], 'asked_spec_ids': ['form_factor', 'wireless', 'anc', None], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)'], 'asked_spec_ids': ['form_factor'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet'], 'asked_spec_ids': ['form_factor', 'wireless'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', 'Evet'], 'asked_spec_ids': ['form_factor', 'wireless', 'anc'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak içi (Taşınabilir)', 'Evet', 'Evet', '6-12k₺'], 'asked_spec_ids': ['form_factor', 'wireless', 'anc', None], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Büyük (25 m² +)'], 'asked_spec_ids': ['room_size'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet'], 'asked_spec_ids': ['room_size', 'inverter_technology'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet', 'Çok önemli (A+++)'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency'], 'language': 'tr'}
-📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet', 'Çok önemli (A+++)', 'Hayır'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features'], 'language': 'tr'}
-📩 /ask veri: {'step': 6, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet', 'Çok önemli (A+++)', 'Hayır', 'Fark etmez'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features', 'brand_preference'], 'language': 'tr'}
-📩 /ask veri: {'step': 7, 'category': 'Klima', 'answers': ['Büyük (25 m² +)', 'Evet', 'Çok önemli (A+++)', 'Hayır', 'Fark etmez', '25-35k₺'], 'asked_spec_ids': ['room_size', 'inverter_technology', 'energy_efficiency', 'smart_features', 'brand_preference', None], 'language': 'tr'}
-📩 /ask veri: {'step': 1, 'category': 'Laptop', 'answers': [], 'asked_spec_ids': [], 'language': 'tr'}
-📩 /ask veri: {'step': 2, 'category': 'Laptop', 'answers': ['Oyun (Gaming)'], 'asked_spec_ids': ['primary_use'], 'language': 'tr'}
-📩 /ask veri: {'step': 3, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet'], 'asked_spec_ids': ['primary_use', 'portability'], 'language': 'tr'}
-📩 /ask veri: {'step': 4, 'category': 'Laptop', 'answers': ['Oyun (Gaming)', 'Evet', '40-60k₺'], 'asked_spec_ids': ['primary_use', 'portability', None], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Mouse', 'answers': [], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'çamaşır makinesi'}
+🔍 /detect_category veri: {'query': 'çamaşır makinesi'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', '15-25k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Tire', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Tire', 'answers': ['Kışlık'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Tire', 'answers': ['Kışlık', '225/45 R17'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Tire', 'answers': ['Kışlık', '225/45 R17', 'SUV / 4x4'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Tire', 'answers': ['Kışlık', '225/45 R17', 'SUV / 4x4', 'Kamyonet'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Tire', 'answers': ['Kışlık', '225/45 R17', 'SUV / 4x4', 'Kamyonet', 'SUV / 4x4'], 'language': 'tr'}
+📩 /ask veri: {'step': 7, 'category': 'Tire', 'answers': ['Kışlık', '225/45 R17', 'SUV / 4x4', 'Kamyonet', 'SUV / 4x4', 'Pirelli'], 'language': 'tr'}
+📩 /ask veri: {'step': 8, 'category': 'Tire', 'answers': ['Kışlık', '225/45 R17', 'SUV / 4x4', 'Kamyonet', 'SUV / 4x4', 'Pirelli', 'Bilmiyorum'], 'language': 'tr'}
+📩 /ask veri: {'step': 9, 'category': 'Tire', 'answers': ['Kışlık', '225/45 R17', 'SUV / 4x4', 'Kamyonet', 'SUV / 4x4', 'Pirelli', 'Bilmiyorum', 'Farketmez'], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'drone'}
+🔍 /detect_category veri: {'query': 'drone'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Hayır', 'Orta (1-2km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Hayır', 'Orta (1-2km)', '40.000 - 80.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Orta seviye yeterli'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Önemli (30-40 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Önemli (30-40 dakika)', 'Farketmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Önemli (30-40 dakika)', 'Farketmez', 'Orta (1-2km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Önemli (30-40 dakika)', 'Farketmez', 'Orta (1-2km)', '7.000 - 15.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Orta seviye yeterli'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)', 'Evet', 'Önemli (2-5km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)', 'Evet', 'Önemli (2-5km)', '2.000 - 7.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Hayır', 'Önemli (2-5km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Hayır', 'Önemli (2-5km)', '15.000 - 40.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Önemli (30-40 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Önemli (30-40 dakika)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Önemli (30-40 dakika)', 'Hayır', 'Önemli (2-5km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Önemli (30-40 dakika)', 'Hayır', 'Önemli (2-5km)', '15.000 - 40.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Hayır', 'Önemli (2-5km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Hayır', 'Önemli (2-5km)', '15.000 - 40.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', '25-35k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Evet', 'Orta (1-2km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Evet', 'Orta (1-2km)', '15.000 - 40.000 ₺'], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'monitör'}
+🔍 /detect_category veri: {'query': 'monitör'}
+📩 /ask veri: {'step': 1, 'category': 'Monitor', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Monitor', 'answers': ['27-32 inç'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Monitor', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Monitor', 'answers': ['27-32 inç'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)', 'Bilmiyorum'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)', 'Bilmiyorum', 'Fark etmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)', 'Bilmiyorum', 'Fark etmez', 'OLED'], 'language': 'tr'}
+📩 /ask veri: {'step': 7, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)', 'Bilmiyorum', 'Fark etmez', 'OLED', 'Fark etmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 8, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)', 'Bilmiyorum', 'Fark etmez', 'OLED', 'Fark etmez', 'TN'], 'language': 'tr'}
+📩 /ask veri: {'step': 9, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)', 'Bilmiyorum', 'Fark etmez', 'OLED', 'Fark etmez', 'TN', 'TN'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Fark etmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Fark etmez', 'Farketmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Fark etmez', 'Farketmez', 'Orta (1-2km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Fark etmez', 'Farketmez', 'Orta (1-2km)', '15.000 - 40.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Evet', 'Orta (1-2km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Evet', 'Orta (1-2km)', '15.000 - 40.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Orta seviye yeterli'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)', 'Evet', "Düşük (1km'den az)"], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Orta seviye (20-30 dakika)', 'Evet', "Düşük (1km'den az)", '15.000 - 40.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Çok önemli (A+++)', '35-50k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Telefon', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)', 'Temel (64-128GB)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)', 'Temel (64-128GB)', 'Orta (6.0-6.5 inç)'], 'language': 'tr'}
+📩 /ask veri: {'step': 7, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)', 'Temel (64-128GB)', 'Orta (6.0-6.5 inç)', '25-40k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Farketmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Farketmez', 'Önemli (A++ / A++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Farketmez', 'Önemli (A++ / A++)', '25-35k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Telefon', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)', 'Temel (64-128GB)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)', 'Temel (64-128GB)', 'Orta (6.0-6.5 inç)'], 'language': 'tr'}
+📩 /ask veri: {'step': 7, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)', 'Temel (64-128GB)', 'Orta (6.0-6.5 inç)', '15-25k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü (Konforlu, kaliteli ses)', 'Hayır', '1.5-3k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Telefon', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)', 'Temel (64-128GB)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)', 'Temel (64-128GB)', 'Kompakt (5.5-6.0 inç)'], 'language': 'tr'}
+📩 /ask veri: {'step': 7, 'category': 'Telefon', 'answers': ['Önemli (İyi kalite)', 'Normal kullanım (8-12 saat)', 'Orta performans (Çoklu uygulama)', 'Temel (64-128GB)', 'Kompakt (5.5-6.0 inç)', '40k₺+'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Monitor', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Monitor', 'answers': ['27-32 inç'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Monitor', 'answers': ['27-32 inç', '4K UHD (3840x2160)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Monitor', 'answers': ['27-32 inç', '4K UHD (3840x2160)', 'TN'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Monitor', 'answers': ['27-32 inç', '4K UHD (3840x2160)', 'TN', '144Hz'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Monitor', 'answers': ['27-32 inç', '4K UHD (3840x2160)', 'TN', '144Hz', '12.000-18.000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Monitor', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Monitor', 'answers': ['27-32 inç'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)', 'OLED'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)', 'OLED', '144Hz'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Monitor', 'answers': ['27-32 inç', 'QHD (2560x1440)', 'OLED', '144Hz', '12.000-18.000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Evet', 'Orta (1-2km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Önemli (Yüksek çözünürlük)', 'Orta seviye (20-30 dakika)', 'Evet', 'Orta (1-2km)', '15.000 - 40.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', '25-35k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Television', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Television', 'answers': ['Orta (43-55 inç)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Television', 'answers': ['Orta (43-55 inç)', '4K Ultra HD'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Television', 'answers': ['Orta (43-55 inç)', '4K Ultra HD', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Television', 'answers': ['Orta (43-55 inç)', '4K Ultra HD', 'Evet', 'OLED'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Television', 'answers': ['Orta (43-55 inç)', '4K Ultra HD', 'Evet', 'OLED', '10.000-25.000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Farketmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Farketmez', 'Önemli (A++ / A++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Farketmez', 'Önemli (A++ / A++)', '15-25k₺'], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+🔍 /detect_category veri: {'query': 'telefon'}
+📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'Bir günlük kullanım'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'Bir günlük kullanım', '256 GB'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'Bir günlük kullanım', '256 GB', 'Büyük (6.5 inç üstü)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'Bir günlük kullanım', '256 GB', 'Büyük (6.5 inç üstü)', '8.000-15.000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Hayır', 'Önemli (A++ / A++)', '25-35k₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'İki günlük kullanım'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'İki günlük kullanım', '256 GB'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'İki günlük kullanım', '256 GB', 'Büyük (6.5 inç üstü)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'İki günlük kullanım', '256 GB', 'Büyük (6.5 inç üstü)', '15.000-25.000₺'], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'İki günlük kullanım'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'İki günlük kullanım', '128 GB'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'İki günlük kullanım', '128 GB', 'Büyük (6.5 inç üstü)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'İki günlük kullanım', '128 GB', 'Büyük (6.5 inç üstü)', '15.000-25.000₺'], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Önemli (İyi kalite)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Klima', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Klima', 'answers': ['Orta (15-25 m²)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Farketmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Farketmez', 'Önemli (A++ / A++)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Klima', 'answers': ['Orta (15-25 m²)', 'Farketmez', 'Önemli (A++ / A++)', '35-50k₺'], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+🔍 /detect_category veri: {'query': 'kulaklık'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)', 'Evet', 'Önemli (Pasif gürültü azaltma)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'Yüksek kalite (Hi-Fi)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'Yüksek kalite (Hi-Fi)', '2000-4000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)', 'Hayır', 'Önemli değil'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)', 'Hayır', 'Önemli değil', 'İyi'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü (kapalı)', 'Hayır', 'Önemli değil', 'İyi', '500-1000₺'], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'klavye'}
+🔍 /detect_category veri: {'query': 'klavye'}
+🔍 /detect_category veri: {'query': 'klavye'}
+📩 /ask veri: {'step': 1, 'category': 'Keyboard', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Keyboard', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Keyboard', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Keyboard', 'answers': ['Mekanik'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Keyboard', 'answers': ['Mekanik', 'Cherry MX'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Keyboard', 'answers': ['Mekanik', 'Cherry MX', 'RGB'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Keyboard', 'answers': ['Mekanik', 'Cherry MX', 'RGB', 'Fark etmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Keyboard', 'answers': ['Mekanik', 'Cherry MX', 'RGB', 'Fark etmez', '1500-4000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi', 'Hayır', 'Önemli (Pasif gürültü azaltma)'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Orta seviye yeterli'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Önemli (30-40 dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Orta seviye yeterli', 'Önemli (30-40 dakika)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Phone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Phone', 'answers': ['Önemli (İyi kalite)', 'İki günlük kullanım'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi', 'Hayır', 'Önemli (Pasif gürültü azaltma)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak içi', 'Hayır', 'Önemli (Pasif gürültü azaltma)', 'Temel'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak içi', 'Hayır', 'Önemli (Pasif gürültü azaltma)', 'Temel', '500-1000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet', 'Önemli (Pasif gürültü azaltma)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'İyi'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'İyi', '2000-4000₺'], 'language': 'tr'}
+🔍 /detect_category veri: {'query': 'mouse'}
+🔍 /detect_category veri: {'query': 'mouse'}
+🔍 /detect_category veri: {'query': 'mouse'}
+🔍 /detect_category veri: {'query': 'mouse'}
+🔍 /detect_category veri: {'query': 'mouse'}
+🔍 /detect_category veri: {'query': 'mouse'}
+📩 /ask veri: {'step': 1, 'category': 'Mouse', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Mouse', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Mouse', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Mouse', 'answers': ['Optik (Yeterli)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Mouse', 'answers': ['Optik (Yeterli)', 'Kablosuz (2.4 GHz)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Mouse', 'answers': ['Optik (Yeterli)', 'Kablosuz (2.4 GHz)', 'Önemli'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Mouse', 'answers': ['Optik (Yeterli)', 'Kablosuz (2.4 GHz)', 'Önemli', 'Hayır'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Mouse', 'answers': ['Optik (Yeterli)', 'Kablosuz (2.4 GHz)', 'Önemli', 'Hayır', '800-1500₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'İyi'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'İyi', '1000-2000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak üstü'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'Temel'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak üstü', 'Evet', 'Önemli (Pasif gürültü azaltma)', 'Temel', '1000-2000₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Headphones', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Headphones', 'answers': ['Kulak içi'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet', 'Çok önemli (ANC)'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet', 'Çok önemli (ANC)', 'Yüksek kalite (Hi-Fi)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Headphones', 'answers': ['Kulak içi', 'Evet', 'Çok önemli (ANC)', 'Yüksek kalite (Hi-Fi)', '4000₺+'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Drone', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Drone', 'answers': ['Çok önemli (Profesyonel düzeyde)'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Drone', 'answers': ['Çok önemli (Profesyonel düzeyde)', 'Çok önemli (40+ dakika)'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Drone', 'answers': ['Çok önemli (Profesyonel düzeyde)', 'Çok önemli (40+ dakika)', 'Evet'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Drone', 'answers': ['Çok önemli (Profesyonel düzeyde)', 'Çok önemli (40+ dakika)', 'Evet', 'Önemli (2-5km)'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Drone', 'answers': ['Çok önemli (Profesyonel düzeyde)', 'Çok önemli (40+ dakika)', 'Evet', 'Önemli (2-5km)', '40.000 - 80.000 ₺'], 'language': 'tr'}
+📩 /ask veri: {'step': 1, 'category': 'Keyboard', 'answers': [], 'language': 'tr'}
+📩 /ask veri: {'step': 2, 'category': 'Keyboard', 'answers': ['Mekanik'], 'language': 'tr'}
+📩 /ask veri: {'step': 3, 'category': 'Keyboard', 'answers': ['Mekanik', 'Fark etmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 4, 'category': 'Keyboard', 'answers': ['Mekanik', 'Fark etmez', 'Fark etmez'], 'language': 'tr'}
+📩 /ask veri: {'step': 5, 'category': 'Keyboard', 'answers': ['Mekanik', 'Fark etmez', 'Fark etmez', 'Kablosuz'], 'language': 'tr'}
+📩 /ask veri: {'step': 6, 'category': 'Keyboard', 'answers': ['Mekanik', 'Fark etmez', 'Fark etmez', 'Kablosuz', '1500-4000₺'], 'language': 'tr'}

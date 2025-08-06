@@ -6,10 +6,13 @@
 // Global dil değişkeni
 let currentLanguage = 'tr';
 let currentTheme = 'light';
+let currentCategory = ''; // Global kategori değişkeni
 
 // Otomatik tamamlama için global değişkenler
 let autocompleteData = [];
 let selectedAutocompleteIndex = -1;
+
+// Tema değiştirme fonksiyonu
 function changeTheme(theme) {
     currentTheme = theme;
     
@@ -78,74 +81,192 @@ function handleChatboxEntry() {
         return;
     }
     
-    // Arama butonunu devre dışı bırak
-    const searchBtn = document.getElementById('chatbox-send');
-    const originalText = searchBtn.innerHTML;
-    const loadingText = currentLanguage === 'tr' ? '<i class="fas fa-spinner fa-spin"></i> Aranıyor...' : '<i class="fas fa-spinner fa-spin"></i> Searching...';
-    searchBtn.innerHTML = loadingText;
-    searchBtn.disabled = true;
-    
-    showLoadingScreen();
+    // Modern AI creation screen göster
+    showAICreationScreen();
     
     // API çağrısı
-                fetch('/detect_category', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: input })
-                })
-                .then(res => res.json())
+    fetch('/detect_category', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: input })
+    })
+    .then(res => res.json())
     .then(data => {
-        hideLoadingScreen();
-        
-        // Butonu eski haline getir
-        searchBtn.innerHTML = originalText;
-        searchBtn.disabled = false;
+        hideAICreationScreen();
         
         if (data.category) {
             category = data.category;
-                        step = 1;
-                        answers = [];
+            currentCategory = data.category; // Global kategoriyi güncelle
+            step = 1;
+            answers = [];
             
-            // Basit geçiş
-                        document.querySelector('.landing').style.display = 'none';
-                        document.getElementById('interaction').style.display = '';
-                        askAgent();
-                    } else {
-            const errorMsg = currentLanguage === 'tr' ? 'Aradığınız kategoriyi bulamadım. Lütfen başka bir şey deneyin.' : 'Could not find the category you are looking for. Please try something else.';
-            alert(errorMsg);
+            // Modern geçiş
+            document.querySelector('.landing').style.display = 'none';
+            document.getElementById('interaction').style.display = '';
+            askAgent();
+        } else {
+            showErrorScreen();
         }
     })
     .catch(error => {
         console.error("Arama hatası:", error);
-        hideLoadingScreen();
-        
-        // Butonu eski haline getir
-        searchBtn.innerHTML = originalText;
-        searchBtn.disabled = false;
-        
-        const errorMsg = currentLanguage === 'tr' ? "Bir hata oluştu, lütfen tekrar deneyin." : "An error occurred, please try again.";
-        alert(errorMsg);
+        hideAICreationScreen();
+        showErrorScreen();
     });
 }
 
 let step = 0;
 let category = null;
 let answers = [];
-let asked_spec_ids = []; // ✅ Sorduğumuz spec'lerin ID'lerini takip et
-let pending_asked_spec_id = null; // ✅ Şu anda sorulan spec'in ID'si
+
+// Mevcut kategoriyi döndüren yardımcı fonksiyon
+function getCurrentCategory() {
+    return currentCategory || category || '';
+}
+
+// Ürün başlığından marka çıkarma fonksiyonu
+function extractBrand(productTitle) {
+    const title = productTitle.toLowerCase();
+    const brandKeywords = [
+        'sony', 'bose', 'apple', 'samsung', 'lg', 'sennheiser', 'beats', 
+        'xiaomi', 'huawei', 'oppo', 'oneplus', 'realme', 'vivo', 'iphone',
+        'airpods', 'galaxy', 'pixel', 'redmi', 'poco', 'honor',
+        'jbl', 'marshall', 'audio-technica', 'beyerdynamic', 'akg',
+        'skullcandy', 'plantronics', 'jabra', 'razer', 'steelseries',
+        'hyperx', 'corsair', 'logitech', 'asus', 'msi', 'acer', 'hp',
+        'dell', 'lenovo', 'macbook', 'thinkpad', 'pavilion', 'inspiron'
+    ];
+    
+    for (const brand of brandKeywords) {
+        if (title.includes(brand)) {
+            return brand;
+        }
+    }
+    return null;
+}
+
+// Ürün başlığından model çıkarma fonksiyonu  
+function extractModel(productTitle) {
+    const title = productTitle.toLowerCase();
+    
+    // Model pattern'leri (sayı kombinasyonları)
+    const modelPatterns = [
+        /\b\d{1,2}[a-z]*\b/g,  // 12, 12a, 13pro gibi
+        /\b[a-z]+\s*\d+[a-z]*\b/g,  // pro max 12, air 3 gibi
+        /\b\d+\s*[a-z]+\b/g  // 12 pro, 3 max gibi
+    ];
+    
+    for (const pattern of modelPatterns) {
+        const matches = title.match(pattern);
+        if (matches && matches.length > 0) {
+            return matches[0];
+        }
+    }
+    return null;
+}
 
 const categoryIcons = {
-    'Mouse': 'fas fa-mouse',
+    'Drone': 'fas fa-plane',
     'Headphones': 'fas fa-headphones',
+    'Keyboard': 'fas fa-keyboard',  
+    'Air Conditioner': 'fas fa-snowflake',
     'Phone': 'fas fa-mobile-alt',
-    'Laptop': 'fas fa-laptop',
-    'Keyboard': 'fas fa-keyboard',
-    'Monitor': 'fas fa-desktop',
-    'Speaker': 'fas fa-volume-up',
-    'Camera': 'fas fa-camera',
-    'Tablet': 'fas fa-tablet-alt',
-    'Smartwatch': 'fas fa-clock'
+    'Television': 'fas fa-tv'
 };
+
+// --- Akıllı Arama & Filtreleme Özelliği ---
+// Not: HTML kısmını main.html dosyasına eklemelisin (bkz. açıklama)
+
+// Örnek teknolojik ürün verisi (backend'den de çekilebilir)
+const products = [
+  { name: "Mouse", color: "siyah", size: "M", price: 399, rating: 4.6 },
+  { name: "Laptop", color: "gri", size: "L", price: 15999, rating: 4.8 },
+  { name: "Telefon", color: "mavi", size: "M", price: 10999, rating: 4.7 },
+  { name: "Kulaklık", color: "siyah", size: "S", price: 799, rating: 4.3 },
+  { name: "Monitör", color: "beyaz", size: "L", price: 2999, rating: 4.5 },
+  { name: "Klavye", color: "siyah", size: "M", price: 599, rating: 4.2 },
+  { name: "Tablet", color: "gri", size: "M", price: 4999, rating: 4.4 },
+  { name: "Kamera", color: "siyah", size: "S", price: 3499, rating: 4.1 },
+  { name: "Hoparlör", color: "kırmızı", size: "S", price: 699, rating: 4.0 },
+  { name: "Akıllı Saat", color: "siyah", size: "S", price: 1999, rating: 4.6 }
+];
+
+// Ürünleri ekrana bas
+function displayProducts(filtered) {
+  const productList = document.getElementById("product-list");
+  if (!productList) return;
+  productList.innerHTML = "";
+  filtered.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.textContent = `${p.name} | Renk: ${p.color} | Beden: ${p.size} | ₺${p.price} | ⭐${p.rating}`;
+    productList.appendChild(div);
+  });
+}
+
+// Filtreleme fonksiyonu
+function filterProducts() {
+  const inputEl = document.getElementById("product-search-input");
+  const colorEl = document.getElementById("color-filter");
+  const sizeEl = document.getElementById("size-filter");
+  const ratingEl = document.getElementById("rating-filter");
+  if (!inputEl || !colorEl || !sizeEl || !ratingEl) return;
+  const input = inputEl.value.toLowerCase();
+  const color = colorEl.value;
+  const size = sizeEl.value;
+  const rating = parseFloat(ratingEl.value) || 0;
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(input) &&
+    (color === "" || p.color === color) &&
+    (size === "" || p.size === size) &&
+    p.rating >= rating
+  );
+  displayProducts(filtered);
+}
+
+// Otomatik tamamlama
+function setupSmartSearchEvents() {
+  const inputEl = document.getElementById("product-search-input");
+  const suggestionsDiv = document.getElementById("product-suggestions");
+  if (!inputEl || !suggestionsDiv) return;
+  inputEl.addEventListener("input", () => {
+    const input = inputEl.value.toLowerCase();
+    const matched = products
+      .map(p => p.name)
+      .filter(name => name.toLowerCase().startsWith(input));
+    suggestionsDiv.innerHTML = matched.length > 0 ? matched.join(", ") : "";
+    filterProducts();
+  });
+}
+
+function setupFilterEvents() {
+  const colorEl = document.getElementById("color-filter");
+  const sizeEl = document.getElementById("size-filter");
+  const ratingEl = document.getElementById("rating-filter");
+  if (colorEl) colorEl.addEventListener("change", filterProducts);
+  if (sizeEl) sizeEl.addEventListener("change", filterProducts);
+  if (ratingEl) ratingEl.addEventListener("change", filterProducts);
+}
+
+// Sayfa yüklendiğinde smart search alanı varsa başlat
+window.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById("product-search-input")) {
+    setupSmartSearchEvents();
+    setupFilterEvents();
+    displayProducts(products);
+  }
+});
+
+// Açıklama: HTML tarafına şunu eklemelisin (örnek):
+// <div class="smart-search">
+//   <input type="text" id="product-search-input" placeholder="Ürün Ara (örn: ka)">
+//   <select id="color-filter"> ... </select>
+//   <select id="size-filter"> ... </select>
+//   <select id="rating-filter"> ... </select>
+//   <div id="product-suggestions"></div>
+// </div>
+// <div id="product-list"></div>
 
 // Otomatik tamamlama verileri
 const autocompleteSuggestions = {
@@ -520,6 +641,7 @@ function renderLanding(categories) {
 
 function startInteraction(selectedCategory) {
     category = selectedCategory;
+    currentCategory = selectedCategory; // Global kategoriyi güncelle
     step = 1;
     answers = [];
     
@@ -575,7 +697,11 @@ function renderRecommendations(recs) {
     console.log("📊 Length:", recs ? recs.length : 'null/undefined');
     console.log("📊 Full data:", JSON.stringify(recs, null, 2));
     
-    hideLoadingScreen();
+    // Loading ekranlarını gizle
+    hideAICreationScreen();
+    const loadingElement = document.querySelector('.loading');
+    if (loadingElement) loadingElement.style.display = 'none';
+    
     const recDiv = document.querySelector('.recommendations');
     
     const titleText = currentLanguage === 'tr' ? 'Önerilen Ürünler' : 'Recommended Products';
@@ -649,26 +775,90 @@ function renderRecommendations(recs) {
             } catch (e) {
                 console.warn(`⚠️ Invalid URL detected: ${url}`);
                 
-                // Site-specific fallback URLs
+                // Site-specific fallback URLs with enhanced product targeting
                 let siteFound = false;
                 const searchQuery = encodeURIComponent(productTitle);
                 
+                // Extract brand and model from product title for better targeting
+                const foundBrand = extractBrand(productTitle);
+                const foundModel = extractModel(productTitle);
+                
+                // Build enhanced search query
+                let enhancedQuery = searchQuery;
+                if (foundBrand) {
+                    enhancedQuery = foundBrand + ' ' + searchQuery;
+                }
+                if (foundModel && !searchQuery.toLowerCase().includes(foundModel)) {
+                    enhancedQuery += ' ' + foundModel;
+                }
+                
+                console.log(`🎯 Enhanced search: "${productTitle}" → brand: "${foundBrand}", model: "${foundModel}", query: "${enhancedQuery}"`);
+                
+                // Category mapping for better site navigation
+                const categoryMapping = {
+                    'Headphones': 'kulaklik',
+                    'Phone': 'cep-telefonu', 
+                    'Laptop': 'laptop',
+                    'Television': 'televizyon',
+                    'Drone': 'drone',
+                    'Klima': 'klima'
+                };
+                
                 if (sourceSite) {
+                    console.log(`🎯 Creating enhanced search URL for: ${sourceSite}`);
+                    
+                    const currentCat = getCurrentCategory();
+                    const categoryPath = categoryMapping[currentCat] || '';
+                    
+                    // Fiyat bilgisini de URL'ye ekle
+                    const price = r.price && typeof r.price === 'object' ? r.price.value : null;
+                    const priceParam = price ? `&minPrice=${Math.max(0, price-1000)}&maxPrice=${price+1000}` : '';
+                    
                     if (sourceSite.includes('teknosa')) {
-                        url = `https://www.teknosa.com/arama?q=${searchQuery}`;
-                        console.log(`🔍 Teknosa fallback URL: ${url}`);
+                        // Teknosa enhanced URL with category and brand
+                        url = `https://www.teknosa.com/arama?q=${enhancedQuery}${categoryPath ? '&kategori=' + categoryPath : ''}`;
+                        console.log(`🔍 Teknosa enhanced URL: ${url}`);
                         siteFound = true;
                     } else if (sourceSite.includes('hepsiburada')) {
-                        url = `https://www.hepsiburada.com/ara?q=${searchQuery}`;
-                        console.log(`🔍 Hepsiburada fallback URL: ${url}`);
+                        // Hepsiburada enhanced URL with specific product targeting
+                        url = `https://www.hepsiburada.com/ara?q=${enhancedQuery}${priceParam}`;
+                        console.log(`🔍 Hepsiburada enhanced URL: ${url}`);
                         siteFound = true;
                     } else if (sourceSite.includes('trendyol')) {
-                        url = `https://www.trendyol.com/sr?q=${searchQuery}`;
-                        console.log(`🔍 Trendyol fallback URL: ${url}`);
+                        // Trendyol enhanced URL with brand and model focus
+                        url = `https://www.trendyol.com/sr?q=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
+                        console.log(`🔍 Trendyol enhanced URL: ${url}`);
                         siteFound = true;
                     } else if (sourceSite.includes('n11')) {
-                        url = `https://www.n11.com/arama?q=${searchQuery}`;
-                        console.log(`🔍 N11 fallback URL: ${url}`);
+                        // N11 enhanced URL with precise product search
+                        url = `https://www.n11.com/arama?q=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
+                        console.log(`🔍 N11 enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('amazon')) {
+                        // Amazon enhanced URL with department targeting
+                        const dept = categoryPath ? `&i=${categoryPath}` : '';
+                        url = `https://www.amazon.com.tr/s?k=${enhancedQuery}${dept}`;
+                        console.log(`🔍 Amazon enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('gittigidiyor')) {
+                        // GittiGidiyor enhanced URL
+                        url = `https://www.gittigidiyor.com/arama/?k=${enhancedQuery}${foundBrand ? '&marka=' + foundBrand : ''}`;
+                        console.log(`🔍 GittiGidiyor enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('ciceksepeti')) {
+                        // ÇiçekSepeti enhanced URL for tech products
+                        url = `https://www.ciceksepeti.com/arama?q=${enhancedQuery}`;
+                        console.log(`🔍 ÇiçekSepeti enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('mediamarkt')) {
+                        // MediaMarkt enhanced URL
+                        url = `https://www.mediamarkt.com.tr/tr/search.html?query=${enhancedQuery}`;
+                        console.log(`🔍 MediaMarkt enhanced URL: ${url}`);
+                        siteFound = true;
+                    } else if (sourceSite.includes('vatan')) {
+                        // Vatan Bilgisayar enhanced URL
+                        url = `https://www.vatanbilgisayar.com/arama/?text=${enhancedQuery}`;
+                        console.log(`🔍 Vatan enhanced URL: ${url}`);
                         siteFound = true;
                     }
                 }
@@ -804,95 +994,24 @@ function resetToLanding() {
     interaction.style.display = 'none';
     landing.style.display = '';
     
+    // Hide all screens
+    hideAICreationScreen();
+    hideErrorScreen();
+    
     // Reset all content
     document.querySelector('.recommendations').innerHTML = '';
-        document.querySelector('.question').innerHTML = '';
-        document.querySelector('.options').innerHTML = '';
-        document.querySelector('.error').textContent = '';
+    document.querySelector('.question').innerHTML = '';
+    document.querySelector('.options').innerHTML = '';
+    document.querySelector('.error').textContent = '';
     
     // Reset variables
-        step = 0;
-        category = null;
-        answers = [];
-        asked_spec_ids = []; // ✅ Spec ID'leri sıfırla
-        pending_asked_spec_id = null; // ✅ Pending spec ID'yi sıfırla
+    step = 0;
+    category = null;
+    answers = [];
     
     // Clear search input
     const searchInput = document.getElementById('chatbox-input');
     if (searchInput) searchInput.value = '';
-}
-
-function showLoadingScreen() {
-    hideLoadingScreen();
-    let loadingDiv = document.getElementById('custom-loading');
-    if (!loadingDiv) {
-        const loadingText = currentLanguage === 'tr' ? 'AI İşliyor...' : 'AI Processing...';
-        const loadingSubtext = currentLanguage === 'tr' 
-            ? 'Yapay zeka tercihlerinizi analiz ediyor ve size en uygun ürünleri buluyor.'
-            : 'AI is analyzing your preferences and finding the most suitable products for you.';
-        const resetText = currentLanguage === 'tr' ? 'Sıfırla' : 'Reset';
-        
-        loadingDiv = document.createElement('div');
-        loadingDiv.id = 'custom-loading';
-        loadingDiv.className = 'loading-container';
-        loadingDiv.innerHTML = `
-            <div class="loading-spinner"></div>
-            <div class="loading-text">${loadingText}</div>
-            <div class="loading-subtext">${loadingSubtext}</div>
-            <div class="progress-container">
-                <div class="progress-bar" id="ai-progress" style="width: 0%"></div>
-            </div>
-            <button class="emergency-reset" id="emergency-reset">
-                <i class="fas fa-redo"></i> ${resetText}
-            </button>
-        `;
-        
-        // Acil durum sıfırlama butonu
-        const resetButton = loadingDiv.querySelector('#emergency-reset');
-        resetButton.onclick = () => {
-            isRequestInProgress = false;
-            hideLoadingScreen();
-            resetToLanding();
-        };
-        
-        document.body.appendChild(loadingDiv);
-    }
-    
-    loadingDiv.style.display = 'flex';
-    animateProgress();
-}
-
-function animateProgress() {
-    const progressBar = document.getElementById('ai-progress');
-    if (!progressBar) return;
-    
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += Math.random() * 3 + 1;
-        if (progress > 90) progress = 90;
-        
-        progressBar.style.width = progress + '%';
-        
-        if (!document.getElementById('custom-loading') || 
-            document.getElementById('custom-loading').style.display === 'none') {
-            clearInterval(interval);
-        }
-    }, 200);
-}
-
-function hideLoadingScreen() {
-    let loadingDiv = document.getElementById('custom-loading');
-    if (loadingDiv) {
-        const progressBar = document.getElementById('ai-progress');
-        if (progressBar) {
-            progressBar.style.width = '100%';
-            setTimeout(() => {
-                loadingDiv.style.display = 'none';
-            }, 300);
-        } else {
-            loadingDiv.style.display = 'none';
-        }
-    }
 }
 
 let isRequestInProgress = false;
@@ -925,19 +1044,6 @@ function handleOption(opt) {
         }
         
         answers.push(opt);
-        
-        // ✅ Bu cevaba karşılık gelen spec ID'yi kaydet
-        if (pending_asked_spec_id) {
-            asked_spec_ids.push(pending_asked_spec_id);
-            console.log(`📝 Added spec_id to asked_spec_ids: ${pending_asked_spec_id}`);
-            console.log(`📝 Current asked_spec_ids:`, asked_spec_ids);
-            pending_asked_spec_id = null; // Clear pending
-        } else {
-            // Fallback: eski sistemde spec_id olmayabilir, boş ekle
-            asked_spec_ids.push(null);
-            console.log(`⚠️ No pending_asked_spec_id, added null`);
-        }
-        
         step++;
         
         document.querySelector('.error').textContent = '';
@@ -976,17 +1082,16 @@ function askAgent() {
     
     let specs = window.currentSpecs && window.currentSpecs[category] ? window.currentSpecs[category] : [];
     if (step > specs.length) {
-        showLoadingScreen();
+        showAICreationScreen();
     }
     
     const timeoutId = setTimeout(() => {
         if (isRequestInProgress) {
             console.log("Zaman aşımı oluştu!");
             isRequestInProgress = false;
-            hideLoadingScreen();
+            hideAICreationScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            const timeoutMsg = currentLanguage === 'tr' ? 'İstek zaman aşımına uğradı. AI analizi uzun sürdü, lütfen tekrar deneyin.' : 'Request timed out. AI analysis took too long, please try again.';
-            document.querySelector('.error').textContent = timeoutMsg;
+            showErrorScreen();
         }
     }, 45000);
     
@@ -997,7 +1102,6 @@ function askAgent() {
             step: step, 
             category: category, 
             answers: answers,
-            asked_spec_ids: asked_spec_ids, // ✅ Sorduğumuz spec'lerin ID'lerini gönder
             language: currentLanguage
         })
     })
@@ -1011,7 +1115,12 @@ function askAgent() {
     .then(data => {
         clearTimeout(timeoutId);
         isRequestInProgress = false;
-        console.log("Sunucudan gelen yanıt:", data);
+        console.log("🔄 Sunucudan gelen yanıt:", data);
+        console.log("🔍 Response type:", data.type);
+        console.log("🔍 Response keys:", Object.keys(data));
+        console.log("🔍 Has recommendations:", !!data.recommendations);
+        console.log("🔍 Has question:", !!data.question);
+        console.log("🔍 Has options:", !!data.options);
         
         console.log("Response has question:", !!data.question);
         console.log("Response has options:", !!data.options);
@@ -1021,71 +1130,96 @@ function askAgent() {
         console.log("Response keys:", Object.keys(data));
         
         if (data.question && data.options) {
-            hideLoadingScreen();
+            console.log("✅ Rendering question...");
+            hideAICreationScreen();
             window.currentQuestionTooltip = data.tooltip || null;
-            
-            // ✅ Sorduğumuz spec'in ID'sini kaydet
-            if (data.asked_spec_id) {
-                console.log(`📝 Storing pending asked_spec_id: ${data.asked_spec_id}`);
-                pending_asked_spec_id = data.asked_spec_id;
-            }
-            
             renderQuestion(data.question, data.options, data.emoji || '🔍');
         } else if (data.type === 'modern_recommendation' && data.recommendations) {
+            console.log("✅ Modern recommendation path triggered");
             // Modern search engine response
-            console.log("Modern recommendations found:", data.recommendations.length);
+            console.log("🚀 Modern recommendations found:", data.recommendations.length);
+            console.log("📦 Modern recommendation data:", JSON.stringify(data, null, 2));
+            
+            hideAICreationScreen();
             renderRecommendations(data.recommendations);
             
             // Grounding results varsa göster
             if (data.grounding_results) {
-                console.log("Grounding results:", data.grounding_results);
+                console.log("🔍 Grounding results:", data.grounding_results);
             }
             
             // Shopping results varsa göster
             if (data.shopping_results) {
-                console.log("Shopping results:", data.shopping_results.length);
+                console.log("🛒 Shopping results:", data.shopping_results.length);
             }
             
             // Sources varsa göster
             if (data.sources) {
-                console.log("Sources:", data.sources.length);
+                console.log("📄 Sources:", data.sources.length);
+            }
+            
+            // Modern search başarı bilgisi göster
+            const modernMessage = currentLanguage === 'tr' ? 
+                '✅ Online arama sistemi aktif - Güncel piyasa verilerimizle ürün önerilerinizi sunuyoruz.' : 
+                '✅ Online search system active - Showing product recommendations with current market data.';
+            
+            showInfoMessage(modernMessage);
+        } else if (data.type === 'fallback_recommendation' && data.recommendations) {
+            console.log("✅ Fallback recommendation path triggered");
+            // Fallback recommendations - güvenilir öneriler
+            console.log("Fallback recommendations found:", data.recommendations.length);
+            hideAICreationScreen();
+            renderRecommendations(data.recommendations);
+            
+            // Fallback durumu için özel bildirim
+            const fallbackMessage = currentLanguage === 'tr' ? 
+                '⚠️ Online arama servisi şu anda kullanılamıyor. Size önceden hazırlanmış kaliteli ürün önerilerimizi sunuyoruz.' : 
+                '⚠️ Online search service is currently unavailable. We are showing you our pre-prepared quality product recommendations.';
+            
+            showInfoMessage(fallbackMessage);
+            
+            // Ek mesaj varsa da göster
+            if (data.message && data.message !== fallbackMessage) {
+                setTimeout(() => showInfoMessage(data.message), 2000);
             }
         } else if (data.recommendations) {
+            console.log("✅ Legacy recommendation path triggered");
             // Legacy recommendations
             renderRecommendations(data.recommendations);
         } else if (data.categories) {
+            console.log("✅ Categories path triggered");
             renderLanding(data.categories);
         } else if (data.error) {
-            hideLoadingScreen();
+            console.log("❌ Error path triggered");
+            hideAICreationScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            document.querySelector('.error').textContent = data.error;
+            showErrorScreen();
         } else if (data.type === 'error' && data.fallback_recommendations) {
+            console.log("✅ Error with fallback path triggered");
             // Error with fallback recommendations
             console.log("Error occurred but fallback recommendations provided");
-            hideLoadingScreen();
+            hideAICreationScreen();
             renderRecommendations(data.fallback_recommendations);
             
             // Error message'ı göster ama bloke etme
             const errorMsg = currentLanguage === 'tr' ? 
                 'Arama sisteminde bir sorun oluştu, yedek öneriler gösteriliyor.' : 
                 'Search system error occurred, showing fallback recommendations.';
-            showTemporaryMessage(errorMsg, 'warning');
+            showInfoMessage(errorMsg);
         } else {
-            console.error('Beklenmeyen yanıt formatı:', data);
-            hideLoadingScreen();
+            console.error('❌ Hiçbir path eşleşmedi! Beklenmeyen yanıt formatı:', data);
+            hideAICreationScreen();
             if (loadingElement) loadingElement.style.display = 'none';
-            const unexpectedMsg = currentLanguage === 'tr' ? 'Beklenmeyen bir yanıt alındı. Lütfen sayfayı yenileyin.' : 'An unexpected response was received. Please refresh the page.';
-            document.querySelector('.error').textContent = unexpectedMsg;
+            showErrorScreen();
         }
     })
     .catch(err => {
         clearTimeout(timeoutId);
         isRequestInProgress = false;
         
-        hideLoadingScreen();
+        hideAICreationScreen();
         if (loadingElement) loadingElement.style.display = 'none';
-        const errorMsg = currentLanguage === 'tr' ? 'Sunucuya erişilemiyor: ' : 'Cannot access server: ';
-        document.querySelector('.error').textContent = errorMsg + err.message;
+        showErrorScreen();
         console.error('Hata:', err);
     });
 }
@@ -1223,4 +1357,225 @@ window.onload = () => {
             const errorMsg = currentLanguage === 'tr' ? "Kategoriler yüklenemedi. Lütfen sayfayı yenileyin." : "Categories could not be loaded. Please refresh the page.";
             document.querySelector('.error').textContent = errorMsg;
         });
+    
+    // Akıllı arama bileşenini oluştur
+    const smartSearchHtml = `
+        <div class="smart-search">
+          <input type="text" id="product-search-input" placeholder="Ürün Ara (örn: ka)">
+          <select id="color-filter">
+            <option value="">Renk</option>
+            <option value="kırmızı">Kırmızı</option>
+            <option value="siyah">Siyah</option>
+            <option value="mavi">Mavi</option>
+          </select>
+          <select id="size-filter">
+            <option value="">Beden</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+          </select>
+          <select id="rating-filter">
+            <option value="">Puan</option>
+            <option value="4">4+ Yıldız</option>
+            <option value="3">3+ Yıldız</option>
+          </select>
+          <div id="product-suggestions"></div>
+        </div>
+        <div id="product-list"></div>
+    `;
+    
+    document.getElementById('smart-search-container').innerHTML = smartSearchHtml;
+    
+    // Ürün arama ve filtreleme
+    const productSearchInput = document.getElementById('product-search-input');
+    const colorFilter = document.getElementById('color-filter');
+    const sizeFilter = document.getElementById('size-filter');
+    const ratingFilter = document.getElementById('rating-filter');
+    const productSuggestions = document.getElementById('product-suggestions');
+    const productList = document.getElementById('product-list');
+    
+    // Ürünleri yükle
+    function loadProducts() {
+        fetch('/products')
+            .then(res => res.json())
+            .then(data => {
+                window.allProducts = data;
+                renderProductList(data);
+            })
+            .catch(error => {
+                console.error("Ürünler yüklenirken hata:", error);
+            });
+    }
+    
+    // Ürün listesini renderla
+    function renderProductList(products) {
+        productList.innerHTML = '';
+        
+        products.forEach(product => {
+            const productItem = document.createElement('div');
+            productItem.className = 'product-item';
+            productItem.innerHTML = `
+                <div class="product-image">
+                    <img src="${product.image}" alt="${product.name}">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">${product.price} ₺</div>
+                </div>
+            `;
+            
+            productItem.addEventListener('click', () => {
+                // Ürün tıklandığında yapılacaklar
+                console.log("Ürün tıklandı:", product);
+            });
+            
+            productList.appendChild(productItem);
+        });
+    }
+    
+    // Arama ve filtreleme işlemini gerçekleştir
+    function performSearchAndFilter() {
+        const query = productSearchInput.value.toLowerCase().trim();
+        const selectedColor = colorFilter.value;
+        const selectedSize = sizeFilter.value;
+        const selectedRating = ratingFilter.value;
+        
+        let filteredProducts = window.allProducts || [];
+        
+        // Ürün adında arama
+        if (query) {
+            filteredProducts = filteredProducts.filter(product => product.name.toLowerCase().includes(query));
+        }
+        
+        // Renk filtresi
+        if (selectedColor) {
+            filteredProducts = filteredProducts.filter(product => product.color === selectedColor);
+        }
+        
+        // Beden filtresi
+        if (selectedSize) {
+            filteredProducts = filteredProducts.filter(product => product.size === selectedSize);
+        }
+        
+        // Puan filtresi
+        if (selectedRating) {
+            filteredProducts = filteredProducts.filter(product => product.rating >= parseInt(selectedRating));
+        }
+        
+        renderProductList(filteredProducts);
+    }
+    
+    // Olay dinleyicileri ekle
+    productSearchInput.addEventListener('input', performSearchAndFilter);
+    colorFilter.addEventListener('change', performSearchAndFilter);
+    sizeFilter.addEventListener('change', performSearchAndFilter);
+    ratingFilter.addEventListener('change', performSearchAndFilter);
+    
+    // Ürünleri yükle
+    loadProducts();
 };
+
+// Ana sayfaya dönüş fonksiyonu
+function goToHomePage() {
+    // Tüm ekranları gizle
+    hideErrorScreen();
+    hideAICreationScreen();
+    hideLoadingScreen();
+    
+    // Interaction'ı gizle ve landing'i göster
+    document.getElementById('interaction').style.display = 'none';
+    document.querySelector('.landing').style.display = 'block';
+    
+    // Değişkenleri sıfırla
+    step = 0;
+    category = null;
+    answers = [];
+    
+    // Input'u temizle
+    document.getElementById('chatbox-input').value = '';
+    
+    // Arama butonunu aktif hale getir
+    const searchBtn = document.getElementById('chatbox-send');
+    const originalText = currentLanguage === 'tr' ? '<i class="fas fa-search"></i> <span>AI ile Bul</span>' : '<i class="fas fa-search"></i> <span>Find with AI</span>';
+    searchBtn.innerHTML = originalText;
+    searchBtn.disabled = false;
+}
+
+// AI Creation Screen fonksiyonları
+function showAICreationScreen() {
+    document.getElementById('ai-creation-screen').style.display = 'flex';
+    
+    // Progress bar animasyonu
+    setTimeout(() => {
+        const progressBar = document.querySelector('.ai-progress-bar');
+        if (progressBar) progressBar.style.width = '75%';
+    }, 1000);
+    
+    setTimeout(() => {
+        const progressBar = document.querySelector('.ai-progress-bar');
+        if (progressBar) progressBar.style.width = '100%';
+    }, 2000);
+}
+
+function hideAICreationScreen() {
+    document.getElementById('ai-creation-screen').style.display = 'none';
+    // Progress bar'ı sıfırla
+    const progressBar = document.querySelector('.ai-progress-bar');
+    if (progressBar) progressBar.style.width = '45%';
+}
+
+// Error Screen fonksiyonları
+function showInfoMessage(message) {
+    // Info mesajı için stil oluştur
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'info-message';
+    infoDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+        z-index: 10000;
+        max-width: 350px;
+        font-size: 14px;
+        line-height: 1.4;
+        animation: slideInRight 0.3s ease;
+    `;
+    infoDiv.innerHTML = `
+        <i class="fas fa-info-circle" style="margin-right: 8px; color: #fbbf24;"></i>
+        ${message}
+    `;
+    
+    document.body.appendChild(infoDiv);
+    
+    // 5 saniye sonra otomatik olarak kaldır
+    setTimeout(() => {
+        if (infoDiv.parentNode) {
+            infoDiv.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(infoDiv);
+            }, 300);
+        }
+    }, 5000);
+    
+    // Tıklayınca kapat
+    infoDiv.addEventListener('click', () => {
+        if (infoDiv.parentNode) {
+            infoDiv.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(infoDiv);
+            }, 300);
+        }
+    });
+}
+
+function showErrorScreen() {
+    document.getElementById('error-screen').style.display = 'flex';
+}
+
+function hideErrorScreen() {
+    document.getElementById('error-screen').style.display = 'none';
+}

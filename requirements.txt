@@ -8,6 +8,7 @@
 # - dotenv: Environment variables yönetimi (.env dosyası için)
 # - google-generativeai: Gemini AI entegrasyonu (ürün önerisi için)
 # - requests: HTTP istekleri (SerpAPI için)
+# - gunicorn: Production WSGI server
 # 
 # Kurulum:
 #     pip install -r requirements.txt
@@ -26,7 +27,8 @@
 # - Amazon API anahtarı .env dosyasından okunur
 # - Tüm bağımlılıklar otomatik olarak kurulur
 
-Flask
-python-dotenv
-google-generativeai
-requests
+Flask==2.3.3
+python-dotenv==1.0.0
+google-generativeai==0.3.2
+requests==2.31.0
+gunicorn==21.2.0

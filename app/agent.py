@@ -44,31 +44,8 @@ Kullanım:
 
 import json
 import os
-from datetime import datetime
 from .config import setup_gemini, get_gemini_model, generate_with_retry
 import json
-
-def log_category_detection(query, result, method="direct"):
-    """
-    Kategori tespit sonuçlarını loglar
-    
-    Args:
-        query (str): Kullanıcı sorgusu
-        result (str): Tespit edilen kategori
-        method (str): Tespit yöntemi
-    """
-    try:
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        with open('agent_output_log.txt', 'a', encoding='utf-8') as f:
-            f.write(f"\n🔍 [{timestamp}] CATEGORY DETECTION\n")
-            f.write(f"Query: '{query}'\n")
-            f.write(f"Result: '{result}'\n")
-            f.write(f"Method: {method}\n")
-            f.write(f"-"*40 + "\n")
-            
-    except Exception as e:
-        print(f"❌ Category detection logging error: {e}")
 
 def detect_category_from_query(query):
     """
@@ -106,16 +83,14 @@ def detect_category_from_query(query):
             'kulaklık': 'Headphones',
             'kulaklik': 'Headphones',
             'headphones': 'Headphones',
-            'telefon': 'Phone',
-            'phone': 'Phone',
-            'laptop': 'Laptop',
-            'dizüstü': 'Laptop',
-            'bilgisayar': 'Laptop',
-            'computer': 'Laptop',
-            'pc': 'Laptop',
-            'mouse': 'Mouse',
-            'fare': 'Mouse',
-            # Removed non-existing categories: Charger, Klima, Drill, Hair Dryer
+            'klima': 'Klima',
+            'airconditioner': 'Klima',
+            'lastik': 'Tire',
+            'tire': 'Tire',
+            'televizyon': 'Television',
+            'tv': 'Television',
+            'television': 'Television',
+            # Removed non-existing categories: Phone, Laptop, Mouse, Charger, Drill, Hair Dryer
             # These will be handled by CategoryGenerator AI creation
         }
         
@@ -125,7 +100,6 @@ def detect_category_from_query(query):
         if query_lower in local_mappings:
             mapped_category = local_mappings[query_lower]
             print(f"✅ Local mapping found: '{query}' → '{mapped_category}'")
-            log_category_detection(query, mapped_category, "local_mapping")
             return mapped_category
         
         from .category_generator import CategoryGenerator
@@ -137,17 +111,14 @@ def detect_category_from_query(query):
         # Handle different match types
         if result['match_type'] in ['exact', 'partial', 'ai_recognition']:
             print(f"✅ Category found: {result['match_type']} - '{result['category']}'")
-            log_category_detection(query, result['category'], result['match_type'])
             return result['category']
             
         elif result['match_type'] == 'ai_created':
             print(f"🆕 New category created: '{result['category']}'")
-            log_category_detection(query, result['category'], "ai_created")
             return result['category']
             
         else:
             print(f"❌ Category detection failed: {result.get('message', 'Unknown error')}")
-            log_category_detection(query, None, "failed")
             # Return None instead of defaulting to prevent confusion
             return None
             
@@ -155,7 +126,6 @@ def detect_category_from_query(query):
         print(f"❌ Category detection error: {e}")
         import traceback
         print(traceback.format_exc())
-        log_category_detection(query, None, f"error: {str(e)}")
         return None
 
 class Agent:
@@ -193,35 +163,6 @@ class Agent:
     def __init__(self):
         self.categories = self.load_categories()
 
-    def log_agent_output(self, output_type, data, input_data=None):
-        """
-        Agent'ın ürettiği çıktıları ayrı bir dosyaya loglar
-        
-        Args:
-            output_type (str): Çıktı tipi (question, recommendations, error, etc.)
-            data (dict): Agent'ın döndürdüğü veri
-            input_data (dict): Agent'a gönderilen input verisi (opsiyonel)
-        """
-        try:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            
-            with open('agent_output_log.txt', 'a', encoding='utf-8') as f:
-                f.write(f"\n{'='*80}\n")
-                f.write(f"⏰ [{timestamp}] Agent Output Type: {output_type}\n")
-                f.write(f"{'='*80}\n")
-                
-                if input_data:
-                    f.write(f"📥 INPUT DATA:\n")
-                    f.write(f"{json.dumps(input_data, indent=2, ensure_ascii=False)}\n")
-                    f.write(f"-"*40 + "\n")
-                
-                f.write(f"📤 OUTPUT DATA:\n")
-                f.write(f"{json.dumps(data, indent=2, ensure_ascii=False)}\n")
-                f.write(f"\n")
-                
-        except Exception as e:
-            print(f"❌ Logging error: {e}")
-
     def load_categories(self):
         try:
             with open('categories.json', 'r', encoding='utf-8') as f:
@@ -241,53 +182,67 @@ class Agent:
         print(f"🔄 Agent.handle çağrıldı - Step: {step}, Category: {category}, Answers: {answers}")
         print(f"📊 Raw data: {json.dumps(data, indent=2, ensure_ascii=False)}")
         
-        # Initialize response variable
-        response = None
-        
         if step == 0:
             # İlk adım: Kategori seçimi
-            response = {
+            return {
                 'question': 'What tech are you shopping for?' if language == 'en' else 'Hangi teknoloji ürününü arıyorsunuz?',
                 'categories': list(self.categories.keys())
             }
-            # Log the response
-            self.log_agent_output("category_selection", response, data)
-            return response
         
-        elif category and category in self.categories:
-            specs = self.categories[category]['specs']
+        elif category:
+            # Check if category exists, if not try to create it with CategoryGenerator
+            if category not in self.categories:
+                print(f"🔍 Category '{category}' not found, attempting to create with AI...")
+                from .category_generator import CategoryGenerator
+                
+                category_generator = CategoryGenerator()
+                result = category_generator.intelligent_category_detection(category)
+                
+                if result['match_type'] == 'ai_created':
+                    print(f"🆕 New category '{result['category']}' created successfully!")
+                    # Reload categories to include the new one
+                    self.categories = self.load_categories()
+                    category = result['category']  # Use the AI-determined category name
+                elif result['match_type'] in ['exact', 'partial', 'ai_recognition']:
+                    print(f"✅ Category mapped to existing: '{result['category']}'")
+                    category = result['category']
+                else:
+                    print(f"❌ Failed to create category: {result.get('message', 'Unknown error')}")
+                    return {'error': f"Category '{category}' could not be created or found"}
             
-            # Frontend'den gelen asked_spec_ids bilgisini al
-            asked_spec_ids = data.get('asked_spec_ids', [])
-            
-            # Kullanıcının mevcut tercihlerini analiz et
-            preferences = self._analyze_current_preferences(answers, specs, asked_spec_ids)
-            
-            # Frontend'den gelen özel alanları ekle (budget_band gibi)
-            if 'budget_band' in data:
-                preferences['budget_band'] = data['budget_band']
-            
-            confidence_score = self._calculate_confidence_score(preferences, specs)
-            
-            print(f"🎯 Preferences: {json.dumps(preferences, indent=2, ensure_ascii=False)}")
-            print(f"📈 Confidence Score: {confidence_score}")
-            
-            # Akıllı follow-up soru belirleme
-            next_question = self._determine_next_followup(specs, preferences, confidence_score, language, category)
-            
-            if next_question:
-                # Progress bilgisi ekle
-                progress = self._calculate_progress(preferences, specs)
-                next_question['progress'] = progress
-                # Log the question response
-                self.log_agent_output("follow_up_question", next_question, data)
-                return next_question
+            # Now we should have a valid category
+            if category in self.categories:
+                specs = self.categories[category]['specs']
+                
+                # Kullanıcının mevcut tercihlerini analiz et
+                preferences = self._analyze_current_preferences(answers, specs)
+                
+                # Frontend'den gelen özel alanları ekle (budget_band gibi)
+                if 'budget_band' in data:
+                    preferences['budget_band'] = data['budget_band']
+                
+                # Hangi sorular soruldu hesapla (step sayısı kadar spec sorulmuş)
+                asked_specs = [specs[i]['id'] for i in range(min(step-1, len(specs)))]
+                
+                confidence_score = self._calculate_confidence_score(preferences, specs)
+                
+                print(f"🎯 Preferences: {json.dumps(preferences, indent=2, ensure_ascii=False)}")
+                print(f"📈 Confidence Score: {confidence_score}")
+                print(f"📋 Asked specs so far: {asked_specs}")
+                
+                # Akıllı follow-up soru belirleme
+                next_question = self._determine_next_followup(specs, preferences, confidence_score, language, category, asked_specs)
+                
+                if next_question:
+                    # Progress bilgisi ekle
+                    progress = self._calculate_progress(preferences, specs)
+                    next_question['progress'] = progress
+                    return next_question
+                else:
+                    # Tüm gerekli bilgiler toplandı, öneri ver
+                    return self._generate_recommendations(category, preferences, specs, language)
             else:
-                # Tüm gerekli bilgiler toplandı, öneri ver
-                response = self._generate_recommendations(category, preferences, specs, language)
-                # Log the recommendations response
-                self.log_agent_output("recommendations", response, data)
-                return response
+                return {'error': f"Category '{category}' could not be processed"}
         
         else:
             print(f"❌ Invalid category or step!")
@@ -295,107 +250,90 @@ class Agent:
             print(f"   Category: '{category}'")
             print(f"   Category exists in self.categories: {category in self.categories if category else 'N/A'}")
             print(f"   Available categories: {list(self.categories.keys())}")
-            response = {'error': 'Invalid category or step'}
-            # Log the error response
-            self.log_agent_output("error", response, data)
-            return response
+            return {'error': 'Invalid category or step'}
 
-    def _analyze_current_preferences(self, answers, specs, asked_spec_ids=None):
-        """Mevcut cevapları tercih objesi haline getir - doğru spec'e eşleştirme ile"""
+    def _analyze_current_preferences(self, answers, specs):
+        """Mevcut cevapları tercih objesi haline getir"""
         preferences = {}
         
         print(f"🔍 _analyze_current_preferences:")
         print(f"  📊 answers_count={len(answers)}")
         print(f"  📋 specs_count={len(specs)}")
         print(f"  📝 answers={answers}")
-        print(f"  🎯 asked_spec_ids={asked_spec_ids}")
-        # Fix the budget_band issue by ensuring proper formatting of spec IDs
+        # Fix the budge t_band issue by ensuring proper formatting of spec IDs
         print(f"  🏷️ spec_ids=[{', '.join([spec['id'].strip() for spec in specs])}]")
         
-        # ✅ YENİ YÖNTEM: asked_spec_ids varsa bunları kullan
-        if asked_spec_ids and len(asked_spec_ids) == len(answers):
-            print(f"  ✅ Using asked_spec_ids for precise matching")
-            
-            # Create spec lookup dictionary
-            spec_lookup = {spec['id']: spec for spec in specs}
-            
-            for i, (answer, spec_id) in enumerate(zip(answers, asked_spec_ids)):
-                if answer is not None and spec_id in spec_lookup:
-                    spec = spec_lookup[spec_id]
-                    print(f"  📋 Processing answer {i}: {spec_id} = '{answer}' (type: {spec['type']})")
+        # answered_specs - sadece cevaplanan spec'leri işle
+        for i, answer in enumerate(answers):
+            if i < len(specs) and answer is not None:
+                spec = specs[i]
+                spec_id = spec['id']
+                
+                print(f"  📋 Processing spec {i}: {spec_id} = '{answer}' (type: {spec['type']})")
+                
+                if spec['type'] == 'boolean':
+                    normalized_answer = answer.lower().strip()
+                    if normalized_answer in ['yes', 'evet', 'true', 'evet önemli', 'önemli']:
+                        preferences[spec_id] = True
+                        print(f"    ✅ Boolean value: True")
+                    elif normalized_answer in ['no', 'hayır', 'false', 'önemli değil', 'değil']:
+                        preferences[spec_id] = False
+                        print(f"    ✅ Boolean value: False")
+                    elif normalized_answer in ['no preference', 'fark etmez', 'bilmiyorum', 'farketmez', 'i don\'t know', 'unknown']:
+                        preferences[spec_id] = None  # No preference
+                        print(f"    ✅ Boolean value: No preference (None)")
+                    else:
+                        print(f"    ❌ Invalid boolean answer: '{normalized_answer}' - treating as no preference")
+                        preferences[spec_id] = None
+                elif spec['type'] == 'single_choice':
+                    # Seçilen option'ın ID'sini bul
+                    option_found = False
+                    for opt in spec['options']:
+                        if opt['label']['en'] == answer or opt['label']['tr'] == answer:
+                            preferences[spec_id] = opt['id']
+                            option_found = True
+                            print(f"    ✅ Mapped to option_id: {opt['id']}")
+                            break
                     
-                    if spec['type'] == 'boolean':
-                        if answer.lower() in ['yes', 'evet', 'true']:
-                            preferences[spec_id] = True
-                            print(f"    ✅ Boolean value: True")
-                        elif answer.lower() in ['no', 'hayır', 'false']:
-                            preferences[spec_id] = False
-                            print(f"    ✅ Boolean value: False")
-                        elif answer.lower() in ['no preference', 'fark etmez', 'bilmiyorum', 'farketmez']:
-                            preferences[spec_id] = None  # No preference
-                            print(f"    ✅ Boolean value: No preference (None)")
-                        else:
-                            print(f"    ❌ Invalid boolean answer: '{answer}'")
-                    elif spec['type'] == 'single_choice':
-                        # Seçilen option'ın ID'sini bul
-                        option_found = False
-                        for opt in spec['options']:
-                            if opt['label']['en'] == answer or opt['label']['tr'] == answer:
-                                preferences[spec_id] = opt['id']
+                    # Eğer eşleşme bulunamadıysa, "Bilmiyorum" veya "Fark etmez" benzeri cevapları kontrol et
+                    if not option_found:
+                        normalized_answer = answer.lower().strip()
+                        if normalized_answer in ['bilmiyorum', 'i don\'t know', 'unknown', 'dont know']:
+                            # "unknown" veya "no_preference" option_id'si varsa kullan
+                            for opt in spec['options']:
+                                if opt['id'] in ['unknown', 'no_preference']:
+                                    preferences[spec_id] = opt['id']
+                                    option_found = True
+                                    print(f"    ✅ Mapped 'Bilmiyorum' to option_id: {opt['id']}")
+                                    break
+                            # Eğer hiçbir option bulunmadıysa, null olarak set et (cevaplandı ama bilmiyor)
+                            if not option_found:
+                                preferences[spec_id] = None
                                 option_found = True
-                                print(f"    ✅ Mapped to option_id: {opt['id']}")
-                                break
-                        if not option_found:
-                            print(f"    ❌ No option found for answer: '{answer}'")
-                    elif spec['type'] == 'number':
-                        try:
-                            preferences[spec_id] = int(answer)
-                            print(f"    ✅ Converted to number: {int(answer)}")
-                        except ValueError:
-                            preferences[spec_id] = None
-                            print(f"    ❌ Could not convert to number: '{answer}'")
-        else:
-            # ❌ ESKİ YÖNTEM: Fallback olarak indeks bazlı eşleştirme (eski kategoriler için)
-            print(f"  ⚠️ Falling back to index-based matching (old method)")
-            
-            # answered_specs - sadece cevaplanan spec'leri işle
-            for i, answer in enumerate(answers):
-                if i < len(specs) and answer is not None:
-                    spec = specs[i]
-                    spec_id = spec['id']
-                    
-                    print(f"  📋 Processing spec {i}: {spec_id} = '{answer}' (type: {spec['type']})")
-                    
-                    if spec['type'] == 'boolean':
-                        if answer.lower() in ['yes', 'evet', 'true']:
-                            preferences[spec_id] = True
-                            print(f"    ✅ Boolean value: True")
-                        elif answer.lower() in ['no', 'hayır', 'false']:
-                            preferences[spec_id] = False
-                            print(f"    ✅ Boolean value: False")
-                        elif answer.lower() in ['no preference', 'fark etmez', 'bilmiyorum', 'farketmez']:
-                            preferences[spec_id] = None  # No preference
-                            print(f"    ✅ Boolean value: No preference (None)")
-                        else:
-                            print(f"    ❌ Invalid boolean answer: '{answer}'")
-                    elif spec['type'] == 'single_choice':
-                        # Seçilen option'ın ID'sini bul
-                        option_found = False
-                        for opt in spec['options']:
-                            if opt['label']['en'] == answer or opt['label']['tr'] == answer:
-                                preferences[spec_id] = opt['id']
+                                print(f"    ✅ Mapped 'Bilmiyorum' to null (answered but unknown)")
+                        elif normalized_answer in ['fark etmez', 'farketmez', 'no preference', 'doesnt matter']:
+                            # "no_preference" option_id'si varsa kullan
+                            for opt in spec['options']:
+                                if opt['id'] == 'no_preference':
+                                    preferences[spec_id] = opt['id']
+                                    option_found = True
+                                    print(f"    ✅ Mapped 'Fark etmez' to option_id: {opt['id']}")
+                                    break
+                            # Eğer no_preference option'ı yoksa, null olarak set et
+                            if not option_found:
+                                preferences[spec_id] = None
                                 option_found = True
-                                print(f"    ✅ Mapped to option_id: {opt['id']}")
-                                break
-                        if not option_found:
-                            print(f"    ❌ No option found for answer: '{answer}'")
-                    elif spec['type'] == 'number':
-                        try:
-                            preferences[spec_id] = int(answer)
-                            print(f"    ✅ Converted to number: {int(answer)}")
-                        except ValueError:
-                            preferences[spec_id] = None
-                            print(f"    ❌ Could not convert to number: '{answer}'")
+                                print(f"    ✅ Mapped 'Fark etmez' to null (answered but no preference)")
+                    
+                    if not option_found:
+                        print(f"    ❌ No option found for answer: '{answer}'")
+                elif spec['type'] == 'number':
+                    try:
+                        preferences[spec_id] = int(answer)
+                        print(f"    ✅ Converted to number: {int(answer)}")
+                    except ValueError:
+                        preferences[spec_id] = None
+                        print(f"    ❌ Could not convert to number: '{answer}'")
         
         # Özel bütçe kontrolü - Para birimi sembolü içeren yanıtları bütçe olarak tanı
         for i, answer in enumerate(answers):
@@ -403,9 +341,9 @@ class Agent:
                 preferences['budget_band'] = answer
                 print(f"  💰 Special budget detection: '{answer}' added as budget_band")
                 
-                # Eğer bu cevap bir spec'e eşleştirildiyse temizle
-                if asked_spec_ids and i < len(asked_spec_ids):
-                    spec_id = asked_spec_ids[i]
+                # Bu bir spec cevabı olarak işlendiyse, bu spec'i null olarak işaretle
+                if i < len(specs):
+                    spec_id = specs[i]['id']
                     if spec_id in preferences and spec_id != 'budget_band':
                         preferences[spec_id] = None
                         print(f"  ⚠️ Clearing {spec_id} since this was actually a budget answer")
@@ -469,8 +407,13 @@ class Agent:
         total_count = len(specs)
         return int((answered_count / total_count) * 100) if total_count > 0 else 0
 
-    def _determine_next_followup(self, specs, preferences, confidence_score, language, category=None):
+    def _determine_next_followup(self, specs, preferences, confidence_score, language, category=None, asked_specs=None):
         """Akıllı follow-up soru belirleme algoritması"""
+        
+        if asked_specs is None:
+            asked_specs = []
+        
+        print(f"🔍 Next question logic: confidence={confidence_score:.2f}, asked_specs={asked_specs}")
         
         # 1) Çelişki var mı kontrol et
         conflict_question = self._check_conflicts(specs, preferences, language)
@@ -478,23 +421,24 @@ class Agent:
             return conflict_question
         
         # 2) Zorunlu/önemli eksikler (mandatory veya weight ≥ 0.9)
-        mandatory_question = self._check_mandatory_missing(specs, preferences, language)
+        mandatory_question = self._check_mandatory_missing(specs, preferences, language, asked_specs)
         if mandatory_question:
             return mandatory_question
         
         # 3) depends_on tetiklenen alt sorular
-        dependency_question = self._check_dependency_triggers(specs, preferences, language)
+        dependency_question = self._check_dependency_triggers(specs, preferences, language, asked_specs)
         if dependency_question:
             return dependency_question
         
-        # 4) Yüksek weight'li eksikler - confidence'tan bağımsız kontrol et
-        # Makul weight'e sahip (>=0.6) eksik spec'ler varsa onları sor
-        high_weight_question = self._check_high_weight_missing_improved(specs, preferences, language)
-        if high_weight_question:
-            return high_weight_question
+        # 4) Skor düşükse (bilgi yetersiz), yüksek weight'li eksikler
+        # ANCAK budget sorulduysa bu adımı atla (yeteri kadar bilgi var demektir)
+        if confidence_score < 0.7 and 'budget_band' not in preferences:
+            high_weight_question = self._check_high_weight_missing(specs, preferences, language, asked_specs)
+            if high_weight_question:
+                return high_weight_question
         
         # 5) Sayısal detay gereken sorular
-        numeric_question = self._check_numeric_needed(specs, preferences, language)
+        numeric_question = self._check_numeric_needed(specs, preferences, language, asked_specs)
         if numeric_question:
             return numeric_question
         
@@ -513,12 +457,16 @@ class Agent:
         # Bu basit örnek, daha karmaşık çelişki mantığı eklenebilir
         return None
 
-    def _check_mandatory_missing(self, specs, preferences, language):
+    def _check_mandatory_missing(self, specs, preferences, language, asked_specs=None):
         """Zorunlu veya çok önemli (weight≥0.9) eksik sorular"""
+        if asked_specs is None:
+            asked_specs = []
+            
         missing = [
             spec for spec in specs 
             if (spec.get('weight', 1.0) >= 0.9 or spec.get('mandatory', False)) 
             and spec['id'] not in preferences
+            and spec['id'] not in asked_specs  # Bu satır eklendi - zaten sorulmuş soruları atla
             and not self._has_unsatisfied_dependencies(spec, preferences)  # Dependency'si olmayan veya sağlanan sorular
         ]
         
@@ -528,10 +476,13 @@ class Agent:
             return self._format_question(missing[0], language, reason="mandatory")
         return None
 
-    def _check_dependency_triggers(self, specs, preferences, language):
+    def _check_dependency_triggers(self, specs, preferences, language, asked_specs=None):
         """Bağımlılık tetikleyen sorular"""
+        if asked_specs is None:
+            asked_specs = []
+            
         for spec in specs:
-            if spec['id'] not in preferences and 'depends_on' in spec:
+            if spec['id'] not in preferences and spec['id'] not in asked_specs and 'depends_on' in spec:
                 # Dependency koşulları sağlanıyor mu?
                 should_ask = True
                 for dep in spec['depends_on']:
@@ -559,46 +510,10 @@ class Agent:
         
         return None
 
-    def _check_high_weight_missing_improved(self, specs, preferences, language):
-        """Geliştirilmiş yüksek önemde eksik soru kontrolü - confidence'tan bağımsız"""
-        
-        # Önce ağırlıklı (>=0.6) eksik spec'leri ara
-        missing_high = [
-            spec for spec in specs 
-            if spec.get('weight', 1.0) >= 0.6 
-            and spec['id'] not in preferences
-            and not self._has_unsatisfied_dependencies(spec, preferences)
-        ]
-        
-        # Eğer yüksek ağırlıklı bulunamazsa, herhangi bir eksik spec'i ara (>=0.5)
-        if not missing_high:
-            missing_high = [
-                spec for spec in specs 
-                if spec.get('weight', 1.0) >= 0.5 
-                and spec['id'] not in preferences
-                and not self._has_unsatisfied_dependencies(spec, preferences)
-            ]
-        
-        # Hala bulunamazsa, herhangi bir eksik spec'i ara (threshold yok)
-        if not missing_high:
-            missing_high = [
-                spec for spec in specs 
-                if spec['id'] not in preferences
-                and not self._has_unsatisfied_dependencies(spec, preferences)
-            ]
-        
-        print(f"  📈 Improved high weight check: found {len(missing_high)} missing specs")
-        
-        # En yüksek weight'li olanı seç
-        if missing_high:
-            missing_high.sort(key=lambda x: x.get('weight', 1.0), reverse=True)
-            selected_spec = missing_high[0]
-            print(f"    🎯 Will ask: {selected_spec['id']} (weight: {selected_spec.get('weight', 1.0)})")
-            return self._format_question(selected_spec, language, reason="importance")
-        return None
-
-    def _check_high_weight_missing(self, specs, preferences, language):
+    def _check_high_weight_missing(self, specs, preferences, language, asked_specs=None):
         """Yüksek önemde ama henüz cevaplanmamış sorular"""
+        if asked_specs is None:
+            asked_specs = []
         
         # Budget sorulduysa weight threshold'u daha yüksek yap (sadece çok kritik olanlar)
         threshold = 0.9 if 'budget_band' in preferences else 0.6
@@ -607,6 +522,7 @@ class Agent:
             spec for spec in specs 
             if spec.get('weight', 1.0) >= threshold 
             and spec['id'] not in preferences
+            and spec['id'] not in asked_specs  # Bu satır eklendi - zaten sorulmuş soruları atla
             and not self._has_unsatisfied_dependencies(spec, preferences)  # Dependency'si sağlanan sorular
         ]
         
@@ -619,8 +535,10 @@ class Agent:
             return self._format_question(missing[0], language, reason="importance")
         return None
 
-    def _check_numeric_needed(self, specs, preferences, language):
+    def _check_numeric_needed(self, specs, preferences, language, asked_specs=None):
         """Sayısal detay gereken sorular"""
+        if asked_specs is None:
+            asked_specs = []
         
         # Budget sorulduysa sayısal soruları atla (çok kritik olanlar hariç)
         if 'budget_band' in preferences:
@@ -631,6 +549,7 @@ class Agent:
             spec for spec in specs 
             if spec['type'] == 'number' 
             and spec['id'] not in preferences
+            and spec['id'] not in asked_specs  # Bu satır eklendi - zaten sorulmuş soruları atla
             and not self._has_unsatisfied_dependencies(spec, preferences)  # BU SATIR EKLENDİ
         ]
         
@@ -729,8 +648,7 @@ class Agent:
             'question': spec['label'][language],
             'emoji': spec.get('emoji', ''),
             'type': spec['type'],
-            'id': spec['id'],
-            'asked_spec_id': spec['id']  # ✅ Sorduğumuz spec'in ID'sini ekle
+            'id': spec['id']
         }
         
         # Spec'e özgü tooltip ekle
@@ -776,9 +694,9 @@ class Agent:
         return question_data
 
     def _generate_recommendations(self, category, preferences, specs, language):
-        """AI-Enhanced Product Recommendations - Extract from detailed AI analysis"""
+        """Modern Search Engine kullanarak öneri oluştur - fallback sistemi ile"""
         try:
-            print(f"🚀 AI-Enhanced Search Engine ile öneri oluşturuluyor: {category}")
+            print(f"🚀 Modern Search Engine ile öneri oluşturuluyor: {category}")
             
             # Modern search sistemi için tercihleri hazırla
             search_preferences = self._prepare_search_preferences(category, preferences, language)
@@ -790,40 +708,159 @@ class Agent:
             # Ürün arama yap
             search_results = search_engine.search_products(search_preferences)
             
-            if search_results['status'] == 'success':
-                # AI'dan gelen grounding results'u parse et ve gerçek ürün önerileri çıkar
-                enhanced_recommendations = self._extract_real_products_from_ai_analysis(
-                    search_results['grounding_results'],
-                    preferences,
-                    category,
-                    language
+            if search_results['status'] == 'success' and search_results.get('recommendations'):
+                print(f"✅ Modern search engine başarılı, {len(search_results['recommendations'])} öneri döndü")
+                
+                # Budget filtreleme uygula
+                filtered_recommendations = self._filter_recommendations_by_budget(
+                    search_results['recommendations'], 
+                    preferences, 
+                    category
                 )
                 
-                return {
-                    'type': 'ai_enhanced_recommendation',
-                    'grounding_results': search_results['grounding_results'],
-                    'shopping_results': enhanced_recommendations['shopping_results'],
-                    'sources': search_results['sources'],
-                    'recommendations': enhanced_recommendations['recommendations'],
+                print(f"💰 Budget filtreleme sonrası: {len(filtered_recommendations)} öneri kaldı")
+                
+                # Eğer budget filtreleme sonrası hiç ürün yoksa fallback'e geç
+                if not filtered_recommendations:
+                    print(f"⚠️ Budget filtreleme sonrası hiç ürün kalmadı, fallback'e geçiliyor")
+                    fallback_recommendations = self._get_fallback_recommendations(category, preferences, language)
+                    return {
+                        'type': 'fallback_recommendation',
+                        'message': f'Seçtiğiniz bütçe aralığında ürün bulunamadı. Size benzer ürünler öneriyoruz.',
+                        'recommendations': fallback_recommendations,
+                        'category': category,
+                        'preferences': preferences,
+                        'confidence_score': self._calculate_confidence_score(preferences, specs),
+                        'budget_filter_applied': True
+                    }
+                
+                response_data = {
+                    'type': 'modern_recommendation',
+                    'grounding_results': search_results.get('grounding_results', []),
+                    'shopping_results': search_results.get('shopping_results', []),
+                    'sources': search_results.get('sources', []),
+                    'recommendations': filtered_recommendations,
                     'category': category,
                     'preferences': preferences,
                     'confidence_score': self._calculate_confidence_score(preferences, specs),
-                    'ai_analysis': enhanced_recommendations['ai_analysis']
+                    'budget_filter_applied': True,
+                    'original_count': len(search_results['recommendations']),
+                    'filtered_count': len(filtered_recommendations)
                 }
+                
+                print(f"🎯 Response data keys: {list(response_data.keys())}")
+                print(f"📊 Recommendations count in response: {len(response_data['recommendations'])}")
+                print(f"📦 First recommendation preview: {response_data['recommendations'][0] if response_data['recommendations'] else 'None'}")
+                
+                return response_data
             else:
+                print(f"⚠️ Modern search engine başarısız veya boş sonuç, fallback'e geçiliyor")
+                fallback_recommendations = self._get_fallback_recommendations(category, preferences, language)
                 return {
-                    'type': 'error',
-                    'message': search_results.get('message', 'Arama sistemi hatası'),
-                    'fallback_recommendations': self._get_fallback_recommendations(category, preferences, language)
+                    'type': 'fallback_recommendation',
+                    'message': 'Arama sistemi geçici olarak sınırlı, önerilerimizi sunuyoruz',
+                    'recommendations': fallback_recommendations,
+                    'category': category,
+                    'preferences': preferences,
+                    'confidence_score': self._calculate_confidence_score(preferences, specs)
                 }
             
         except Exception as e:
-            print(f"❌ AI-Enhanced search engine hatası: {e}")
+            print(f"❌ Modern search engine hatası: {e}")
+            print(f"🔄 Fallback önerilerine geçiliyor...")
+            fallback_recommendations = self._get_fallback_recommendations(category, preferences, language)
             return {
-                'type': 'error',
-                'message': 'Arama sistemi geçici olarak kullanılamıyor',
-                'fallback_recommendations': self._get_fallback_recommendations(category, preferences, language)
+                'type': 'fallback_recommendation',
+                'message': 'Arama sistemi geçici olarak kullanılamıyor, güvenilir önerilerimizi sunuyoruz',
+                'recommendations': fallback_recommendations,
+                'category': category,
+                'preferences': preferences,
+                'confidence_score': self._calculate_confidence_score(preferences, specs),
+                'fallback_reason': str(e)
             }
+    
+    def _filter_recommendations_by_budget(self, recommendations, preferences, category):
+        """Önerileri kullanıcının bütçe aralığına göre filtrele"""
+        try:
+            budget_min, budget_max = self._extract_budget_range(preferences)
+            
+            if not budget_min and not budget_max:
+                print("💰 Budget aralığı yok, filtreleme yapılmayacak")
+                return recommendations
+            
+            print(f"💰 Budget filtreleme: {budget_min} - {budget_max} TL")
+            
+            filtered = []
+            for rec in recommendations:
+                try:
+                    # Fiyat bilgisini çıkar
+                    price_value = None
+                    
+                    if 'price' in rec:
+                        if isinstance(rec['price'], dict):
+                            price_value = rec['price'].get('value')
+                        elif isinstance(rec['price'], (int, float)):
+                            price_value = rec['price']
+                        elif isinstance(rec['price'], str):
+                            # String fiyat parse et
+                            import re
+                            price_match = re.search(r'(\d+(?:\.\d+)?)', rec['price'].replace('.', '').replace(',', ''))
+                            if price_match:
+                                price_value = float(price_match.group(1))
+                    
+                    if price_value is None:
+                        print(f"⚠️ Fiyat bilgisi bulunamadı: {rec.get('title', 'Unknown')}")
+                        continue
+                    
+                    # Budget kontrolü
+                    price_in_range = True
+                    
+                    if budget_min and price_value < budget_min:
+                        price_in_range = False
+                        print(f"❌ {rec.get('title', 'Unknown')}: {price_value} TL < {budget_min} TL (minimum)")
+                    
+                    if budget_max and price_value > budget_max:
+                        price_in_range = False
+                        print(f"❌ {rec.get('title', 'Unknown')}: {price_value} TL > {budget_max} TL (maximum)")
+                    
+                    if price_in_range:
+                        print(f"✅ {rec.get('title', 'Unknown')}: {price_value} TL - Bütçe aralığında")
+                        filtered.append(rec)
+                    
+                except Exception as e:
+                    print(f"⚠️ Fiyat filtreleme hatası {rec.get('title', 'Unknown')}: {e}")
+                    # Hata durumunda ürünü dahil et
+                    filtered.append(rec)
+            
+            print(f"💰 Filtreleme tamamlandı: {len(recommendations)} -> {len(filtered)} ürün")
+            return filtered
+            
+        except Exception as e:
+            print(f"❌ Budget filtreleme genel hatası: {e}")
+            return recommendations
+
+    def _prepare_search_preferences(self, category, preferences, language):
+        """Preferences'ları modern search sistemi için hazırla"""
+        # Budget bilgisini çıkar
+        budget_min, budget_max = self._extract_budget_range(preferences)
+        
+        # Özellikleri çıkar
+        features = []
+        for pref_id, value in preferences.items():
+            if pref_id != 'budget_band' and value and value not in ['Bilmiyorum', 'Not sure', 'Farketmez', 'No preference']:
+                if isinstance(value, bool):
+                    if value:  # Sadece True olan özellikleri ekle
+                        features.append(pref_id.replace('_', ' '))
+                elif isinstance(value, str):
+                    features.append(value)
+        
+        return {
+            'category': category,
+            'budget_min': budget_min,
+            'budget_max': budget_max,
+            'features': features,
+            'language': language
+        }
     
     def _extract_budget_range(self, preferences):
         """Budget aralığını çıkar - 'k' formatını da destekler"""
@@ -860,350 +897,27 @@ class Agent:
                     print(f"✅ K max format parsed: None - {base_value}")
                     return None, base_value
         
-        # Normal format "500-1000₺"
-        normal_pattern = r'(\d+)\s*-\s*(\d+)'
+        # Normal format "500-1000₺" veya "15.000-40.000₺"
+        # Türkçe binlik ayırıcı noktaları da destekle
+        normal_pattern = r'([\d.]+)\s*-\s*([\d.]+)'
         normal_match = re.search(normal_pattern, budget_band)
         
         if normal_match:
-            min_val = int(normal_match.group(1))
-            max_val = int(normal_match.group(2))
+            # Binlik ayırıcı noktaları kaldır (15.000 -> 15000)
+            min_str = normal_match.group(1).replace('.', '') if normal_match.group(1).count('.') > 0 and not normal_match.group(1).endswith('.') else normal_match.group(1)
+            max_str = normal_match.group(2).replace('.', '') if normal_match.group(2).count('.') > 0 and not normal_match.group(2).endswith('.') else normal_match.group(2)
+            
+            min_val = int(float(min_str))
+            max_val = int(float(max_str))
             print(f"✅ Normal format parsed: {min_val} - {max_val}")
             return min_val, max_val
         
-        # Tek değer
-        single_match = re.search(r'(\d+)', budget_band)
+        # Tek değer - binlik ayırıcı noktaları da destekle
+        single_match = re.search(r'([\d.]+)', budget_band)
         if single_match:
-            value = int(single_match.group(1))
-            if '+' in budget_band:
-                print(f"✅ Single+ format parsed: {value} - {value * 2}")
-                return value, value * 2
-            else:
-                print(f"✅ Single format parsed: None - {value}")
-                return None, value
-        
-        print(f"❌ Budget parsing failed for: '{budget_band}'")
-        return None, None
-
-    def _prepare_search_preferences(self, category, preferences, language):
-        """Preferences'ları modern search sistemi için hazırla"""
-        # Budget bilgisini çıkar
-        budget_min, budget_max = self._extract_budget_range(preferences)
-        
-        # Özellikleri çıkar
-        features = []
-        for pref_id, value in preferences.items():
-            if pref_id != 'budget_band' and value and value not in ['Bilmiyorum', 'Not sure', 'Farketmez', 'No preference']:
-                if isinstance(value, bool):
-                    if value:  # Sadece True olan özellikleri ekle
-                        features.append(pref_id.replace('_', ' '))
-                elif isinstance(value, str):
-                    features.append(value)
-        
-        return {
-            'category': category,
-            'budget_min': budget_min,
-            'budget_max': budget_max,
-            'features': features,
-            'language': language
-        }
-    
-    def _extract_real_products_from_ai_analysis(self, grounding_results, preferences, category, language):
-        """
-        AI'ın detaylı analizinden gerçek ürün önerilerini çıkar
-        """
-        try:
-            setup_gemini()
-            model = get_gemini_model()
-            
-            # AI'ın grounding response'unu parse et
-            ai_response = grounding_results.get('response', '')
-            
-            # Bütçe bilgisini al
-            budget_min, budget_max = self._extract_budget_range(preferences)
-            
-            # Structured extraction prompt
-            extraction_prompt = f"""
-Sen bir e-ticaret uzmanısın. Aşağıdaki AI raporundan GERÇEK ürün bilgilerini çıkarıp yapılandırılmış JSON formatında döndür.
-
-AI RAPORU:
-{ai_response[:3000]}  
-
-KULLANICI TERCİHLERİ:
-- Kategori: {category}
-- Bütçe: {budget_min}₺ - {budget_max}₺
-- Özellikler: {json.dumps(preferences, ensure_ascii=False)}
-
-GÖREV: 
-1. Rapordaki GERÇEK ürün isimlerini, fiyatlarını ve özelliklerini çıkar
-2. Her ürün için GERÇEK e-ticaret site linklerini oluştur (Trendyol, Hepsiburada, Teknosa vb.)
-3. Kullanıcı tercihlerine en uygun 3-5 ürünü seç
-
-ZORUNLU JSON FORMAT:
-{{
-  "ai_analysis": "AI raporunun özeti",
-  "shopping_results": [
-    {{
-      "title": "GERÇEK ürün adı (örn: Samsung Galaxy S24 128GB)",
-      "price": {{"value": 25000, "currency": "TRY", "display": "25.000 ₺"}},
-      "source": "hepsiburada.com",
-      "link": "https://www.hepsiburada.com/ara?q=samsung+galaxy+s24+128gb",
-      "thumbnail": "https://via.placeholder.com/150x150?text=Product",
-      "rating": 4.5,
-      "reviews": 120,
-      "delivery": "Ücretsiz kargo",
-      "shipping": "1-2 gün"
-    }}
-  ],
-  "recommendations": [
-    {{
-      "title": "GERÇEK ürün adı",
-      "price": {{"value": 25000, "currency": "TRY", "display": "25.000 ₺"}},
-      "features": ["GERÇEK özellik 1", "GERÇEK özellik 2"],
-      "pros": ["GERÇEK avantaj 1", "GERÇEK avantaj 2"],
-      "cons": ["GERÇEK dezavantaj 1"],
-      "match_score": 95,
-      "source_site": "hepsiburada.com",
-      "product_url": "https://www.hepsiburada.com/ara?q=ürün+adı",
-      "why_recommended": "Neden önerildi (GERÇEK özellikler)"
-    }}
-  ]
-}}
-
-ÖNEMLI: 
-- Sadece raporda GEÇMİŞ GERÇEK ürünleri kullan (Apple MacBook Air M2, ASUS Zenbook, Dell XPS vb.)
-- "Laptop Model 1" gibi MOCK ürünler kullanma
-- Linkleri GERÇEK Türk e-ticaret sitelerine yönlendir
-- Fiyatları rapordaki bilgilere göre ayarla
-
-Sadece geçerli JSON döndür:
-"""
-            
-            response = generate_with_retry(model, extraction_prompt, max_retries=2)
-            
-            if response and response.text:
-                try:
-                    # JSON parse et
-                    json_content = response.text.strip()
-                    if json_content.startswith('```json'):
-                        json_content = json_content[7:-3]
-                    elif json_content.startswith('```'):
-                        json_content = json_content[3:-3]
-                    
-                    result = json.loads(json_content)
-                    
-                    # Linkleri doğrula ve onar
-                    if 'shopping_results' in result:
-                        for product in result['shopping_results']:
-                            if 'link' in product:
-                                print(f"🔗 Link doğrulaması: {product['title']}")
-                                # Link validation'ı search engine'den kullan
-                                from .search_engine import ModernSearchEngine
-                                search_engine = ModernSearchEngine()
-                                link_result = search_engine.validate_and_repair_link(
-                                    product['link'], 
-                                    product['title']
-                                )
-                                product['link'] = link_result['url']
-                                product['link_status'] = link_result['status']
-                                product['link_message'] = link_result['message']
-                    
-                    if 'recommendations' in result:
-                        for product in result['recommendations']:
-                            if 'product_url' in product:
-                                print(f"🔗 Recommendation link doğrulaması: {product['title']}")
-                                from .search_engine import ModernSearchEngine
-                                search_engine = ModernSearchEngine()
-                                link_result = search_engine.validate_and_repair_link(
-                                    product['product_url'], 
-                                    product['title']
-                                )
-                                product['product_url'] = link_result['url']
-                                product['link_status'] = link_result['status']
-                                product['link_message'] = link_result['message']
-                    
-                    print(f"✅ {len(result.get('recommendations', []))} gerçek ürün önerisi çıkarıldı")
-                    return result
-                    
-                except json.JSONDecodeError as e:
-                    print(f"❌ JSON parse failed: {e}")
-                    print(f"Raw response: {response.text[:500]}")
-                    return self._get_enhanced_fallback_recommendations(preferences, category, ai_response)
-            
-            return self._get_enhanced_fallback_recommendations(preferences, category, ai_response)
-            
-        except Exception as e:
-            print(f"❌ Real product extraction error: {e}")
-            return self._get_enhanced_fallback_recommendations(preferences, category, "")
-
-    def _get_enhanced_fallback_recommendations(self, preferences, category, ai_analysis=""):
-        """Enhanced fallback recommendations based on AI analysis"""
-        
-        # Bütçe bilgisini al
-        budget_min, budget_max = self._extract_budget_range(preferences)
-        
-        # AI analizinden ürün isimlerini çıkarmaya çalış
-        real_products = []
-        if ai_analysis:
-            # Rapordaki gerçek ürün isimlerini regex ile çıkar
-            import re
-            
-            # MacBook, Galaxy, Dell XPS gibi gerçek ürün isimlerini ara
-            product_patterns = [
-                r'(MacBook [A-Za-z0-9\s]+)',
-                r'(Galaxy [A-Za-z0-9\s]+)',
-                r'(iPhone [A-Za-z0-9\s]+)',
-                r'(Dell XPS [A-Za-z0-9\s]+)',
-                r'(ASUS [A-Za-z0-9\s]+)',
-                r'(HP [A-Za-z0-9\s]+)',
-                r'(Lenovo [A-Za-z0-9\s]+)',
-                r'(Xiaomi [A-Za-z0-9\s]+)',
-                r'(Redmi [A-Za-z0-9\s]+)'
-            ]
-            
-            for pattern in product_patterns:
-                matches = re.findall(pattern, ai_analysis, re.IGNORECASE)
-                for match in matches[:3]:  # İlk 3 match'i al
-                    # Temizle ve formatla
-                    product_name = re.sub(r'\s+', ' ', match.strip())
-                    if len(product_name) > 5:  # Çok kısa isimleri filtrele
-                        real_products.append(product_name)
-        
-        # Eğer gerçek ürün bulunamazsa kategori bazlı varsayılanlar
-        if not real_products:
-            if category == 'Laptop':
-                real_products = [
-                    'MacBook Air M2 13-inch',
-                    'ASUS Zenbook 14 OLED',
-                    'Dell XPS 13 Plus'
-                ]
-            elif category == 'Phone':
-                real_products = [
-                    'Samsung Galaxy S24 128GB',
-                    'iPhone 15 128GB',
-                    'Xiaomi Redmi Note 13 Pro'
-                ]
-            else:
-                real_products = [f'{category} Pro Model']
-        
-        # Shopping results oluştur
-        shopping_results = []
-        recommendations = []
-        
-        for i, product_name in enumerate(real_products[:5]):
-            # Fiyat hesapla (bütçe aralığında)
-            if budget_min and budget_max:
-                price_step = (budget_max - budget_min) / len(real_products)
-                price = budget_min + (i * price_step)
-            else:
-                price = 15000 + (i * 5000)  # Varsayılan fiyat aralığı
-            
-            # Site seçimi (döngüsel)
-            sites = ['hepsiburada.com', 'trendyol.com', 'teknosa.com', 'n11.com', 'vatanbilgisayar.com']
-            selected_site = sites[i % len(sites)]
-            
-            # Arama URL'si oluştur
-            search_query = product_name.lower().replace(' ', '+')
-            if selected_site == 'hepsiburada.com':
-                product_url = f"https://www.hepsiburada.com/ara?q={search_query}"
-            elif selected_site == 'trendyol.com':
-                product_url = f"https://www.trendyol.com/sr?q={search_query}"
-            elif selected_site == 'teknosa.com':
-                product_url = f"https://www.teknosa.com/arama?q={search_query}"
-            elif selected_site == 'n11.com':
-                product_url = f"https://www.n11.com/arama?q={search_query}"
-            else:
-                product_url = f"https://www.vatanbilgisayar.com/arama/?text={search_query}"
-            
-            shopping_results.append({
-                "title": product_name,
-                "price": {
-                    "value": price,
-                    "currency": "TRY",
-                    "display": f"{price:,.0f} ₺".replace(',', '.')
-                },
-                "source": selected_site,
-                "link": product_url,
-                "thumbnail": f"https://via.placeholder.com/150x150?text={product_name.split()[0]}",
-                "rating": 4.0 + (i * 0.2),
-                "reviews": 50 + (i * 25),
-                "delivery": "Ücretsiz kargo",
-                "shipping": "1-2 gün",
-                "link_status": "search_url",
-                "link_message": f"{selected_site} arama sayfası"
-            })
-            
-            # Recommendation oluştur
-            recommendations.append({
-                "title": product_name,
-                "price": {
-                    "value": price,
-                    "currency": "TRY", 
-                    "display": f"{price:,.0f} ₺".replace(',', '.')
-                },
-                "features": [f"Kaliteli {category.lower()}", "Güvenilir marka", "Yüksek performans"],
-                "pros": ["İyi performans", "Güvenilir marka", "Olumlu kullanıcı yorumları"],
-                "cons": ["Fiyat yüksek olabilir"],
-                "match_score": 85 + (i * 2),
-                "source_site": selected_site,
-                "product_url": product_url,
-                "link_status": "search_url",
-                "link_message": f"{selected_site} arama sayfası",
-                "why_recommended": f"AI analizine göre kullanıcı tercihlerinize uygun - {selected_site}'den arama"
-            })
-        
-        return {
-            "ai_analysis": ai_analysis[:500] + "..." if ai_analysis else "AI analizi mevcut değil",
-            "shopping_results": shopping_results,
-            "recommendations": recommendations
-        }
-        """Budget aralığını çıkar - 'k' formatını da destekler"""
-        budget_band = preferences.get('budget_band', '')
-        
-        if not budget_band:
-            return None, None
-        
-        print(f"🔍 Budget band parsing: '{budget_band}'")
-        
-        # "2-5k₺", "20-40k₺" formatını parse et
-        import re
-        
-        # 'k' formatını kontrol et
-        if 'k' in budget_band.lower():
-            # "20-40k₺" -> [20000, 40000]  
-            k_pattern = r'(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)k'
-            k_match = re.search(k_pattern, budget_band.lower())
-            
-            if k_match:
-                min_val = int(float(k_match.group(1)) * 1000)
-                max_val = int(float(k_match.group(2)) * 1000)
-                print(f"✅ K format parsed: {min_val} - {max_val}")
-                return min_val, max_val
-            
-            # Tek k değeri "40k₺+" formatı
-            single_k = re.search(r'(\d+(?:\.\d+)?)k', budget_band.lower())
-            if single_k:
-                base_value = int(float(single_k.group(1)) * 1000)
-                if '+' in budget_band:
-                    print(f"✅ K+ format parsed: {base_value} - {base_value * 2}")
-                    return base_value, base_value * 2
-                else:
-                    print(f"✅ K max format parsed: None - {base_value}")
-                    return None, base_value
-        
-        # Normal format "500-1000₺"
-        normal_pattern = r'(\d+)\s*-\s*(\d+)'
-        normal_match = re.search(normal_pattern, budget_band)
-        
-        if normal_match:
-            min_val = int(normal_match.group(1))
-            max_val = int(normal_match.group(2))
-            print(f"✅ Normal format parsed: {min_val} - {max_val}")
-            return min_val, max_val
-        
-        # Tek değer
-        single_match = re.search(r'(\d+)', budget_band)
-        if single_match:
-            value = int(single_match.group(1))
+            # Binlik ayırıcı noktaları kaldır
+            value_str = single_match.group(1).replace('.', '') if single_match.group(1).count('.') > 0 and not single_match.group(1).endswith('.') else single_match.group(1)
+            value = int(float(value_str))
             if '+' in budget_band:
                 print(f"✅ Single+ format parsed: {value} - {value * 2}")
                 return value, value * 2
@@ -1220,7 +934,50 @@ Sadece geçerli JSON döndür:
         # Bütçe bilgisini al
         budget_min, budget_max = self._extract_budget_range(preferences)
         
-        if category == 'Phone':
+        if category == 'Drone':
+            return [
+                {
+                    'title': 'DJI Mini 3',
+                    'price': {'value': min(budget_max or 15000, 15000), 'currency': 'TRY', 'display': f'{min(budget_max or 15000, 15000):.0f} ₺'},
+                    'features': ['4K Kamera', '38 Dakika Uçuş', 'Katlanabilir Tasarım', 'GPS'],
+                    'pros': ['Güvenilir marka', 'Uzun uçuş süresi', 'Kompakt taşınabilir'],
+                    'cons': ['Yüksek fiyat', 'Rüzgara hassas'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=dji+mini+3+drone',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Başlangıç seviyesi için mükemmel drone'
+                },
+                {
+                    'title': 'DJI Air 2S',
+                    'price': {'value': min(budget_max or 25000, 25000), 'currency': 'TRY', 'display': f'{min(budget_max or 25000, 25000):.0f} ₺'},
+                    'features': ['5.4K Video', '31 Dakika Uçuş', 'Engel Algılama', '1 inch Sensör'],
+                    'pros': ['Profesyonel kalite', 'Güçlü özellikler', 'İleri seviye kamera'],
+                    'cons': ['Pahalı', 'Ağır'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=dji+air+2s+drone',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Profesyonel çekimler için ideal'
+                },
+                {
+                    'title': 'Hubsan H117S Zino',
+                    'price': {'value': min(budget_max or 8000, 8000), 'currency': 'TRY', 'display': f'{min(budget_max or 8000, 8000):.0f} ₺'},
+                    'features': ['4K Kamera', '23 Dakika Uçuş', '1km Menzil', 'GPS Return'],
+                    'pros': ['Uygun fiyat', 'İyi kamera', 'Kolay kullanım'],
+                    'cons': ['Daha kısa uçuş süresi', 'Sınırlı özellikler'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=hubsan+zino+drone',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Bütçe dostu seçenek'
+                }
+            ]
+        
+        elif category == 'Phone':
             return [
                 {
                     'title': 'Samsung Galaxy A54 5G 128GB',
@@ -1263,18 +1020,234 @@ Sadece geçerli JSON döndür:
                 }
             ]
         
+        elif category == 'Headphones':
+            return [
+                {
+                    'title': 'Sony WH-1000XM5',
+                    'price': {'value': min(budget_max or 12000, 12000), 'currency': 'TRY', 'display': f'{min(budget_max or 12000, 12000):.0f} ₺'},
+                    'features': ['Üst Seviye ANC', '30 Saat Pil', 'Kablosuz', 'Premium Ses'],
+                    'pros': ['Mükemmel ses kalitesi', 'Güçlü gürültü engelleme', 'Konforlu'],
+                    'cons': ['Pahalı', 'Büyük boyut'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=sony+wh-1000xm5',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium ses deneyimi için ideal'
+                },
+                {
+                    'title': 'Apple AirPods Pro 2',
+                    'price': {'value': min(budget_max or 8000, 8000), 'currency': 'TRY', 'display': f'{min(budget_max or 8000, 8000):.0f} ₺'},
+                    'features': ['Uzamsal Ses', 'ANC', 'İOS Entegrasyonu', 'Kablosuz Şarj'],
+                    'pros': ['Apple ekosistemi', 'Kompakt tasarım', 'İyi ANC'],
+                    'cons': ['İOS odaklı', 'Pahalı'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=apple+airpods+pro+2',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Apple kullanıcıları için mükemmel'
+                },
+                {
+                    'title': 'JBL Tune 770NC',
+                    'price': {'value': min(budget_max or 3000, 3000), 'currency': 'TRY', 'display': f'{min(budget_max or 3000, 3000):.0f} ₺'},
+                    'features': ['ANC', 'Bluetooth', '70 Saat Pil', 'Hızlı Şarj'],
+                    'pros': ['Uygun fiyat', 'Uzun pil ömrü', 'İyi ses'],
+                    'cons': ['Orta seviye build quality'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=jbl+tune+770nc',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Bütçe dostu ANC kulaklık'
+                }
+            ]
+
+        elif category == 'Klima':
+            return [
+                {
+                    'title': 'Daikin FTXM35R Comfora',
+                    'price': {'value': min(budget_max or 25000, 25000), 'currency': 'TRY', 'display': f'{min(budget_max or 25000, 25000):.0f} ₺'},
+                    'features': ['Inverter', 'A++ Enerji', '12.000 BTU', 'R32 Gaz'],
+                    'pros': ['Güvenilir marka', 'Sessiz çalışma', 'Enerji tasarrufu'],
+                    'cons': ['Yüksek fiyat', 'Kurulum gerekli'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=daikin+comfora+klima',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium kalite ve enerji tasarrufu'
+                },
+                {
+                    'title': 'Mitsubishi MSZ-HR25VF',
+                    'price': {'value': min(budget_max or 20000, 20000), 'currency': 'TRY', 'display': f'{min(budget_max or 20000, 20000):.0f} ₺'},
+                    'features': ['Inverter', 'Wi-Fi', '9.000 BTU', 'Plasma Quad Plus'],
+                    'pros': ['Japon teknolojisi', 'Akıllı özellikler', 'Güçlü soğutma'],
+                    'cons': ['Pahalı servis', 'Karmaşık kumanda'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=mitsubishi+klima',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Teknoloji ve kalite odaklı'
+                },
+                {
+                    'title': 'Arçelik Inverter 12570 EI',
+                    'price': {'value': min(budget_max or 15000, 15000), 'currency': 'TRY', 'display': f'{min(budget_max or 15000, 15000):.0f} ₺'},
+                    'features': ['Inverter', 'A+ Enerji', '12.000 BTU', '10 Yıl Garanti'],
+                    'pros': ['Türk markası', 'Uygun fiyat', 'Yaygın servis'],
+                    'cons': ['Daha az özellik', 'Ses seviyesi'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=arcelik+inverter+klima',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Yerli üretim güvenilir seçenek'
+                }
+            ]
+
+        elif category == 'Television':
+            return [
+                {
+                    'title': 'Samsung 55" QN90C Neo QLED',
+                    'price': {'value': min(budget_max or 40000, 40000), 'currency': 'TRY', 'display': f'{min(budget_max or 40000, 40000):.0f} ₺'},
+                    'features': ['4K', 'Neo QLED', 'Quantum Matrix', 'Tizen OS'],
+                    'pros': ['Mükemmel görüntü', 'Akıllı özellikler', 'Premium tasarım'],
+                    'cons': ['Pahalı', 'Karmaşık menüler'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=samsung+55+qn90c+neo+qled',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium görüntü kalitesi'
+                },
+                {
+                    'title': 'LG 55" C3 OLED evo',
+                    'price': {'value': min(budget_max or 35000, 35000), 'currency': 'TRY', 'display': f'{min(budget_max or 35000, 35000):.0f} ₺'},
+                    'features': ['4K OLED', 'WebOS', 'Dolby Vision', '120Hz'],
+                    'pros': ['OLED teknolojisi', 'Sinema kalitesi', 'Gaming desteği'],
+                    'cons': ['Burn-in riski', 'Parlak ortamlarda sorun'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=lg+55+c3+oled',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Sinema ve oyun deneyimi'
+                },
+                {
+                    'title': 'Xiaomi TV A2 43"',
+                    'price': {'value': min(budget_max or 8000, 8000), 'currency': 'TRY', 'display': f'{min(budget_max or 8000, 8000):.0f} ₺'},
+                    'features': ['4K HDR', 'Android TV', 'Dolby Audio', 'Chromecast'],
+                    'pros': ['Uygun fiyat', 'Android TV', 'İyi özellikler'],
+                    'cons': ['Orta seviye panel', 'Ses kalitesi'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=xiaomi+tv+a2+43',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Bütçe dostu akıllı TV'
+                }
+            ]
+
+        elif category == 'Tire':
+            return [
+                {
+                    'title': 'Michelin Pilot Sport 4 225/45 R17',
+                    'price': {'value': min(budget_max or 2500, 2500), 'currency': 'TRY', 'display': f'{min(budget_max or 2500, 2500):.0f} ₺'},
+                    'features': ['Spor Lastik', 'Yüksek Performans', 'Islak Yol Tutuşu', 'Uzun Ömür'],
+                    'pros': ['Mükemmel tutuş', 'Premium marka', 'Güvenli'],
+                    'cons': ['Pahalı', 'Gürültü seviyesi'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=michelin+pilot+sport+4',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium performans lastiği'
+                },
+                {
+                    'title': 'Bridgestone Turanza T005 205/55 R16',
+                    'price': {'value': min(budget_max or 1800, 1800), 'currency': 'TRY', 'display': f'{min(budget_max or 1800, 1800):.0f} ₺'},
+                    'features': ['Konfor Odaklı', 'Düşük Gürültü', 'Enerji Tasarrufu', 'Uzun Ömür'],
+                    'pros': ['Konforlu sürüş', 'Güvenilir marka', 'Dayanıklı'],
+                    'cons': ['Spor performans sınırlı'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=bridgestone+turanza+t005',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Konfor ve güvenlik odaklı'
+                },
+                {
+                    'title': 'Lassa Competus H/P 215/60 R17',
+                    'price': {'value': min(budget_max or 1200, 1200), 'currency': 'TRY', 'display': f'{min(budget_max or 1200, 1200):.0f} ₺'},
+                    'features': ['SUV Lastiği', 'Türk Malı', 'Uygun Fiyat', 'Dört Mevsim'],
+                    'pros': ['Uygun fiyat', 'Yerli üretim', 'SUV uyumlu'],
+                    'cons': ['Performans sınırlı', 'Gürültü'],
+                    'match_score': 75,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=lassa+competus+suv+lastik',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'Bütçe dostu yerli seçenek'
+                }
+            ]
+
+        elif category == 'Telefon':
+            return [
+                {
+                    'title': 'iPhone 15 128GB',
+                    'price': {'value': min(budget_max or 35000, 35000), 'currency': 'TRY', 'display': f'{min(budget_max or 35000, 35000):.0f} ₺'},
+                    'features': ['A17 Pro Chip', '48MP Kamera', 'iOS 17', 'USB-C'],
+                    'pros': ['Premium performans', 'Uzun destek', 'Mükemmel kamera'],
+                    'cons': ['Pahalı', 'Lightning yerine USB-C'],
+                    'match_score': 90,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': 'https://www.hepsiburada.com/ara?q=iphone+15+128gb',
+                    'link_status': 'fallback',
+                    'link_message': 'Hepsiburada arama sayfası',
+                    'why_recommended': 'Premium iPhone deneyimi'
+                },
+                {
+                    'title': 'Samsung Galaxy S23 256GB',
+                    'price': {'value': min(budget_max or 25000, 25000), 'currency': 'TRY', 'display': f'{min(budget_max or 25000, 25000):.0f} ₺'},
+                    'features': ['Snapdragon 8 Gen 2', '50MP Kamera', 'Android 14', '8GB RAM'],
+                    'pros': ['Güçlü performans', 'İyi kamera', 'Samsung ekosistemi'],
+                    'cons': ['OneUI arayüzü', 'Pil ömrü'],
+                    'match_score': 85,
+                    'source_site': 'teknosa.com',
+                    'product_url': 'https://www.teknosa.com/arama?q=samsung+galaxy+s23+256gb',
+                    'link_status': 'fallback',
+                    'link_message': 'Teknosa arama sayfası',
+                    'why_recommended': 'Android flagship deneyimi'
+                },
+                {
+                    'title': 'Xiaomi Redmi Note 13 Pro 256GB',
+                    'price': {'value': min(budget_max or 12000, 12000), 'currency': 'TRY', 'display': f'{min(budget_max or 12000, 12000):.0f} ₺'},
+                    'features': ['Dimensity 7200', '200MP Kamera', 'AMOLED Ekran', '67W Şarj'],
+                    'pros': ['Fiyat/performans', 'Hızlı şarj', 'İyi ekran'],
+                    'cons': ['MIUI arayüzü', 'Plastik gövde'],
+                    'match_score': 80,
+                    'source_site': 'trendyol.com',
+                    'product_url': 'https://www.trendyol.com/sr?q=xiaomi+redmi+note+13+pro',
+                    'link_status': 'fallback',
+                    'link_message': 'Trendyol arama sayfası',
+                    'why_recommended': 'En iyi fiyat/performans'
+                }
+            ]
+
         # Diğer kategoriler için genel fallback
-        return [
-            {
-                'title': f'Önerilen {category}',
-                'price': {'value': budget_min or 1000, 'currency': 'TRY', 'display': f'{budget_min or 1000:.0f} ₺'},
-                'features': ['Kaliteli', 'Güvenilir'],
-                'pros': ['İyi performans'],
-                'cons': ['Sınırlı bilgi'],
-                'match_score': 75,
-                'source_site': 'hepsiburada.com',
-                'product_url': f'https://www.hepsiburada.com/ara?q={category.lower()}',
-                'link_status': 'fallback',
+        else:
+            return [
+                {
+                    'title': f'Önerilen {category}',
+                    'price': {'value': budget_min or 1000, 'currency': 'TRY', 'display': f'{budget_min or 1000:.0f} ₺'},
+                    'features': ['Kaliteli', 'Güvenilir'],
+                    'pros': ['İyi performans'],
+                    'cons': ['Sınırlı bilgi'],
+                    'match_score': 75,
+                    'source_site': 'hepsiburada.com',
+                    'product_url': f'https://www.hepsiburada.com/ara?q={category.lower()}',
+                    'link_status': 'fallback',
                 'link_message': 'Hepsiburada arama sayfası',
                 'why_recommended': 'Genel öneri - detaylı arama yapılamadı'
             }
