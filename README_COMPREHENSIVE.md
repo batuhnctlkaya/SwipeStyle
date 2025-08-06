@@ -1,8 +1,8 @@
-# 🛍️ SwipeStyle - Yapay Zeka Destekli Akıllı Ürün Öneri Sistemi
+# 🛍️ FindFlow - Yapay Zeka Destekli Akıllı Ürün Öneri Sistemi
 
 <div align="center">
 
-![SwipeStyle Logo](https://img.shields.io/badge/SwipeStyle-AI%20Product%20Recommendations-blue?style=for-the-badge&logo=shopping-cart)
+![FindFlow Logo](https://img.shields.io/badge/FindFlow-AI%20Product%20Recommendations-blue?style=for-the-badge&logo=shopping-cart)
 
 **Modern teknoloji ile alışverişi yeniden tanımlıyoruz**
 
@@ -15,9 +15,9 @@
 
 ---
 
-## 🌟 SwipeStyle Nedir?
+## 🌟 FindFlow Nedir?
 
-SwipeStyle, **yapay zeka teknolojisi** ile desteklenen yeni nesil bir ürün öneri sistemidir. Kullanıcıların ihtiyaçlarını anlayarak, kişiselleştirilmiş ürün önerileri sunan akıllı bir alışveriş asistanıdır.
+FindFlow, **yapay zeka teknolojisi** ile desteklenen yeni nesil bir ürün öneri sistemidir. Kullanıcıların ihtiyaçlarını anlayarak, kişiselleştirilmiş ürün önerileri sunan akıllı bir alışveriş asistanıdır.
 
 ### 🎯 Misyonumuz
 > "Her kullanıcı için mükemmel ürünü bulmak, teknoloji ile alışveriş deneyimini kişiselleştirmek"
@@ -104,8 +104,8 @@ Flask Web Framework
 
 1. **Projeyi İndirin**
 ```bash
-git clone https://github.com/batuhnctlkaya/SwipeStyle.git
-cd SwipeStyle-iz
+git clone https://github.com/batuhnctlkaya/FindFlow.git
+cd FindFlow-iz
 ```
 
 2. **Bağımlılıkları Yükleyin**
@@ -171,9 +171,9 @@ http://localhost:8080
 
 ## 🏆 Rekabetçi Avantajlar
 
-### ✅ **SwipeStyle'ın Üstünlükleri**
+### ✅ **FindFlow'ın Üstünlükleri**
 
-| Özellik | SwipeStyle | Geleneksel Sistemler |
+| Özellik | FindFlow | Geleneksel Sistemler |
 |---------|------------|----------------------|
 | **AI Entegrasyonu** | ✅ Google Gemini | ❌ Basit filtreler |
 | **Kişiselleştirme** | ✅ Dinamik öğrenme | ❌ Statik kategoriler |

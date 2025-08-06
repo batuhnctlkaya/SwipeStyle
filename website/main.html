@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SwipeStyle - AI Product Recommendations</title>
+    <title>FindFlow - AI Product Recommendations</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -247,6 +247,92 @@
 
         [data-theme="dark"] .tooltip .tooltip-text::after {
             border-color: transparent transparent #f1f5f9 transparent;
+        }
+        
+        /* Question Tooltip Styles */
+        .question-header-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .question-title-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .tooltip-wrapper .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            width: 280px;
+            background-color: var(--text-dark);
+            color: white;
+            text-align: left;
+            border-radius: 8px;
+            padding: 12px 16px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -140px;
+            transition: opacity 0.3s, visibility 0.3s;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tooltip-wrapper .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-dark) transparent transparent transparent;
+        }
+        
+        [data-theme="dark"] .tooltip-wrapper .tooltip-text {
+            background-color: #374151;
+            color: #f9fafb;
+        }
+        
+        [data-theme="dark"] .tooltip-wrapper .tooltip-text::after {
+            border-color: #374151 transparent transparent transparent;
+        }
+        
+        .tooltip-icon {
+            color: var(--primary-blue);
+            font-size: 1.2em;
+            cursor: help;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            margin-left: 5px;
+        }
+        
+        .tooltip-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            color: var(--cta-orange);
+        }
+        
+        [data-theme="dark"] .tooltip-icon {
+            color: #60a5fa;
+        }
+        
+        [data-theme="dark"] .tooltip-icon:hover {
+            color: var(--cta-orange);
         }
         
         [data-theme="dark"] .option-btn {
@@ -1680,7 +1766,7 @@
         </div>
         
         <div class="header-content">
-            <h1 class="logo">SwipeStyle</h1>
+            <h1 class="logo">FindFlow</h1>
             <p class="tagline">AI-Powered Product Recommendations</p>
         </div>
         
@@ -1774,10 +1860,18 @@
         
         <!-- Question Content -->
         <div class="question-content">
-            <div class="question-icon">
-                <i class="fas fa-map-marker-alt"></i>
+            <div class="question-header-wrapper">
+                <div class="question-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="question-title-wrapper">
+                    <div class="question"></div>
+                    <div class="tooltip-wrapper" id="question-tooltip" style="display: none;">
+                        <i class="fas fa-info-circle tooltip-icon"></i>
+                        <span class="tooltip-text"></span>
+                    </div>
+                </div>
             </div>
-            <div class="question"></div>
         </div>
         
         <div class="loading" style="color: var(--text-gray); margin-bottom: 20px; text-align: center; display: none;">

@@ -1,5 +1,5 @@
 /**
- * SwipeStyle Frontend JavaScript
+ * FindFlow Frontend JavaScript
  * Basit ve temiz JavaScript kodu
  */
 
@@ -32,7 +32,7 @@ function changeTheme(theme) {
     });
     
     // LocalStorage'a kaydet
-    localStorage.setItem('swipestyle-theme', theme);
+    localStorage.setItem('findflow-theme', theme);
 }
 
 // Dil değiştirme fonksiyonu
@@ -731,6 +731,9 @@ function renderQuestion(question, options, emoji) {
     // Update question icon
     updateQuestionIcon(emoji);
     
+    // Update tooltip if available
+    updateQuestionTooltip();
+    
     const questionDiv = interaction.querySelector('.question');
     const optionsDiv = interaction.querySelector('.options');
     
@@ -1096,10 +1099,10 @@ function askAgent() {
 }
 
 window.onload = () => {
-    console.log("SwipeStyle uygulaması başlatılıyor...");
+    console.log("FindFlow uygulaması başlatılıyor...");
     
     // Tema tercihini localStorage'dan yükle
-    const savedTheme = localStorage.getItem('swipestyle-theme') || 'light';
+    const savedTheme = localStorage.getItem('findflow-theme') || 'light';
     changeTheme(savedTheme);
     
     // Dil değiştirme event listener'ları
@@ -1221,7 +1224,7 @@ window.onload = () => {
                 });
             }
             
-            console.log("SwipeStyle başarıyla başlatıldı");
+            console.log("FindFlow başarıyla başlatıldı");
         })
         .catch(error => {
             console.error("Kategoriler yüklenirken hata oluştu:", error);
@@ -1455,5 +1458,69 @@ function hideLoadingScreen() {
     const loadingElement = document.querySelector('.loading');
     if (loadingElement) {
         loadingElement.style.display = 'none';
+    }
+}
+
+// Tooltip functions
+function updateQuestionTooltip() {
+    const tooltipWrapper = document.getElementById('question-tooltip');
+    const tooltipText = tooltipWrapper?.querySelector('.tooltip-text');
+    
+    if (!tooltipWrapper || !tooltipText) {
+        return;
+    }
+    
+    // Check if current question has tooltip
+    if (window.currentQuestionTooltip && window.currentQuestionTooltip.trim() !== '') {
+        tooltipText.textContent = window.currentQuestionTooltip;
+        tooltipWrapper.style.display = 'inline-flex';
+        
+        // Add click and hover events for mobile and desktop
+        const tooltipIcon = tooltipWrapper.querySelector('.tooltip-icon');
+        if (tooltipIcon) {
+            // Remove existing event listeners
+            tooltipIcon.replaceWith(tooltipIcon.cloneNode(true));
+            const newTooltipIcon = tooltipWrapper.querySelector('.tooltip-icon');
+            
+            // Desktop hover
+            newTooltipIcon.addEventListener('mouseenter', showTooltip);
+            newTooltipIcon.addEventListener('mouseleave', hideTooltip);
+            
+            // Mobile tap
+            newTooltipIcon.addEventListener('click', toggleTooltip);
+        }
+    } else {
+        tooltipWrapper.style.display = 'none';
+    }
+}
+
+function showTooltip() {
+    const tooltipWrapper = document.getElementById('question-tooltip');
+    const tooltipText = tooltipWrapper?.querySelector('.tooltip-text');
+    if (tooltipText) {
+        tooltipText.style.visibility = 'visible';
+        tooltipText.style.opacity = '1';
+    }
+}
+
+function hideTooltip() {
+    const tooltipWrapper = document.getElementById('question-tooltip');
+    const tooltipText = tooltipWrapper?.querySelector('.tooltip-text');
+    if (tooltipText) {
+        tooltipText.style.visibility = 'hidden';
+        tooltipText.style.opacity = '0';
+    }
+}
+
+function toggleTooltip() {
+    const tooltipWrapper = document.getElementById('question-tooltip');
+    const tooltipText = tooltipWrapper?.querySelector('.tooltip-text');
+    if (tooltipText) {
+        const isVisible = tooltipText.style.visibility === 'visible';
+        if (isVisible) {
+            hideTooltip();
+        } else {
+            showTooltip();
+        }
     }
 }

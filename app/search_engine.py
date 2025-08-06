@@ -36,11 +36,15 @@ load_dotenv()
 
 class ModernSearchEngine:
     """
-    Modern ürün arama motoru - Grounding + Function Calling mimarisi
+    FindFlow Modern Ürün Arama Motoru - Grounding + Function Calling Mimarisi
+    
+    Bu sınıf, FindFlow uygulamasının ürün arama ve öneri sisteminin 
+    kalbidir. Modern AI teknolojileri ile gerçek zamanlı ürün verisi 
+    toplayarak kullanıcıya en uygun önerileri sunar.
     """
     
     def __init__(self):
-        """Search Engine'i başlat"""
+        """FindFlow Arama Motoru Başlatma"""
         self.serpapi_key = os.getenv('SERPAPI_KEY')
         self.serpapi_base_url = "https://serpapi.com/search"
         self.cache = {}  # Basit cache sistemi
@@ -286,7 +290,7 @@ Lütfen kaynaklı bir rapor hazırla.
             return self._get_mock_shopping_results(preferences)
     
     def _build_search_query(self, preferences: Dict, site_filter: Optional[List[str]]) -> str:
-        """Search query oluştur"""
+        """FindFlow için arama sorgusu oluşturma"""
         category = preferences.get('category', '')
         features = preferences.get('features', [])
         budget_min = preferences.get('budget_min')

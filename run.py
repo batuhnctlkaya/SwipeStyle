@@ -1,5 +1,8 @@
 """
-SwipeStyle Ana Uygulama Dosyası
+FindFlow Ana Uygulama Dosyası
+=======================================
+
+Bu dosya, FindFlow ürün tavsiye sisteminin ana Flask uygulamasını içerir.SwipeStyle Ana Uygulama Dosyası
 ================================
 
 Bu dosya, SwipeStyle ürün tavsiye sisteminin ana Flask uygulamasını içerir.
@@ -66,7 +69,7 @@ add_dynamic_category_route(app)
 @app.route('/detect_category', methods=['POST'])
 def detect_category():
     """
-    Kullanıcı sorgusundan kategori tespiti yapar.
+    Kullanıcı sorgusundan kategori tespiti yapar - FindFlow AI sistemi.
     
     Bu endpoint, kullanıcının yazdığı metni analiz ederek
     en uygun ürün kategorisini tespit eder. Gerekirse yeni kategori oluşturur.
@@ -142,7 +145,7 @@ def get_categories():
 @app.route('/ask', methods=['POST'])
 def ask():
     """
-    Soru-cevap akışını yönetir ve ürün önerileri döndürür.
+    Soru-cevap akışını yönetir ve FindFlow AI önerileri döndürür.
     
     Bu endpoint, kullanıcının kategori seçiminden sonra
     adım adım sorular sorar ve sonunda ürün önerileri sunar.

@@ -1,7 +1,7 @@
-# SwipeStyle Python Bağımlılıkları
+# FindFlow Python BaÄŸÄ±mlÄ±lÄ±klarÄ±
 # =================================
 # 
-# Bu dosya, SwipeStyle uygulamasının çalışması için gerekli Python paketlerini listeler.
+# # Bu dosya, FindFlow uygulamasÄ±nÄ±n Ã§alÄ±ÅŸmasÄ± iÃ§in gerekli Python paketlerini listeler.
 # 
 # Ana Bağımlılıklar:
 # - Flask: Web framework (backend API için)
