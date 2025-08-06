@@ -5,8 +5,10 @@
 
 // Global dil değişkeni
 let currentLanguage = 'tr';
-let currentTheme = 'light';
+let currentTheme = 'light';  // Default light theme
 let currentCategory = ''; // Global kategori değişkeni
+let currentQuestionIndex = 0;
+let totalQuestions = 7;
 
 // Otomatik tamamlama için global değişkenler
 let autocompleteData = [];
@@ -655,6 +657,14 @@ function startInteraction(selectedCategory) {
     currentCategory = selectedCategory; // Global kategoriyi güncelle
     step = 1;
     answers = [];
+    currentQuestionIndex = 1;
+    
+    // Get total questions from category specs
+    if (window.currentSpecs && window.currentSpecs[selectedCategory]) {
+        totalQuestions = window.currentSpecs[selectedCategory].length;
+    } else {
+        totalQuestions = 5; // fallback
+    }
     
     // Basit geçiş
     document.querySelector('.landing').style.display = 'none';
@@ -662,8 +672,64 @@ function startInteraction(selectedCategory) {
     askAgent();
 }
 
+// Question progress functions
+function updateQuestionProgress() {
+    const currentElement = document.getElementById('current-question');
+    const totalElement = document.getElementById('total-questions');
+    
+    if (currentElement && totalElement) {
+        currentElement.textContent = currentQuestionIndex;
+        totalElement.textContent = totalQuestions;
+    }
+}
+
+function updateQuestionIcon(emoji) {
+    const iconElement = document.querySelector('.question-icon i');
+    if (iconElement && emoji) {
+        // Map emoji to FontAwesome icon with better icons
+        const iconMap = {
+            '📍': 'fas fa-map-marker-alt',
+            '💰': 'fas fa-dollar-sign',
+            '🏢': 'fas fa-building',
+            '⚡': 'fas fa-bolt',
+            '🖥️': 'fas fa-desktop',
+            '📱': 'fas fa-mobile-alt',
+            '🎮': 'fas fa-gamepad',
+            '🎵': 'fas fa-music',
+            '💡': 'fas fa-lightbulb',
+            '🔧': 'fas fa-wrench',
+            '📐': 'fas fa-ruler-combined',
+            '🌈': 'fas fa-palette',
+            '⌨️': 'fas fa-keyboard',
+            '🖱️': 'fas fa-mouse',
+            '🔍': 'fas fa-search',
+            '❓': 'fas fa-question-circle',
+            '📊': 'fas fa-chart-bar',
+            '🔥': 'fas fa-fire',
+            '⭐': 'fas fa-star',
+            '🎯': 'fas fa-bullseye'
+        };
+        
+        const iconClass = iconMap[emoji] || 'fas fa-question-circle';
+        iconElement.className = iconClass;
+    } else if (iconElement) {
+        // Default icon for category
+        const categoryIcon = categoryIcons[getCurrentCategory()] || 'fas fa-search';
+        iconElement.className = categoryIcon;
+    }
+}
+
+// Go to home page function - removed duplicate, using detailed version below
+
 function renderQuestion(question, options, emoji) {
     const interaction = document.getElementById('interaction');
+    
+    // Update question progress
+    currentQuestionIndex = step;
+    updateQuestionProgress();
+    
+    // Update question icon
+    updateQuestionIcon(emoji);
     
     const questionDiv = interaction.querySelector('.question');
     const optionsDiv = interaction.querySelector('.options');
@@ -675,31 +741,8 @@ function renderQuestion(question, options, emoji) {
         return;
     }
     
-    questionDiv.innerHTML = '';
+    questionDiv.innerHTML = question;
     optionsDiv.innerHTML = '';
-
-    // Soru başlığı ve tooltip
-    const questionContainer = document.createElement('div');
-    questionContainer.className = 'question-container';
-
-    const questionTitle = document.createElement('h2');
-    questionTitle.innerHTML = `${emoji} ${question}`;
-    questionContainer.appendChild(questionTitle);
-
-    if (window.currentQuestionTooltip) {
-        const tooltipSpan = document.createElement('span');
-        tooltipSpan.className = 'tooltip';
-        tooltipSpan.innerHTML = '<i class="fas fa-info-circle"></i>';
-        
-        const tooltipText = document.createElement('span');
-        tooltipText.className = 'tooltip-text';
-        tooltipText.textContent = window.currentQuestionTooltip;
-        
-        tooltipSpan.appendChild(tooltipText);
-        questionContainer.appendChild(tooltipSpan);
-    }
-    
-    questionDiv.appendChild(questionContainer);
 
     // Seçenekleri oluştur
     options.forEach(opt => {
@@ -834,6 +877,7 @@ function resetToLanding() {
     step = 0;
     category = null;
     answers = [];
+    currentQuestionIndex = 0;
     
     // Clear search input
     const searchInput = document.getElementById('chatbox-input');
@@ -871,6 +915,7 @@ function handleOption(opt) {
         
         answers.push(opt);
         step++;
+        currentQuestionIndex = step;
         
         document.querySelector('.error').textContent = '';
         
@@ -1404,4 +1449,11 @@ function showErrorScreen() {
 
 function hideErrorScreen() {
     document.getElementById('error-screen').style.display = 'none';
+}
+
+function hideLoadingScreen() {
+    const loadingElement = document.querySelector('.loading');
+    if (loadingElement) {
+        loadingElement.style.display = 'none';
+    }
 }
