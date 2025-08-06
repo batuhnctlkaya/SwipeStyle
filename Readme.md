@@ -214,16 +214,10 @@ http://localhost:8080
 ## 👥 Takım ve İletişim
 
 ### 🏢 **Geliştirme Ekibi**
-- **Product Manager**: Batuhan Çetinkaya
-- **AI/ML Engineer**: SwipeStyle AI Team
-- **Frontend Developer**: Web UI Team
-- **Backend Developer**: API Development Team
-
-### 📞 **İletişim Kanalları**
-- **GitHub**: [batuhnctlkaya/SwipeStyle](https://github.com/batuhnctlkaya/SwipeStyle)
-- **E-mail**: info@swipestyle.com
-- **LinkedIn**: SwipeStyle Official
-- **Twitter**: @SwipeStyleAI
+- **Product Manager**: 
+- **AI/ML Engineer**: 
+- **Frontend Developer**: 
+- **Backend Developer**: 
 
 ---
 
@@ -234,12 +228,6 @@ http://localhost:8080
 - **Uptime**: %99.9
 - **API Rate Limit**: 1000 req/dakika
 - **Kategori Tespit Doğruluğu**: %95+
-
-### 📈 **Kullanıcı Metrikleri**
-- **Günlük Aktif Kullanıcı**: 10K+
-- **Ortalama Oturum Süresi**: 8 dakika
-- **Tekrar Ziyaret Oranı**: %75
-- **Kullanıcı Memnuniyeti**: 4.8/5
 
 ---
 
@@ -288,28 +276,12 @@ Bu proje MIT lisansı altında sunulmaktadır. Detaylar için [LICENSE](LICENSE)
 
 ---
 
-## 🌟 Başarı Hikayeleri
-
-### 💬 **Kullanıcı Yorumları**
-
-> *"SwipeStyle sayesinde aradığım telefonu 5 dakikada buldum. Harika bir deneyim!"*  
-> **- Ahmet K., İstanbul**
-
-> *"E-ticaret sitemizde %40 dönüşüm artışı sağladık."*  
-> **- TechStore CEO**
-
-> *"AI önerileri gerçekten isabetli. Tam ihtiyacımı karşıladı."*  
-> **- Elif M., Ankara**
-
----
-
 <div align="center">
 
 ## 🚀 SwipeStyle ile Geleceğin Alışverişini Bugün Deneyimleyin!
 
 [![Hemen Başla](https://img.shields.io/badge/Hemen%20Başla-SwipeStyle-blue?style=for-the-badge&logo=rocket)](http://localhost:8080)
 [![Demo İzle](https://img.shields.io/badge/Demo%20İzle-YouTube-red?style=for-the-badge&logo=youtube)](https://youtube.com/swipestyle)
-[![Dokümantasyon](https://img.shields.io/badge/Dokümantasyon-Oku-green?style=for-the-badge&logo=book)](https://docs.swipestyle.com)
 
 ---
 
